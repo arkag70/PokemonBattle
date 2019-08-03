@@ -384,7 +384,7 @@
 423,423,383,Groudon,Ground,Ground,670,100,150,140,100,90,90,3,TRUE
 425,425,384,Rayquaza,Dragon,Flying,680,105,150,90,150,90,95,3,TRUE
 427,427,385,Jirachi,Steel,Psychic,600,100,100,100,100,100,100,3,TRUE
-428,428,386,Deoxys,Psychic,Psychic,600,50,150,50,150,50,150,3,TRUE
+428,428,386,Deoxys Normal,Psychic,Psychic,600,50,150,50,150,50,150,3,TRUE
 429,429,386,DeoxysAttack Forme,Psychic,Psychic,600,50,180,20,180,20,150,3,TRUE
 430,430,386,DeoxysDefense Forme,Psychic,Psychic,600,50,70,160,70,160,90,3,TRUE
 431,431,386,DeoxysSpeed Forme,Psychic,Psychic,600,50,95,90,95,90,180,3,TRUE
