@@ -29,6 +29,9 @@ class PokeGUI:
 		self.bottom = tk.Frame(self.master)
 		self.bottom.grid(row = 3,column = 0)
 
+		self.remark = tk.Frame(self.master)
+		self.remark.grid(row = 4,column = 0)
+
 	def createLabel(self,canvas,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12")):
 		self.label = tk.Label(canvas,text = text_,font=font_)
 		self.label.grid(row = row_,column = col_,padx = padx_, pady = pady_)
@@ -39,9 +42,9 @@ class PokeGUI:
 		self.entry.grid(row = row_,column = col_,padx = padx_, pady = pady_)
 		return self.entry
 
-	def createButton(self,canvas,command_,text_ = "Button-Text",width_ = 5,bd_ = 2,font_ = ("Calibri 12"),row_ = 0,col_ = 0,padx_ = 2,pady_ = 2):
+	def createButton(self,canvas,command_,text_ = "Button-Text",width_ = 5,bd_ = 3,font_ = ("Calibri 12")):
 		self.button = tk.Button(canvas,text = text_,command = command_,width = width_,bd = bd_,font = font_)
-		self.button.grid(row = row_,column = col_,padx = padx_, pady = pady_)
+		self.button.grid(row = 0,column = 0,sticky = tk.W + tk.E)
 		return self.button
 
 	def createRadioButton(self,canvas,variable_,text_ = "radio-item",value_ = 1,row_ = 0, col_ = 0):
@@ -56,14 +59,14 @@ class PokeGUI:
 		imglabel.grid(row = row_,column = col_)
 		return imglabel
 	
-	def createProgress(self,canvas,orient_="horizontal",length_=200, mode_="determinate",row_ = 0, col_ = 1):
+	def createProgress(self,canvas,orient_="horizontal",length_=150, mode_="determinate",row_ = 0, col_ = 1):
 		# s = ttk.Style()
 		# s.theme_use('clam')
 		# s.configure("yellow.Horizontal.TProgressbar", foreground='yellow', background='yellow')
 		self.pbar = ttk.Progressbar(canvas,orient = orient_,length = length_, mode = mode_)
 		self.pbar.grid(row = row_, column = col_)
 		self.pbar["maximum"] = length_
-		self.pbar["value"] = 200
+		self.pbar["value"] = length_
 		return self.pbar
 
 
