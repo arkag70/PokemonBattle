@@ -1,4 +1,5 @@
 import tkinter as tk
+from fns import *
 
 class PokeGUI:
 
