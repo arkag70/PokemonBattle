@@ -1,7 +1,7 @@
 from gui_class import *
 import threading
 
-var = 0
+
 p1 = Pokemon()
 p2 = Pokemon()
 hp1 = p1.fetchHP()
@@ -17,7 +17,7 @@ def startProgress(pbar):
 def start_fight_thread(event):
     #startButton.config(state = DISABLED)
     global fight_thread
-    fight_thread = threading.Thread(target = fight, args = (firstPbar,secondPbar))
+    fight_thread = threading.Thread(target = fight, args = (firstPbar,secondPbar,var1,var2))
     fight_thread.daemon = True
     fight_thread.start()
     root.after(20,check_fight_thread)
@@ -28,9 +28,9 @@ def check_fight_thread():
     else:
         pass
 
-def fight(bar1,bar2):
-	for i in range(50):
-		startProgress(bar2)
+def fight(bar1,bar2,var1,var2):
+	print(firstmoves[var1.get()])
+	print(secondmoves[var2.get()])	
 
 
 '''
@@ -59,28 +59,25 @@ if __name__ == "__main__":
 	secondPbar = pg.createProgress(pg.secondright)
 
 	firstMoveLabel = pg.createLabel(pg.thirdleft,text_ = "Moves",row_ = 0,col_ = 0)
-	firstmoves = ["Quick Attack","Slash","Double Kick","Blaze Kick"]
+	firstmoves = p1.getMoves()
 	firstRadio = []
-
 	var1 = tk.IntVar()
-	firstRadio1 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[0],variable_ = var1,value_ = 1,row_ = 1,col_ = 0)
-	firstRadio2 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[1],variable_ = var1,value_ = 2,row_ = 2,col_ = 0)
-	firstRadio3 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[2],variable_ = var1,value_ = 3,row_ = 3,col_ = 0)
-	firstRadio4 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[3],variable_ = var1,value_ = 4,row_ = 4,col_ = 0)
+	firstRadio1 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[0],variable_ = var1,value_ = 0,row_ = 1,col_ = 0)
+	firstRadio2 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[1],variable_ = var1,value_ = 1,row_ = 2,col_ = 0)
+	firstRadio3 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[2],variable_ = var1,value_ = 2,row_ = 3,col_ = 0)
+	firstRadio4 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[3],variable_ = var1,value_ = 3,row_ = 4,col_ = 0)
 
 
 	secondMoveLabel = pg.createLabel(pg.thirdright,text_ = "Moves",row_ = 0,col_ = 0)
-	secondmoves = ["Pound","Leaf Blade","Pursuit","Agility"]
+	secondmoves = p2.getMoves()
 	secondRadio = []
 	var2 = tk.IntVar()
-	secondRadio1 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[0],variable_ = var2,value_ = 1,row_ = 1,col_ = 0)
-	secondRadio2 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[1],variable_ = var2,value_ = 2,row_ = 2,col_ = 0)
-	secondRadio3 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[2],variable_ = var2,value_ = 3,row_ = 3,col_ = 0)
-	secondRadio4 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[3],variable_ = var2,value_ = 4,row_ = 4,col_ = 0)
+	secondRadio1 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[0],variable_ = var2,value_ = 0,row_ = 1,col_ = 0)
+	secondRadio2 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[1],variable_ = var2,value_ = 1,row_ = 2,col_ = 0)
+	secondRadio3 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[2],variable_ = var2,value_ = 2,row_ = 3,col_ = 0)
+	secondRadio4 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[3],variable_ = var2,value_ = 3,row_ = 4,col_ = 0)
 
 	
-
-
 	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None))
 
 	remarkLabel = pg.createLabel(pg.remark,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12"))

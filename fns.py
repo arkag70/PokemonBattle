@@ -1,5 +1,6 @@
 import pandas as pd
 import random
+from moves import moveset
 #filtered the file
 #dataset1 = dataset[~dataset.Name.str.contains("Mega ")]
 
@@ -18,6 +19,8 @@ class Pokemon:
 
 		self.name = pokemons[i]["name"]
 		self.HP = int(pokemons[i]["hp"])
+		self.type1 = pokemons[i]["type1"]
+		self.type2 = pokemons[i]["type2"]
 
 		i += 1
 		if len(str(i)) == 1:
@@ -35,3 +38,16 @@ class Pokemon:
 
 	def fetchHP(self):
 		return self.HP
+
+	def getMoves(self):
+		moves = []
+		if self.type1 == self.type2:
+			for i in range(4):
+				key, value = list(moveset[self.type1].items())[i]
+				moves.append(key)
+		else:
+			for i in range(2):
+				key, value = list(moveset[self.type1].items())[i]
+				key, value = list(moveset[self.type2].items())[i]
+				moves.append(key)
+		return moves
