@@ -1,5 +1,7 @@
 import tkinter as tk
+from tkinter import ttk
 from fns import *
+import time
 
 class PokeGUI:
 
@@ -54,8 +56,15 @@ class PokeGUI:
 		imglabel.grid(row = row_,column = col_)
 		return imglabel
 	
-
-
+	def createProgress(self,canvas,orient_="horizontal",length_=200, mode_="determinate",row_ = 0, col_ = 1):
+		# s = ttk.Style()
+		# s.theme_use('clam')
+		# s.configure("yellow.Horizontal.TProgressbar", foreground='yellow', background='yellow')
+		self.pbar = ttk.Progressbar(canvas,orient = orient_,length = length_, mode = mode_)
+		self.pbar.grid(row = row_, column = col_)
+		self.pbar["maximum"] = length_
+		self.pbar["value"] = 200
+		return self.pbar
 
 
 
