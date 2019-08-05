@@ -32,9 +32,6 @@ def check_fight_thread():
 def fight(bar1,bar2,var1,var2):
 	print(firstmoves[var1.get()])
 	print(secondmoves[var2.get()])	
-	for i in range(50):
-		startProgress(bar2,50)
-		startProgress(bar1,40)
 
 
 '''
