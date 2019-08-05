@@ -201,3 +201,13 @@ moveset = {
 		   "Withdraw"		:{"power":0,"accuracy":100,"PP":40,"type":"water"},
 		   "Steam Eruption"	:{"power":110,"accuracy":95,"PP":5,"type":"water"}}
 }
+# movelist = list(moveset["water"].items())
+# moves = []
+# desc = []
+# for i in movelist:
+# 	moves.append(i[0])
+# 	desc.append(i[1])
+# r_number = 4
+
+# move = moves[r_number]
+# print(desc[r_number]["accuracy"])
