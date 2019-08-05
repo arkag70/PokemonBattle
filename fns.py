@@ -40,23 +40,49 @@ class Pokemon:
 		return self.HP
 
 	def getMoves(self):
-		moves = []
+
 		if self.type1 == self.type2:
-			print(self.type1,self.type2,"same type")
-			for i in range(4):
-				key, value = list(moveset[self.type1].items())[random.randint(0,10)]
-				moves.append(key)
+			moves = []
+			desc = []
+			movlist = list(moveset[self.type1].items())
+			for movename in movlist:
+				moves.append(movename[0])
+				desc.append(movename[1])
+			together = list(zip(moves,desc))
+			random.shuffle(together)
+			moves[:],desc[:] = zip(*together)
+			moves = moves[:4]
+			desc = desc[:4]
 				
 		else:
-			print(self.type1,self.type2,"different types")
-			for i in range(2):
-				key, value = list(moveset[self.type1].items())[random.randint(0,10)]
-				moves.append(key)
-			for i in range(2):
-				key, value = list(moveset[self.type2].items())[random.randint(0,10)]
-				moves.append(key)
-		print(moves)
-		return moves
+			moves1 = []
+			desc1 = []
+			movlist1 = list(moveset[self.type1].items())
+			for movename in movlist1:
+				moves1.append(movename[0])
+				desc1.append(movename[1])
+			together1 = list(zip(moves1,desc1))
+			random.shuffle(together1)
+			moves1[:],desc1[:] = zip(*together1)
+			moves1 = moves1[:2]
+			desc1 = desc1[:2]
+
+			moves2 = []
+			desc2= []
+			movlist2 = list(moveset[self.type2].items())
+			for movename in movlist2:
+				moves2.append(movename[0])
+				desc2.append(movename[1])
+			together2 = list(zip(moves2,desc2))
+			random.shuffle(together2)
+			moves2[:],desc2[:] = zip(*together2)
+			moves2 = moves2[:2]
+			desc2 = desc2[:2]
+
+			moves = moves1 + moves2
+			desc = desc1 + desc2
+		#print(moves,desc)
+		return moves,desc
 
 # def hello():
 # 	key, value = list(moveset["dark"].items())[5]

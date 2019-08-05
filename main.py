@@ -7,12 +7,13 @@ p2 = Pokemon()
 hp1 = p1.fetchHP()
 hp2 = p2.fetchHP()
 
-def startProgress(pbar):
+def startProgress(pbar,val):
 	if pbar["value"] >= 0:
-		pbar["value"] -= 1
+		pbar["value"] -= val
 		val = pbar["value"]
 		secondpokeHP.config(text = f"{val}/{hp2}")
-		time.sleep(0.1)
+		firstpokeHP.config(text = f"{val}/{hp1}")
+		time.sleep(0.05)
 
 def start_fight_thread(event):
     #startButton.config(state = DISABLED)
@@ -32,7 +33,8 @@ def fight(bar1,bar2,var1,var2):
 	print(firstmoves[var1.get()])
 	print(secondmoves[var2.get()])	
 	for i in range(50):
-		startProgress(bar2)
+		startProgress(bar2,50)
+		startProgress(bar1,40)
 
 
 '''
@@ -61,7 +63,8 @@ if __name__ == "__main__":
 	secondPbar = pg.createProgress(pg.secondright)
 
 	firstMoveLabel = pg.createLabel(pg.thirdleft,text_ = "Moves",row_ = 0,col_ = 0)
-	firstmoves = p1.getMoves()
+	firstmoves = p1.getMoves()[0]
+	firstdesc = p1.getMoves()[1]
 	firstRadio = []
 	var1 = tk.IntVar()
 	firstRadio1 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[0],variable_ = var1,value_ = 0,row_ = 1,col_ = 0)
@@ -71,7 +74,8 @@ if __name__ == "__main__":
 
 
 	secondMoveLabel = pg.createLabel(pg.thirdright,text_ = "Moves",row_ = 0,col_ = 0)
-	secondmoves = p2.getMoves()
+	secondmoves = p2.getMoves()[0]
+	seconddesc = p2.getMoves()[1]
 	secondRadio = []
 	var2 = tk.IntVar()
 	secondRadio1 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[0],variable_ = var2,value_ = 0,row_ = 1,col_ = 0)
