@@ -8,7 +8,7 @@ hp1 = p1.fetchHP()
 hp2 = p2.fetchHP()
 
 def startProgress(pbar):
-	if pbar["value"] >= 50:
+	if pbar["value"] >= 0:
 		pbar["value"] -= 1
 		val = pbar["value"]
 		secondpokeHP.config(text = f"{val}/{hp2}")
@@ -31,6 +31,8 @@ def check_fight_thread():
 def fight(bar1,bar2,var1,var2):
 	print(firstmoves[var1.get()])
 	print(secondmoves[var2.get()])	
+	for i in range(50):
+		startProgress(bar2)
 
 
 '''
