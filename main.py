@@ -4,21 +4,48 @@ import threading
 
 p1 = Pokemon()
 p2 = Pokemon()
-hp1 = p1.fetchHP()
-hp2 = p2.fetchHP()
+fullhp1 = p1.fetchHP()
+fullhp2 = p2.fetchHP()
+hp1 = fullhp1
+hp2 = fullhp2
+round = 0
+def startProgress(damageon2,damageon1):
 
-def startProgress(pbar,val):
-	if pbar["value"] >= 0:
-		pbar["value"] -= val
-		val = pbar["value"]
-		secondpokeHP.config(text = f"{val}/{hp2}")
-		firstpokeHP.config(text = f"{val}/{hp1}")
+
+	global round
+	round += 1
+	print(round)
+	global hp1,hp2
+	remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
+	remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
+
+	if remaining1onbar < 0:
+		remaining1onbar = 0
+
+	if remaining2onbar < 0:
+		remaining2onbar = 0
+
+	while(secondPbar["value"] > remaining2onbar):
+		secondPbar["value"] -= 1
+		val = int(secondPbar["value"]*fullhp2/secondPbar["maximum"])
+		secondpokeHP.config(text = f"HP: {val}/{fullhp2}")
 		time.sleep(0.05)
+	hp2 = val
+
+	time.sleep(2)
+
+	while(firstPbar["value"] > remaining1onbar):
+		firstPbar["value"] -= 1
+		val = int(firstPbar["value"]*fullhp1/firstPbar["maximum"])
+		firstpokeHP.config(text = f"HP: {val}/{fullhp1}")
+		time.sleep(0.05)
+	hp1 = val
+
 
 def start_fight_thread(event):
-    #startButton.config(state = DISABLED)
+    startButton.config(state = tk.DISABLED)
     global fight_thread
-    fight_thread = threading.Thread(target = fight, args = (firstPbar,secondPbar,var1,var2))
+    fight_thread = threading.Thread(target = fight) #args = (firstPbar,secondPbar,var1,var2))
     fight_thread.daemon = True
     fight_thread.start()
     root.after(20,check_fight_thread)
@@ -27,11 +54,18 @@ def check_fight_thread():
     if fight_thread.is_alive():
         root.after(20,check_fight_thread)
     else:
-        pass
+        startButton.config(state = "normal")
 
-def fight(bar1,bar2,var1,var2):
-	print(firstmoves[var1.get()])
-	print(secondmoves[var2.get()])	
+def fight():
+
+	damageon2 = 40
+	damageon1 = 35
+	startProgress(40,35)
+	# check speed to decide who'll go first
+
+
+	#check for sleep or freeze; if yes then skip to next player or end turn if player2
+	#
 
 
 '''
@@ -54,9 +88,9 @@ if __name__ == "__main__":
 	secondpokeLabel = pg.createLabel(pg.firstright,text_ = p2.fetchName())
 	secondImg = pg.createImage(file_ = f"poke_png\\{p2.fetchRank()} {p2.fetchName()}.png",canvas = pg.firstright,row_ = 1,col_ = 0)
 
-	firstpokeHP = pg.createLabel(pg.secondleft,text_= f"HP: {hp1}/{p1.fetchHP()}",row_ = 0,col_ = 0)
+	firstpokeHP = pg.createLabel(pg.secondleft,text_= f"HP: {fullhp1}/{p1.fetchHP()}",row_ = 0,col_ = 0)
 	firstPbar = pg.createProgress(pg.secondleft)
-	secondpokeHP = pg.createLabel(pg.secondright,text_= f"HP: {hp2}/{p2.fetchHP()}",row_ = 0,col_ = 0)
+	secondpokeHP = pg.createLabel(pg.secondright,text_= f"HP: {fullhp2}/{p2.fetchHP()}",row_ = 0,col_ = 0)
 	secondPbar = pg.createProgress(pg.secondright)
 
 	firstMoveLabel = pg.createLabel(pg.thirdleft,text_ = "Moves",row_ = 0,col_ = 0)
