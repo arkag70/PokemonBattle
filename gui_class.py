@@ -60,9 +60,9 @@ class PokeGUI:
 		return imglabel
 	
 	def createProgress(self,canvas,orient_="horizontal",length_=150, mode_="determinate",row_ = 0, col_ = 1):
-		# s = ttk.Style()
-		# s.theme_use('clam')
-		# s.configure("yellow.Horizontal.TProgressbar", foreground='yellow', background='yellow')
+		s = ttk.Style()
+		s.theme_use('default')
+		s.configure("Horizontal.TProgressbar", foreground='green', background='green')
 		self.pbar = ttk.Progressbar(canvas,orient = orient_,length = length_, mode = mode_)
 		self.pbar.grid(row = row_, column = col_)
 		self.pbar["maximum"] = length_

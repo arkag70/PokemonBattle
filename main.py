@@ -12,14 +12,18 @@ round = 0
 disablity = 0
 def second(remaining2onbar):
 	s = ttk.Style()
+	s.theme_use('default')
 	while(secondPbar["value"] > remaining2onbar):
 		secondPbar["value"] -= 1
 		if secondPbar["value"] <= 37:
-			s.configure("red.Horizontal.TProgressbar", foreground='red')
-			secondPbar.configure(style="red.Horizontal.TProgressbar",value = secondPbar["value"])
+			s.configure("s.Horizontal.TProgressbar", foreground='red', background='red')
+			secondPbar.configure(style="s.Horizontal.TProgressbar")
 		elif secondPbar["value"] <= 75:
-			s.configure("yellow.Horizontal.TProgressbar", foreground='yellow')
-			secondPbar.configure(style="yellow.Horizontal.TProgressbar",value = secondPbar["value"])
+			s.configure("s.Horizontal.TProgressbar",foreground='yellow', background='yellow')
+			secondPbar.configure(style="s.Horizontal.TProgressbar")
+		else:
+			s.configure("s.Horizontal.TProgressbar",foreground='green', background='green')
+			secondPbar.configure(style="s.Horizontal.TProgressbar")
 
 		val = int(secondPbar["value"]*fullhp2/secondPbar["maximum"])
 		secondpokeHP.config(text = f"HP: {val}/{fullhp2}")
@@ -27,8 +31,20 @@ def second(remaining2onbar):
 	return val
 
 def first(remaining1onbar):
+	s = ttk.Style()
+	s.theme_use('default')
 	while(firstPbar["value"] > remaining1onbar):
 		firstPbar["value"] -= 1
+		if firstPbar["value"] <= 37:
+			s.configure("f.Horizontal.TProgressbar", foreground='red', background='red')
+			firstPbar.configure(style="f.Horizontal.TProgressbar")
+		elif firstPbar["value"] <= 75:
+			s.configure("f.Horizontal.TProgressbar",foreground='yellow', background='yellow')
+			firstPbar.configure(style="f.Horizontal.TProgressbar")
+		else:
+			s.configure("f.Horizontal.TProgressbar",foreground='green', background='green')
+			firstPbar.configure(style="f.Horizontal.TProgressbar")
+
 		val = int(firstPbar["value"]*fullhp1/firstPbar["maximum"])
 		firstpokeHP.config(text = f"HP: {val}/{fullhp1}")
 		time.sleep(0.05)
