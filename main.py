@@ -4,42 +4,88 @@ import threading
 
 p1 = Pokemon()
 p2 = Pokemon()
-fullhp1 = p1.fetchHP()
-fullhp2 = p2.fetchHP()
+fullhp1 = p1.HP
+fullhp2 = p2.HP
 hp1 = fullhp1
 hp2 = fullhp2
 round = 0
-def startProgress(damageon2,damageon1):
-
-
-	global round
-	round += 1
-	print(round)
-	global hp1,hp2
-	remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
-	remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
-
-	if remaining1onbar < 0:
-		remaining1onbar = 0
-
-	if remaining2onbar < 0:
-		remaining2onbar = 0
-
+disablity = 0
+def second(remaining2onbar):
+	s = ttk.Style()
 	while(secondPbar["value"] > remaining2onbar):
 		secondPbar["value"] -= 1
+		if secondPbar["value"] <= 37:
+			s.configure("red.Horizontal.TProgressbar", foreground='red')
+			secondPbar.configure(style="red.Horizontal.TProgressbar",value = secondPbar["value"])
+		elif secondPbar["value"] <= 75:
+			s.configure("yellow.Horizontal.TProgressbar", foreground='yellow')
+			secondPbar.configure(style="yellow.Horizontal.TProgressbar",value = secondPbar["value"])
+
 		val = int(secondPbar["value"]*fullhp2/secondPbar["maximum"])
 		secondpokeHP.config(text = f"HP: {val}/{fullhp2}")
 		time.sleep(0.05)
-	hp2 = val
+	return val
 
-	time.sleep(2)
-
+def first(remaining1onbar):
 	while(firstPbar["value"] > remaining1onbar):
 		firstPbar["value"] -= 1
 		val = int(firstPbar["value"]*fullhp1/firstPbar["maximum"])
 		firstpokeHP.config(text = f"HP: {val}/{fullhp1}")
 		time.sleep(0.05)
-	hp1 = val
+	return val	
+
+def startProgress(damageon1,damageon2,n):
+	global round
+	round += 1
+	print(round)
+	global hp1,hp2
+	global startButton
+	remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
+	remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
+
+	if remaining1onbar < 0:
+		remaining1onbar = 0
+	if remaining2onbar < 0:
+		remaining2onbar = 0
+
+	if n == 1:
+		# first pokemon attacks first due to speed stat so effect on second pokemon
+		print(f"{p1.name} used move")
+		time.sleep(1)
+		hp2 = second(remaining2onbar)
+		if hp2 != 0:
+			time.sleep(2)
+			print(f"{p2.name} used move")
+			time.sleep(1)
+			hp1 = first(remaining1onbar)
+			if hp1 == 0:
+				print(f"{p2.name} wins the round")
+				return -2
+			else:
+				pass
+		else:
+			print(f"{p1.name} wins the match")
+			return -1
+
+	if n == 2:
+		# second pokemon attacks first due to speed stat so effect on first pokemon
+		print(f"{p2.name} used move")
+		time.sleep(1)
+		hp1 = first(remaining1onbar)
+		if hp1 != 0:
+			time.sleep(2)
+			print(f"{p1.name} used move")
+			time.sleep(1)
+			hp2 = second(remaining2onbar)
+			if hp2 == 0:
+				print(f"{p1.name} wins the round")
+				return -1
+			else:
+				pass
+		else:
+			print(f"{p2.name} wins the match")
+			return -2
+	return 0
 
 
 def start_fight_thread(event):
@@ -54,13 +100,16 @@ def check_fight_thread():
     if fight_thread.is_alive():
         root.after(20,check_fight_thread)
     else:
-        startButton.config(state = "normal")
+    	if disablity < 0:
+    		pass
+    	else:
+        	startButton.config(state = "normal")
 
 def fight():
-
+	global disablity
 	damageon2 = 40
-	damageon1 = 35
-	startProgress(40,35)
+	damageon1 = 45
+	disablity = startProgress(damageon1,damageon2,1)
 	# check speed to decide who'll go first
 
 
@@ -82,15 +131,15 @@ if __name__ == "__main__":
 	root.title("Pokemon Battle")
 	pg = PokeGUI(root)
 
-	firstpokeLabel = pg.createLabel(pg.firstleft,text_ = p1.fetchName())
-	firstImg = pg.createImage(file_ = f"poke_png\\{p1.fetchRank()} {p1.fetchName()}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
+	firstpokeLabel = pg.createLabel(pg.firstleft,text_ = p1.name)
+	firstImg = pg.createImage(file_ = f"poke_png\\{p1.rank} {p1.name}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
 
-	secondpokeLabel = pg.createLabel(pg.firstright,text_ = p2.fetchName())
-	secondImg = pg.createImage(file_ = f"poke_png\\{p2.fetchRank()} {p2.fetchName()}.png",canvas = pg.firstright,row_ = 1,col_ = 0)
+	secondpokeLabel = pg.createLabel(pg.firstright,text_ = p2.name)
+	secondImg = pg.createImage(file_ = f"poke_png\\{p2.rank} {p2.name}.png",canvas = pg.firstright,row_ = 1,col_ = 0)
 
-	firstpokeHP = pg.createLabel(pg.secondleft,text_= f"HP: {fullhp1}/{p1.fetchHP()}",row_ = 0,col_ = 0)
+	firstpokeHP = pg.createLabel(pg.secondleft,text_= f"HP: {fullhp1}/{fullhp1}",row_ = 0,col_ = 0)
 	firstPbar = pg.createProgress(pg.secondleft)
-	secondpokeHP = pg.createLabel(pg.secondright,text_= f"HP: {fullhp2}/{p2.fetchHP()}",row_ = 0,col_ = 0)
+	secondpokeHP = pg.createLabel(pg.secondright,text_= f"HP: {fullhp2}/{fullhp2}",row_ = 0,col_ = 0)
 	secondPbar = pg.createProgress(pg.secondright)
 
 	firstMoveLabel = pg.createLabel(pg.thirdleft,text_ = "Moves",row_ = 0,col_ = 0)

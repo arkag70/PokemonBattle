@@ -33,24 +33,6 @@ class Pokemon:
 		self.rank = i
 		print(self.rank,self.name)
 
-	def fetchName(self):
-		return self.name
-
-	def fetchRank(self):
-		return self.rank
-
-	def fetchHP(self):
-		return self.HP
-
-	def fetchAttack(self):
-		return self.attack
-
-	def fetchDefense(self):
-		return self.defense
-
-	def fetchSpeed(self):
-		return self.speed
-
 	def getMoves(self):
 
 		if self.type1 == self.type2:
