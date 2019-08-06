@@ -21,6 +21,9 @@ class Pokemon:
 		self.HP = int(pokemons[i]["hp"])
 		self.type1 = pokemons[i]["type1"]
 		self.type2 = pokemons[i]["type2"]
+		self.attack = pokemons[i]["attack"]
+		self.defense = pokemons[i]["defense"]
+		self.speed = pokemons[i]["speed"]
 
 		i += 1
 		if len(str(i)) == 1:
@@ -38,6 +41,15 @@ class Pokemon:
 
 	def fetchHP(self):
 		return self.HP
+
+	def fetchAttack(self):
+		return self.attack
+
+	def fetchDefense(self):
+		return self.defense
+
+	def fetchSpeed(self):
+		return self.speed
 
 	def getMoves(self):
 
