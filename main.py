@@ -1,4 +1,5 @@
 from gui_class import *
+from pokemon import *
 import threading
 
 
@@ -10,6 +11,7 @@ hp1 = fullhp1
 hp2 = fullhp2
 round = 0
 disablity = 0
+
 def second(remaining2onbar):
 	s = ttk.Style()
 	s.theme_use('default')
@@ -103,34 +105,36 @@ def startProgress(damageon1,damageon2,n):
 					else:
 						#not confused it will attack
 						will1attack = True
-			else:
-				#not paralysed check for confusion
-				if p1.isConfused:
-					#it hurts itself
-					if random.randint(0,10) % 2 != 0:
-						print(f"{p1.name} is confused!")
-						remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
-						if remaining1onbar < 0:
-							remaining1onbar = 0
-						time.sleep(1)
-						hp1 = first(remaining1onbar)
-						print("It hurt itself in confusion")
-						if hp1 == 0:
-							print(f"{p2.name} wins the round")
-							return -2
-						else:
-							pass
-
+			
+			#not paralysed check for confusion
+			elif p1.isConfused:
+				#it hurts itself
+				if random.randint(0,10) % 2 != 0:
+					print(f"{p1.name} is confused!")
+					remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
+					if remaining1onbar < 0:
+						remaining1onbar = 0
+					time.sleep(1)
+					hp1 = first(remaining1onbar)
+					print("It hurt itself in confusion")
+					if hp1 == 0:
+						print(f"{p2.name} wins the round")
+						return -2
 					else:
-						#it will attack
-						print(f"{p1.name} is confused!")
-						will1attack = True
+						pass
+
 				else:
-					#not confused it will attack
+					#it will attack
+					print(f"{p1.name} is confused!")
+					time.sleep(1)
 					will1attack = True
+			else:
+				#not confused it will attack
+				will1attack = True
 
 		if will1attack == True:
 			remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
+			time.sleep(1)
 			print(f"{p1.name} used move")
 			time.sleep(1)
 			if remaining2onbar < 0:
@@ -173,12 +177,35 @@ def startProgress(damageon1,damageon2,n):
 						else:
 							#not confused it will attack
 							will2attack = True
+				#not paralysed check for confusion
+				elif p2.isConfused:
+					#it hurts itself
+					if random.randint(0,10) % 2 != 0:
+						print(f"{p2.name} is confused!")
+						remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
+						if remaining2onbar < 0:
+							remaining2onbar = 0
+						time.sleep(1)
+						hp2 = second(remaining2onbar)
+						print("It hurt itself in confusion")
+						if hp2 == 0:
+							print(f"{p1.name} wins the round")
+							return -1
+						else:
+							pass
+					else:
+						#it will attack
+						print(f"{p2.name} is confused!")
+						time.sleep(1)
+						will2attack = True
 				else:
-					#not paralysed
+					#not confused it will attack
 					will2attack = True
+
 
 			if will2attack == True:
 				remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
+				time.sleep(1)
 				print(f"{p2.name} used move")
 				time.sleep(1)
 				if remaining1onbar < 0:
@@ -196,15 +223,148 @@ def startProgress(damageon1,damageon2,n):
 
 	if n == 2:
 		# second pokemon attacks first due to speed stat so effect on first pokemon
-		print(f"{p2.name} used move")
-		time.sleep(1)
-		hp1 = first(remaining1onbar)
+		if p2.isAsleep:
+			print(f"{p2.name} is fast asleep!")
+		elif p2.isFrozen:
+			print(f"{p2.name} is frozen solid!")
+		else:
+			if p2.isParalysed:
+				#check when it fails to move
+				if random.randint(0,10) % 2 != 0:
+					print(f"{p2.name} is paralysed! It can't move")
+				else:
+					#it can move
+					#check for confusion
+					if p2.isConfused:
+						#it hurts itself
+						if random.randint(0,10) % 2 != 0:
+							print(f"{p2.name} is confused!")
+							remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
+							if remaining2onbar < 0:
+								remaining2onbar = 0
+							time.sleep(1)
+							hp2 = second(remaining2onbar)
+							print("It hurt itself in confusion")
+							if hp2 == 0:
+								print(f"{p1.name} wins the round")
+								return -1
+							else:
+								pass
+
+						else:
+							#it will attack
+							print(f"{p2.name} is confused!")
+							will2attack = True
+					else:
+						#not confused it will attack
+						will2attack = True
+			
+			#not paralysed check for confusion
+			elif p2.isConfused:
+				#it hurts itself
+				if random.randint(0,10) % 2 != 0:
+					print(f"{p2.name} is confused!")
+					remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
+					if remaining2onbar < 0:
+						remaining2onbar = 0
+					time.sleep(1)
+					hp2 = second(remaining2onbar)
+					print("It hurt itself in confusion")
+					if hp2 == 0:
+						print(f"{p1.name} wins the round")
+						return -1
+					else:
+						pass
+
+				else:
+					#it will attack
+					print(f"{p2.name} is confused!")
+					time.sleep(1)
+					will2attack = True
+			else:
+				#not confused it will attack
+				will2attack = True
+
+		if will2attack == True:
+			remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
+			time.sleep(1)
+			print(f"{p2.name} used move")
+			time.sleep(1)
+			if remaining1onbar < 0:
+				remaining1onbar = 0
+			hp1 = first(remaining1onbar)
+
 		if hp1 != 0:
 			time.sleep(2)
-			print(f"{p1.name} used move")
-			time.sleep(1)
-			remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
-			hp2 = second(remaining2onbar)
+			if p1.isAsleep:
+				print(f"{p1.name} is fast asleep!")
+			elif p1.isFrozen:
+				print(f"{p1.name} is frozen solid!")
+			else:
+				if p1.isParalysed:
+					#check when it fails to move
+					if random.randint(0,10) % 2 != 0:
+						#paralysed can't move
+						print(f"{p1.name} is paralysed! It can't move")
+					else:
+						#paralysed but can move; check for confusion
+						if p1.isConfused:
+							print(f"{p1.name} is confused!")
+							#it hurts itself
+							if random.randint(0,10) % 2 != 0:
+								remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
+								if remaining1onbar < 0:
+									remaining1onbar = 0
+								time.sleep(1)
+								hp1 = first(remaining1onbar)
+								print("It hurt itself in confusion")
+								if hp1 == 0:
+									print(f"{p2.name} wins the round")
+									return -2
+								else:
+									pass
+
+							else:
+								#it will attack
+								will1attack = True
+						else:
+							#not confused it will attack
+							will1attack = True
+				#not paralysed check for confusion
+				elif p1.isConfused:
+					#it hurts itself
+					if random.randint(0,10) % 2 != 0:
+						print(f"{p1.name} is confused!")
+						remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
+						if remaining1onbar < 0:
+							remaining1onbar = 0
+						time.sleep(1)
+						hp1 = first(remaining1onbar)
+						print("It hurt itself in confusion")
+						if hp1 == 0:
+							print(f"{p2.name} wins the round")
+							return -2
+						else:
+							pass
+					else:
+						#it will attack
+						print(f"{p1.name} is confused!")
+						time.sleep(1)
+						will1attack = True
+				else:
+					#not confused it will attack
+					will1attack = True
+
+
+			if will1attack == True:
+				remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
+				time.sleep(1)
+				print(f"{p1.name} used move")
+				time.sleep(1)
+				if remaining2onbar < 0:
+					remaining2onbar = 0
+				hp2 = second(remaining2onbar)
+
 			if hp2 == 0:
 				print(f"{p1.name} wins the round")
 				return -1
@@ -214,6 +374,7 @@ def startProgress(damageon1,damageon2,n):
 			print(f"{p2.name} wins the match")
 			return -2
 	return 0
+
 
 
 def start_fight_thread(event):
@@ -235,14 +396,21 @@ def check_fight_thread():
 
 def fight():
 	global disablity
-	damageon2 = 40
-	damageon1 = 45
+	damageon2 = 20
+	damageon1 = 15
 	p1.isParalysed = True
+	p2.isParalysed = True
+	p1.isConfused = True
 	p2.isConfused = True
-	disablity = startProgress(damageon1,damageon2,1)
+	# p1.isFrozen = True
+	# p2.isFrozen = True
+	
 	# check speed to decide who'll go first
-
-
+	if p1.HP > p2.HP:
+		n = 1
+	else:
+		n = 2
+	disablity = startProgress(damageon1,damageon2,n)
 	#check for sleep or freeze; if yes then skip to next player or end turn if player2
 	#
 

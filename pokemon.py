@@ -25,6 +25,7 @@ class Pokemon:
 		self.defense = pokemons[i]["defense"]
 		self.speed = pokemons[i]["speed"]
 		self.isAsleep = False
+		self.sleepFreezeCount = 0
 		self.isFrozen = False
 		self.isParalysed = False
 		self.isConfused = False
