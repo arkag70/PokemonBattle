@@ -24,6 +24,13 @@ class Pokemon:
 		self.attack = pokemons[i]["attack"]
 		self.defense = pokemons[i]["defense"]
 		self.speed = pokemons[i]["speed"]
+		self.isAsleep = False
+		self.isFrozen = False
+		self.isParalysed = False
+		self.isConfused = False
+		self.isPoisoned = False
+		self.isBurnt = False
+		self.isSeeded = False
 
 		i += 1
 		if len(str(i)) == 1:
