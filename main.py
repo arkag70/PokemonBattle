@@ -9,6 +9,7 @@ fullhp1 = p1.HP
 fullhp2 = p2.HP
 hp1 = fullhp1
 hp2 = fullhp2
+sleepturns = random.randint(1,5)
 round = 0
 disablity = 0
 
@@ -55,18 +56,17 @@ def first(remaining1onbar):
 def startProgress(damageon1,damageon2,n):
 	will1attack = False
 	will2attack = False
+	# if p1.isAsleep:
+	# 	sleepturns -= 1
+	# 	if sleepturns <= 0:
+	# 		p1.isAsleep = False
+	# 		print(f"{p1.name} woke up!")
+
 	global round
 	round += 1
 	print(round)
 	global hp1,hp2
 	global startButton
-	remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
-	remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
-
-	if remaining1onbar < 0:
-		remaining1onbar = 0
-	if remaining2onbar < 0:
-		remaining2onbar = 0
 
 	if n == 1:
 		# first pokemon attacks first due to speed stat so effect on second pokemon
@@ -373,6 +373,42 @@ def startProgress(damageon1,damageon2,n):
 		else:
 			print(f"{p2.name} wins the match")
 			return -2
+	#check poisoned or burnt
+	time.sleep(2)
+	if p1.isPoisoned or p1.isBurnt:
+		remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
+		if remaining1onbar < 0:
+			remaining1onbar = 0
+		time.sleep(1)
+		hp1 = first(remaining1onbar)
+		if p1.isPoisoned:
+			print(f"{p1.name} is hurt by poison")
+		else:
+			print(f"{p1.name} is hurt by burn")
+
+		if hp1 == 0:
+			print(f"{p2.name} wins the round")
+			return -2
+		else:
+			pass
+	if p2.isPoisoned or p2.isBurnt:
+		remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
+		if remaining2onbar < 0:
+			remaining2onbar = 0
+		time.sleep(1)
+		hp2 = second(remaining2onbar)
+		if p2.isPoisoned:
+			print(f"{p2.name} is hurt by poison")
+		else:
+			print(f"{p2.name} is hurt by burn")
+
+		if hp2 == 0:
+			print(f"{p1.name} wins the round")
+			return -1
+		else:
+			pass
+
+
 	return 0
 
 
@@ -398,10 +434,14 @@ def fight():
 	global disablity
 	damageon2 = 20
 	damageon1 = 15
-	p1.isParalysed = True
-	p2.isParalysed = True
-	p1.isConfused = True
-	p2.isConfused = True
+	# p1.isParalysed = True
+	# p2.isParalysed = True
+	# p1.isConfused = True
+	# p2.isConfused = True
+	# p1.isPoisoned = True
+	# p2.isPoisoned = True
+	p1.isBurnt = True
+	p2.isBurnt = True
 	# p1.isFrozen = True
 	# p2.isFrozen = True
 	
