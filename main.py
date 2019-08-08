@@ -1,7 +1,7 @@
 from gui_class import *
 from pokemon import *
+from battle import *
 import threading
-
 
 p1 = Pokemon()
 p2 = Pokemon()
@@ -54,361 +54,174 @@ def first(remaining1onbar):
 	return val	
 
 def startProgress(damageon1,damageon2,n):
-	will1attack = False
-	will2attack = False
-	# if p1.isAsleep:
-	# 	sleepturns -= 1
-	# 	if sleepturns <= 0:
-	# 		p1.isAsleep = False
-	# 		print(f"{p1.name} woke up!")
-
+	will1move = 0
+	will2move = 0
 	global round
 	round += 1
 	print(round)
 	global hp1,hp2
-	global startButton
-
+	
 	if n == 1:
-		# first pokemon attacks first due to speed stat so effect on second pokemon
-		if p1.isAsleep:
-			print(f"{p1.name} is fast asleep!")
-		elif p1.isFrozen:
-			print(f"{p1.name} is frozen solid!")
-		else:
-			if p1.isParalysed:
-				#check when it fails to move
-				if random.randint(0,10) % 2 != 0:
-					print(f"{p1.name} is paralysed! It can't move")
-				else:
-					#it can move
-					#check for confusion
-					if p1.isConfused:
-						#it hurts itself
-						if random.randint(0,10) % 2 != 0:
-							print(f"{p1.name} is confused!")
-							remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
-							if remaining1onbar < 0:
-								remaining1onbar = 0
-							time.sleep(1)
-							hp1 = first(remaining1onbar)
-							print("It hurt itself in confusion")
-							if hp1 == 0:
-								print(f"{p2.name} wins the round")
-								return -2
-							else:
-								pass
-
-						else:
-							#it will attack
-							print(f"{p1.name} is confused!")
-							will1attack = True
-					else:
-						#not confused it will attack
-						will1attack = True
-			
-			#not paralysed check for confusion
-			elif p1.isConfused:
-				#it hurts itself
-				if random.randint(0,10) % 2 != 0:
-					print(f"{p1.name} is confused!")
-					remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
-					if remaining1onbar < 0:
-						remaining1onbar = 0
-					time.sleep(1)
-					hp1 = first(remaining1onbar)
-					print("It hurt itself in confusion")
-					if hp1 == 0:
-						print(f"{p2.name} wins the round")
-						return -2
-					else:
-						pass
-
-				else:
-					#it will attack
-					print(f"{p1.name} is confused!")
-					time.sleep(1)
-					will1attack = True
-			else:
-				#not confused it will attack
-				will1attack = True
-
-		if will1attack == True:
+		p1.condition = checkCondition(p1)
+		#pokemon 1 attacks first
+		if p1.condition == "move":
+			time.sleep(1)
+			print(f"{p1.name} used {p1.move}")
+			time.sleep(1)
 			remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
-			time.sleep(1)
-			print(f"{p1.name} used move")
-			time.sleep(1)
 			if remaining2onbar < 0:
 				remaining2onbar = 0
 			hp2 = second(remaining2onbar)
-
-		if hp2 != 0:
+			if hp2 == 0:
+				#pokeom 2 fainted
+				print(f"{p2.name} fainted!")
+				return -1
+			else:
+				#pokemon 2 did not faint
+				p2.condition = checkCondition(p2)
+				if p2.condition == "move":
+					will2move = 1
+				elif p2.condition == "hurt-itself":
+					will2move = -1
+				else:
+					pass
+		elif p1.condition == "hurt-itself":
 			time.sleep(2)
-			if p2.isAsleep:
-				print(f"{p2.name} is fast asleep!")
-			elif p2.isFrozen:
-				print(f"{p2.name} is frozen solid!")
-			else:
-				if p2.isParalysed:
-					#check when it fails to move
-					if random.randint(0,10) % 2 != 0:
-						#paralysed can't move
-						print(f"{p2.name} is paralysed! It can't move")
-					else:
-						#paralysed but can move; check for confusion
-						if p2.isConfused:
-							print(f"{p2.name} is confused!")
-							#it hurts itself
-							if random.randint(0,10) % 2 != 0:
-								remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
-								if remaining2onbar < 0:
-									remaining2onbar = 0
-								time.sleep(1)
-								hp2 = second(remaining2onbar)
-								print("It hurt itself in confusion")
-								if hp2 == 0:
-									print(f"{p1.name} wins the round")
-									return -1
-								else:
-									pass
-
-							else:
-								#it will attack
-								will2attack = True
-						else:
-							#not confused it will attack
-							will2attack = True
-				#not paralysed check for confusion
-				elif p2.isConfused:
-					#it hurts itself
-					if random.randint(0,10) % 2 != 0:
-						print(f"{p2.name} is confused!")
-						remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
-						if remaining2onbar < 0:
-							remaining2onbar = 0
-						time.sleep(1)
-						hp2 = second(remaining2onbar)
-						print("It hurt itself in confusion")
-						if hp2 == 0:
-							print(f"{p1.name} wins the round")
-							return -1
-						else:
-							pass
-					else:
-						#it will attack
-						print(f"{p2.name} is confused!")
-						time.sleep(1)
-						will2attack = True
-				else:
-					#not confused it will attack
-					will2attack = True
-
-
-			if will2attack == True:
-				remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
-				time.sleep(1)
-				print(f"{p2.name} used move")
-				time.sleep(1)
-				if remaining1onbar < 0:
-					remaining1onbar = 0
-				hp1 = first(remaining1onbar)
-
-			if hp1 == 0:
-				print(f"{p2.name} wins the round")
-				return -2
-			else:
-				pass
-		else:
-			print(f"{p1.name} wins the match")
-			return -1
-
-	if n == 2:
-		# second pokemon attacks first due to speed stat so effect on first pokemon
-		if p2.isAsleep:
-			print(f"{p2.name} is fast asleep!")
-		elif p2.isFrozen:
-			print(f"{p2.name} is frozen solid!")
-		else:
-			if p2.isParalysed:
-				#check when it fails to move
-				if random.randint(0,10) % 2 != 0:
-					print(f"{p2.name} is paralysed! It can't move")
-				else:
-					#it can move
-					#check for confusion
-					if p2.isConfused:
-						#it hurts itself
-						if random.randint(0,10) % 2 != 0:
-							print(f"{p2.name} is confused!")
-							remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
-							if remaining2onbar < 0:
-								remaining2onbar = 0
-							time.sleep(1)
-							hp2 = second(remaining2onbar)
-							print("It hurt itself in confusion")
-							if hp2 == 0:
-								print(f"{p1.name} wins the round")
-								return -1
-							else:
-								pass
-
-						else:
-							#it will attack
-							print(f"{p2.name} is confused!")
-							will2attack = True
-					else:
-						#not confused it will attack
-						will2attack = True
-			
-			#not paralysed check for confusion
-			elif p2.isConfused:
-				#it hurts itself
-				if random.randint(0,10) % 2 != 0:
-					print(f"{p2.name} is confused!")
-					remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
-					if remaining2onbar < 0:
-						remaining2onbar = 0
-					time.sleep(1)
-					hp2 = second(remaining2onbar)
-					print("It hurt itself in confusion")
-					if hp2 == 0:
-						print(f"{p1.name} wins the round")
-						return -1
-					else:
-						pass
-
-				else:
-					#it will attack
-					print(f"{p2.name} is confused!")
-					time.sleep(1)
-					will2attack = True
-			else:
-				#not confused it will attack
-				will2attack = True
-
-		if will2attack == True:
-			remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
-			time.sleep(1)
-			print(f"{p2.name} used move")
-			time.sleep(1)
+			remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
 			if remaining1onbar < 0:
 				remaining1onbar = 0
 			hp1 = first(remaining1onbar)
-
-		if hp1 != 0:
-			time.sleep(2)
-			if p1.isAsleep:
-				print(f"{p1.name} is fast asleep!")
-			elif p1.isFrozen:
-				print(f"{p1.name} is frozen solid!")
+			print(f"{p1.name} hurt itself in confusion")
+			if hp1 == 0:
+				#pokemon 1 fainted
+				print(f"{p1.name} fainted!")
+				return -2
 			else:
-				if p1.isParalysed:
-					#check when it fails to move
-					if random.randint(0,10) % 2 != 0:
-						#paralysed can't move
-						print(f"{p1.name} is paralysed! It can't move")
-					else:
-						#paralysed but can move; check for confusion
-						if p1.isConfused:
-							print(f"{p1.name} is confused!")
-							#it hurts itself
-							if random.randint(0,10) % 2 != 0:
-								remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
-								if remaining1onbar < 0:
-									remaining1onbar = 0
-								time.sleep(1)
-								hp1 = first(remaining1onbar)
-								print("It hurt itself in confusion")
-								if hp1 == 0:
-									print(f"{p2.name} wins the round")
-									return -2
-								else:
-									pass
-
-							else:
-								#it will attack
-								will1attack = True
-						else:
-							#not confused it will attack
-							will1attack = True
-				#not paralysed check for confusion
-				elif p1.isConfused:
-					#it hurts itself
-					if random.randint(0,10) % 2 != 0:
-						print(f"{p1.name} is confused!")
-						remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
-						if remaining1onbar < 0:
-							remaining1onbar = 0
-						time.sleep(1)
-						hp1 = first(remaining1onbar)
-						print("It hurt itself in confusion")
-						if hp1 == 0:
-							print(f"{p2.name} wins the round")
-							return -2
-						else:
-							pass
-					else:
-						#it will attack
-						print(f"{p1.name} is confused!")
-						time.sleep(1)
-						will1attack = True
+				time.sleep(2)
+				p2.condition = checkCondition(p2)
+				if p2.condition == "move":
+					will2move = 1
+				elif p2.condition == "hurt-itself":
+					will2move = -1
 				else:
-					#not confused it will attack
-					will1attack = True
+					pass
+		elif p1.condition == "wont":
+			time.sleep(2)
+			p2.condition = checkCondition(p2)
+			if p2.condition == "move":
+				will2move = 1
+			elif p2.condition == "hurt-itself":
+				will2move = -1
+			else:
+				pass
 
-
-			if will1attack == True:
-				remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
-				time.sleep(1)
-				print(f"{p1.name} used move")
-				time.sleep(1)
-				if remaining2onbar < 0:
-					remaining2onbar = 0
-				hp2 = second(remaining2onbar)
-
+		if will2move == 1:
+			time.sleep(1)
+			print(f"{p2.name} used {p2.move}")
+			time.sleep(1)
+			remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
+			if remaining1onbar < 0:
+				remaining1onbar = 0
+			hp1 = first(remaining1onbar)
+			if hp1 == 0:
+				#pokemon 1 fainted
+				print(f"{p1.name} fainted!")
+				return -2
+			else:
+				pass
+		elif will2move == -1:
+			time.sleep(2)
+			remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
+			if remaining2onbar < 0:
+				remaining2onbar = 0
+			hp2 = second(remaining2onbar)
+			print(f"{p2.name} hurt itself in confusion")
 			if hp2 == 0:
-				print(f"{p1.name} wins the round")
+				print(f"{p2.name} fainted!")
 				return -1
 			else:
 				pass
-		else:
-			print(f"{p2.name} wins the match")
-			return -2
-	#check poisoned or burnt
-	time.sleep(2)
-	if p1.isPoisoned or p1.isBurnt:
-		remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
-		if remaining1onbar < 0:
-			remaining1onbar = 0
-		time.sleep(1)
-		hp1 = first(remaining1onbar)
-		if p1.isPoisoned:
-			print(f"{p1.name} is hurt by poison")
-		else:
-			print(f"{p1.name} is hurt by burn")
 
-		if hp1 == 0:
-			print(f"{p2.name} wins the round")
-			return -2
-		else:
-			pass
-	if p2.isPoisoned or p2.isBurnt:
-		remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
-		if remaining2onbar < 0:
-			remaining2onbar = 0
-		time.sleep(1)
-		hp2 = second(remaining2onbar)
-		if p2.isPoisoned:
-			print(f"{p2.name} is hurt by poison")
-		else:
-			print(f"{p2.name} is hurt by burn")
+	elif n == 2:
+		p2.condition = checkCondition(p2)
+		#pokemon 2 attacks first
+		if p2.condition == "move":
+			time.sleep(1)
+			print(f"{p2.name} used {p2.move}")
+			time.sleep(1)
+			remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
+			if remaining1onbar < 0:
+				remaining1onbar = 0
+			hp1 = first(remaining1onbar)
+			if hp1 == 0:
+				#pokeom 1 fainted
+				print(f"{p1.name} fainted!")
+				return -2
+			else:
+				#pokemon 1 did not faint
+				p1.condition = checkCondition(p1)
+				if p1.condition == "move":
+					will1move = 1
+				elif p1.condition == "hurt-itself":
+					will1move = -1
+				else:
+					pass
+		elif p2.condition == "hurt-itself":
+			time.sleep(2)
+			remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
+			if remaining2onbar < 0:
+				remaining2onbar = 0
+			hp2 = second(remaining2onbar)
+			print(f"{p2.name} hurt itself in confusion")
+			if hp2 == 0:
+				#pokemon 2 fainted
+				print(f"{p2.name} fainted!")
+				return -1
+			else:
+				time.sleep(2)
+				p1.condition = checkCondition(p1)
+				if p1.condition == "move":
+					will1move = 1
+				elif p1.condition == "hurt-itself":
+					will1move = -1
+				else:
+					pass
+		elif p2.condition == "wont":
+			time.sleep(2)
+			p1.condition = checkCondition(p1)
+			if p1.condition == "move":
+				will1move = 1
+			elif p1.condition == "hurt-itself":
+				will1move = -1
+			else:
+				pass
 
-		if hp2 == 0:
-			print(f"{p1.name} wins the round")
-			return -1
-		else:
-			pass
-
-
+		if will1move == 1:
+			time.sleep(1)
+			print(f"{p1.name} used {p1.move}")
+			time.sleep(1)
+			remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
+			if remaining2onbar < 0:
+				remaining2onbar = 0
+			hp2 = second(remaining2onbar)
+			if hp2 == 0:
+				#pokemon 2 fainted
+				print(f"{p2.name} fainted!")
+				return -1
+			else:
+				pass
+		elif will1move == -1:
+			time.sleep(2)
+			remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
+			if remaining1onbar < 0:
+				remaining1onbar = 0
+			hp1 = first(remaining1onbar)
+			print(f"{p1.name} hurt itself in confusion")
+			if hp1 == 0:
+				print(f"{p1.name} fainted!")
+				return -2
+			else:
+				pass
 	return 0
 
 
@@ -438,15 +251,19 @@ def fight():
 	# p2.isParalysed = True
 	# p1.isConfused = True
 	# p2.isConfused = True
+	# p1.confuseCount = 2
+	# p2.confuseCount = 2
 	# p1.isPoisoned = True
 	# p2.isPoisoned = True
-	p1.isBurnt = True
-	p2.isBurnt = True
+	# p1.isBurnt = True
+	# p2.isBurnt = True
 	# p1.isFrozen = True
+	# p1.sleepFreezeCount = 2
 	# p2.isFrozen = True
+	# p2.sleepFreezeCount = 2
 	
 	# check speed to decide who'll go first
-	if p1.HP > p2.HP:
+	if p1.speed > p2.speed:
 		n = 1
 	else:
 		n = 2
@@ -464,7 +281,8 @@ createImage(file_,canvas,row_ = 0,col_ = 0)
 (orient_="horizontal",length_=200, mode_="determinate",row_ = 0, col_ = 1)
 '''
 if __name__ == "__main__":
-	
+
+
 	root = tk.Tk()
 	root.title("Pokemon Battle")
 	pg = PokeGUI(root)

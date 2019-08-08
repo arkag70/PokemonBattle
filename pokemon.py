@@ -26,12 +26,15 @@ class Pokemon:
 		self.speed = pokemons[i]["speed"]
 		self.isAsleep = False
 		self.sleepFreezeCount = 0
+		self.confuseCount = 0
 		self.isFrozen = False
 		self.isParalysed = False
 		self.isConfused = False
 		self.isPoisoned = False
 		self.isBurnt = False
 		self.isSeeded = False
+		self.condition = "wont"
+		self.move = "Move"
 
 		i += 1
 		if len(str(i)) == 1:
