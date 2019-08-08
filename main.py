@@ -2,6 +2,8 @@ from gui_class import *
 from pokemon import *
 from battle import *
 import threading
+import winsound as w2
+from playsound import playsound
 
 p1 = Pokemon()
 p2 = Pokemon()
@@ -71,6 +73,7 @@ def startProgress(damageon1,damageon2,n):
 			remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
 			if remaining2onbar < 0:
 				remaining2onbar = 0
+			playsound('NH.wav')
 			hp2 = second(remaining2onbar)
 			if hp2 == 0:
 				#pokeom 2 fainted
@@ -90,6 +93,7 @@ def startProgress(damageon1,damageon2,n):
 			remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
 			if remaining1onbar < 0:
 				remaining1onbar = 0
+			playsound('NH.wav')
 			hp1 = first(remaining1onbar)
 			print(f"{p1.name} hurt itself in confusion")
 			if hp1 == 0:
@@ -122,6 +126,7 @@ def startProgress(damageon1,damageon2,n):
 			remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
 			if remaining1onbar < 0:
 				remaining1onbar = 0
+			playsound('NH.wav')
 			hp1 = first(remaining1onbar)
 			if hp1 == 0:
 				#pokemon 1 fainted
@@ -134,6 +139,7 @@ def startProgress(damageon1,damageon2,n):
 			remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
 			if remaining2onbar < 0:
 				remaining2onbar = 0
+			playsound('NH.wav')
 			hp2 = second(remaining2onbar)
 			print(f"{p2.name} hurt itself in confusion")
 			if hp2 == 0:
@@ -152,6 +158,7 @@ def startProgress(damageon1,damageon2,n):
 			remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
 			if remaining1onbar < 0:
 				remaining1onbar = 0
+			playsound('NH.wav')
 			hp1 = first(remaining1onbar)
 			if hp1 == 0:
 				#pokeom 1 fainted
@@ -171,6 +178,7 @@ def startProgress(damageon1,damageon2,n):
 			remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
 			if remaining2onbar < 0:
 				remaining2onbar = 0
+			playsound('NH.wav')
 			hp2 = second(remaining2onbar)
 			print(f"{p2.name} hurt itself in confusion")
 			if hp2 == 0:
@@ -203,6 +211,7 @@ def startProgress(damageon1,damageon2,n):
 			remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
 			if remaining2onbar < 0:
 				remaining2onbar = 0
+			playsound('NH.wav')
 			hp2 = second(remaining2onbar)
 			if hp2 == 0:
 				#pokemon 2 fainted
@@ -215,6 +224,7 @@ def startProgress(damageon1,damageon2,n):
 			remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
 			if remaining1onbar < 0:
 				remaining1onbar = 0
+			playsound('NH.wav')
 			hp1 = first(remaining1onbar)
 			print(f"{p1.name} hurt itself in confusion")
 			if hp1 == 0:
@@ -281,7 +291,7 @@ createImage(file_,canvas,row_ = 0,col_ = 0)
 (orient_="horizontal",length_=200, mode_="determinate",row_ = 0, col_ = 1)
 '''
 if __name__ == "__main__":
-
+	w2.PlaySound('poke_music.wav', w2.SND_ASYNC | w2.SND_NOSTOP)
 
 	root = tk.Tk()
 	root.title("Pokemon Battle")
