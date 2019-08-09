@@ -2,7 +2,7 @@ import random
 import time
 '''
 											pokemon
-								   				|
+								   				|													check for burn, poison separately
 		   ---------------------------------------------------------------------------------
 		  |			   	  |						|						  |					|
 		sleep			frozen				confusion					paralysed		  free
@@ -27,6 +27,7 @@ def inConfusion(p):
 			return "move"
 
 def checkCondition(p):
+	status = ""
 
 	if p.isAsleep:
 		#check for sleep
@@ -35,11 +36,11 @@ def checkCondition(p):
 			print(f"{p.name} woke up!")
 			p.isAsleep = False
 			
-			return "move"
+			status =  "move"
 		else:
 			print(f"{p.name} is fast asleep!")
 			
-			return "wont"
+			status =  "wont"
 
 	elif p.isFrozen:
 		#check for freeze (Samsung 4 star)
@@ -48,31 +49,45 @@ def checkCondition(p):
 			print(f"{p.name} was defrosted!")
 			p.isFrozen = False
 			
-			return "move"
+			status =  "move"
 		else:
 			print(f"{p.name} is frozen solid!")
 			
-			return "wont"
+			status =  "wont"
 
 	elif p.isParalysed:
 		#check for paralysis
 		if random.randint(0,10) % 2 != 0:
 			#can't move
 			print(f"{p.name} is paralysed! It can't move")
-			return "wont"
+			status =  "wont"
 
 		elif p.isConfused:
 			#check for confusion in paralysis
-			return inConfusion(p)
+			status =  inConfusion(p)
 
 		else:
 			#free; no status problems
-			return "move"
+			status =  "move"
 			
 	elif p.isConfused:
 		#check for confusion
-		return inConfusion(p)
+		status =  inConfusion(p)
+		if p.isPoisoned:
+			status += " poison"
+		elif p.isBurnt:
+			status += " burn"
+		elif p.isSeeded:
+			status += " seed"
 
 	else:
 		#free; no status problems
-		return "move"
+		status =  "move"
+		if p.isPoisoned:
+			status += " poison"
+		elif p.isBurnt:
+			status += " burn"
+		elif p.isSeeded:
+			status += " seed"
+	
+	return status
