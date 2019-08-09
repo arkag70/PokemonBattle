@@ -1,5 +1,6 @@
 import random
 import time
+from playsound import playsound
 '''
 											pokemon
 								   				|													check for burn, poison separately
@@ -20,6 +21,10 @@ def inConfusion(p):
 		return "move"
 	else:
 		print(f"{p.name} is confused!")
+		playsound("sound\\confused.mp3")
+		playsound("sound\\confused.mp3")
+		playsound("sound\\confused.mp3")
+		playsound("sound\\confused.mp3")
 		if random.randint(0,10) % 2 != 0:
 			#hurt itself
 			return "hurt-itself"
@@ -60,6 +65,7 @@ def checkCondition(p):
 		if random.randint(0,10) % 2 != 0:
 			#can't move
 			print(f"{p.name} is paralysed! It can't move")
+			playsound("sound\\paralyse.mp3")
 			status =  "wont"
 
 		elif p.isConfused:

@@ -2,10 +2,9 @@ from gui_class import *
 from pokemon import *
 from battle import *
 import threading
-import winsound as w2
-from playsound import playsound
 
 p = [Pokemon(),Pokemon()]
+background_theme = ["sound\\magmatheme.mp3","sound\\aquatheme.mp3","sound\\finaltheme.mp3"]
 sleepturns = random.randint(1,5)
 round = 0
 disablity = 0
@@ -14,10 +13,10 @@ disablity = 0
 # p[1].isAsleep = True
 # p[1].sleepFreezeCount = 2
 
-p[0].isConfused = True
-p[1].isConfused = True
-p[0].confuseCount = 2
-p[1].confuseCount = 2
+# p[0].isConfused = True
+# p[1].isConfused = True
+# p[0].confuseCount = 2
+# p[1].confuseCount = 2
 
 def second(remainingonbar):
 	s = ttk.Style()
@@ -63,15 +62,16 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = ""):
 
 	displaymsg = False
 	if reason == "":
-		playsound('NH.wav')
+		playsound('sound\\normal.mp3')
 	elif reason == "hurt itself in confusion!":
-		playsound('NH.wav')
+		playsound('sound\\normal.mp3')
 		displaymsg = True
 	elif reason == "is hurt by burn!":
-		#play burn sound
+		playsound('sound\\burn.mp3')
 		displaymsg = True
 	elif reason == "is hurt by poison!":
-		#play poison sound
+		playsound('sound\\poison.mp3')
+		playsound('sound\\poison.mp3')
 		displaymsg = True
 
 	remainingonbar = int((hp - deduct)*bar["maximum"]/fullhp)
@@ -101,12 +101,13 @@ def startProgress(damageon,n):
 	p[n].condition = checkCondition(p[n])
 	#pokemon 1 attacks first
 	if "move" in p[n].condition:
-		time.sleep(1)
+		# time.sleep(1)
 		print(f"{p[n].name} used {p[n].move}")
 		time.sleep(1)
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[(n+1)%2],reason = "")
 		if p[(n+1)%2].hp == 0:
 			#pokeom 2 fainted
+			playsound("sound\\faint.mp3")
 			print(f"{p[(n+1)%2].name} fainted!")
 			return -1
 		else:
@@ -123,6 +124,7 @@ def startProgress(damageon,n):
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "hurt itself in confusion!")
 		if p[n].hp == 0:
 			#pokemon 1 fainted
+			playsound("sound\\faint.mp3")
 			print(f"{p[n].name} fainted!")
 			return -2
 		else:
@@ -145,12 +147,13 @@ def startProgress(damageon,n):
 			pass
 
 	if willmove == 1:
-		time.sleep(1)
+		# time.sleep(1)
 		print(f"{p[(n+1)%2].name} used {p[(n+1)%2].move}")
 		time.sleep(1)
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[n],reason = "")
 		if p[n].hp == 0:
 			#pokemon 1 fainted
+			playsound("sound\\faint.mp3")
 			print(f"{p[n].name} fainted!")
 			return -2
 		else:
@@ -159,6 +162,7 @@ def startProgress(damageon,n):
 		time.sleep(2)
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "hurt itself in confusion!")
 		if p[(n+1)%2].hp == 0:
+			playsound("sound\\faint.mp3")
 			print(f"{p[(n+1)%2].name} fainted!")
 			return -1
 		else:
@@ -168,6 +172,7 @@ def startProgress(damageon,n):
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by poison!")
 		if p[n].hp == 0:
 			#pokemon 1 fainted
+			playsound("sound\\faint.mp3")
 			print(f"{p[n].name} fainted!")
 			return -2
 		else:
@@ -177,6 +182,7 @@ def startProgress(damageon,n):
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by burn!")
 		if p[n].hp == 0:
 			#pokemon 1 fainted
+			playsound("sound\\faint.mp3")
 			print(f"{p[n].name} fainted!")
 			return -2
 		else:
@@ -186,6 +192,7 @@ def startProgress(damageon,n):
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by poison!")
 		if p[(n+1)%2].hp == 0:
 			#pokemon 1 fainted
+			playsound("sound\\faint.mp3")
 			print(f"{p[(n+1)%2].name} fainted!")
 			return -1
 		else:
@@ -195,6 +202,7 @@ def startProgress(damageon,n):
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by burn!")
 		if p[(n+1)%2].hp == 0:
 			#pokemon 1 fainted
+			playsound("sound\\faint.mp3")
 			print(f"{p[(n+1)%2].name} fainted!")
 			return -1
 		else:
@@ -228,8 +236,8 @@ def fight():
 	p[1].isParalysed = True
 	# p[0].isPoisoned = True
 	# p[1].isPoisoned = True
-	p[0].isBurnt = True
-	p[1].isBurnt = True
+	# p[0].isBurnt = True
+	# p[1].isBurnt = True
 	
 	
 	# check speed to decide who'll go first
@@ -251,7 +259,9 @@ createImage(file_,canvas,row_ = 0,col_ = 0)
 (orient_="horizontal",length_=200, mode_="determinate",row_ = 0, col_ = 1)
 '''
 if __name__ == "__main__":
-	w2.PlaySound('poke_music.wav', w2.SND_ASYNC | w2.SND_NOSTOP)
+	# w2.PlaySound('poke_music.wav', w2.SND_ASYNC | w2.SND_NOSTOP)
+	file = random.choice(background_theme)
+	playsound(file,False)
 
 	root = tk.Tk()
 	root.title("Pokemon Battle")
