@@ -7,10 +7,10 @@ class PokeGUI:
 	def __init__(self,canvas):
 		self.master = tk.Frame(canvas)
 		self.master.grid(row = 0,column = 0)
-		self.firstleft = tk.Frame(self.master,highlightbackground="black", highlightthickness=1)
+		self.firstleft = tk.Frame(self.master,highlightbackground="black", highlightthickness=1,background = "#f0ead6")
 		self.firstleft.grid(row = 0,column = 0)
 
-		self.firstright = tk.Frame(self.master,highlightbackground="black", highlightthickness=1)
+		self.firstright = tk.Frame(self.master,highlightbackground="black", highlightthickness=1,background = "#f0ead6")
 		self.firstright.grid(row = 0,column = 1)
 
 		self.secondleft = tk.Frame(self.master,highlightbackground="black", highlightthickness=1)
@@ -31,8 +31,8 @@ class PokeGUI:
 		self.remark = tk.Frame(self.master)
 		self.remark.grid(row = 4,column = 0)
 
-	def createLabel(self,canvas,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12")):
-		self.label = tk.Label(canvas,text = text_,font=font_)
+	def createLabel(self,canvas,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12 bold")):
+		self.label = tk.Label(canvas,text = text_,font=font_,background = "#f0ead6")
 		self.label.grid(row = row_,column = col_,padx = padx_, pady = pady_)
 		return self.label
 
@@ -53,7 +53,7 @@ class PokeGUI:
 
 	def createImage(self,file_,canvas,row_ = 0,col_ = 0):
 		photo = tk.PhotoImage(file=file_)
-		imglabel= tk.Label(canvas,image = photo)
+		imglabel= tk.Label(canvas,image = photo,background = "#f0dd8e")
 		imglabel.image = photo
 		imglabel.grid(row = row_,column = col_)
 		return imglabel

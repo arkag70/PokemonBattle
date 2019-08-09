@@ -1,16 +1,17 @@
 from gui_class import *
 from pokemon import *
 from battle import *
+import winsound
 import threading
 
 p = [Pokemon(),Pokemon()]
-background_theme = ["sound\\magmatheme.mp3","sound\\aquatheme.mp3","sound\\finaltheme.mp3"]
+background_theme = ["sound\\magmatheme.wav","sound\\aquatheme.wav","sound\\finaltheme.wav","sound\\rayquaza.wav"]
 sleepturns = random.randint(1,5)
 round = 0
 disablity = 0
-# p[0].isAsleep = True
+# p[0].isFrozen = True
 # p[0].sleepFreezeCount = 2
-# p[1].isAsleep = True
+# p[1].isFrozen = True
 # p[1].sleepFreezeCount = 2
 
 # p[0].isConfused = True
@@ -232,10 +233,10 @@ def fight():
 	global disablity
 	damageon2 = 20
 	damageon1 = 15
-	p[0].isParalysed = True
-	p[1].isParalysed = True
-	# p[0].isPoisoned = True
-	# p[1].isPoisoned = True
+	# p[0].isParalysed = True
+	# p[1].isParalysed = True
+	p[0].isPoisoned = True
+	p[1].isPoisoned = True
 	# p[0].isBurnt = True
 	# p[1].isBurnt = True
 	
@@ -259,9 +260,9 @@ createImage(file_,canvas,row_ = 0,col_ = 0)
 (orient_="horizontal",length_=200, mode_="determinate",row_ = 0, col_ = 1)
 '''
 if __name__ == "__main__":
-	# w2.PlaySound('poke_music.wav', w2.SND_ASYNC | w2.SND_NOSTOP)
+	
 	file = random.choice(background_theme)
-	playsound(file,False)
+	winsound.PlaySound(file, winsound.SND_ASYNC | winsound.SND_NOSTOP)
 
 	root = tk.Tk()
 	root.title("Pokemon Battle")
@@ -303,6 +304,6 @@ if __name__ == "__main__":
 	
 	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None))
 
-	remarkLabel = pg.createLabel(pg.remark,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12"))
+	# remarkLabel = pg.createLabel(pg.remark,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12"))
 
 	root.mainloop()

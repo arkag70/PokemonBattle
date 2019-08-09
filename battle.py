@@ -16,13 +16,11 @@ def inConfusion(p):
 	p.confuseCount -= 1
 	if p.confuseCount == 0:
 		print(f"{p.name} snapped out of confusion!")
-		
+		time.sleep(1)
 		p.isConfused = False
 		return "move"
 	else:
 		print(f"{p.name} is confused!")
-		playsound("sound\\confused.mp3")
-		playsound("sound\\confused.mp3")
 		playsound("sound\\confused.mp3")
 		playsound("sound\\confused.mp3")
 		if random.randint(0,10) % 2 != 0:
@@ -40,7 +38,7 @@ def checkCondition(p):
 		if p.sleepFreezeCount == 0:
 			print(f"{p.name} woke up!")
 			p.isAsleep = False
-			
+			time.sleep(1)
 			status =  "move"
 		else:
 			print(f"{p.name} is fast asleep!")
@@ -53,9 +51,10 @@ def checkCondition(p):
 		if p.sleepFreezeCount == 0:
 			print(f"{p.name} was defrosted!")
 			p.isFrozen = False
-			
+			time.sleep(1)
 			status =  "move"
 		else:
+			playsound("sound\\freeze.mp3")
 			print(f"{p.name} is frozen solid!")
 			
 			status =  "wont"
