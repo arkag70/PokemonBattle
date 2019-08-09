@@ -5,233 +5,200 @@ import threading
 import winsound as w2
 from playsound import playsound
 
-p1 = Pokemon()
-p2 = Pokemon()
-fullhp1 = p1.HP
-fullhp2 = p2.HP
-hp1 = fullhp1
-hp2 = fullhp2
+p = [Pokemon(),Pokemon()]
 sleepturns = random.randint(1,5)
 round = 0
 disablity = 0
+# p[0].isAsleep = True
+# p[0].sleepFreezeCount = 2
+# p[1].isAsleep = True
+# p[1].sleepFreezeCount = 2
 
-def second(remaining2onbar):
+p[0].isConfused = True
+p[1].isConfused = True
+p[0].confuseCount = 2
+p[1].confuseCount = 2
+
+def second(remainingonbar):
 	s = ttk.Style()
 	s.theme_use('default')
-	while(secondPbar["value"] > remaining2onbar):
-		secondPbar["value"] -= 1
-		if secondPbar["value"] <= 37:
+	while(Pbar[1]["value"] > remainingonbar):
+		Pbar[1]["value"] -= 1
+		if Pbar[1]["value"] <= 37:
 			s.configure("s.Horizontal.TProgressbar", foreground='red', background='red')
-			secondPbar.configure(style="s.Horizontal.TProgressbar")
-		elif secondPbar["value"] <= 75:
+			Pbar[1].configure(style="s.Horizontal.TProgressbar")
+		elif Pbar[1]["value"] <= 75:
 			s.configure("s.Horizontal.TProgressbar",foreground='yellow', background='yellow')
-			secondPbar.configure(style="s.Horizontal.TProgressbar")
+			Pbar[1].configure(style="s.Horizontal.TProgressbar")
 		else:
 			s.configure("s.Horizontal.TProgressbar",foreground='green', background='green')
-			secondPbar.configure(style="s.Horizontal.TProgressbar")
+			Pbar[1].configure(style="s.Horizontal.TProgressbar")
 
-		val = int(secondPbar["value"]*fullhp2/secondPbar["maximum"])
-		secondpokeHP.config(text = f"HP: {val}/{fullhp2}")
+		val = int(Pbar[1]["value"]*p[1].HP/Pbar[1]["maximum"])
+		secondpokeHP.config(text = f"HP: {val}/{p[1].HP}")
 		time.sleep(0.05)
 	return val
 
-def first(remaining1onbar):
+def first(remainingonbar):
 	s = ttk.Style()
 	s.theme_use('default')
-	while(firstPbar["value"] > remaining1onbar):
-		firstPbar["value"] -= 1
-		if firstPbar["value"] <= 37:
+	while(Pbar[0]["value"] > remainingonbar):
+		Pbar[0]["value"] -= 1
+		if Pbar[0]["value"] <= 37:
 			s.configure("f.Horizontal.TProgressbar", foreground='red', background='red')
-			firstPbar.configure(style="f.Horizontal.TProgressbar")
-		elif firstPbar["value"] <= 75:
+			Pbar[0].configure(style="f.Horizontal.TProgressbar")
+		elif Pbar[0]["value"] <= 75:
 			s.configure("f.Horizontal.TProgressbar",foreground='yellow', background='yellow')
-			firstPbar.configure(style="f.Horizontal.TProgressbar")
+			Pbar[0].configure(style="f.Horizontal.TProgressbar")
 		else:
 			s.configure("f.Horizontal.TProgressbar",foreground='green', background='green')
-			firstPbar.configure(style="f.Horizontal.TProgressbar")
+			Pbar[0].configure(style="f.Horizontal.TProgressbar")
 
-		val = int(firstPbar["value"]*fullhp1/firstPbar["maximum"])
-		firstpokeHP.config(text = f"HP: {val}/{fullhp1}")
+		val = int(Pbar[0]["value"]*p[0].HP/Pbar[0]["maximum"])
+		firstpokeHP.config(text = f"HP: {val}/{p[0].HP}")
 		time.sleep(0.05)
-	return val	
+	return val
 
-def startProgress(damageon1,damageon2,n):
-	will1move = 0
-	will2move = 0
+def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = ""):
+
+	displaymsg = False
+	if reason == "":
+		playsound('NH.wav')
+	elif reason == "hurt itself in confusion!":
+		playsound('NH.wav')
+		displaymsg = True
+	elif reason == "is hurt by burn!":
+		#play burn sound
+		displaymsg = True
+	elif reason == "is hurt by poison!":
+		#play poison sound
+		displaymsg = True
+
+	remainingonbar = int((hp - deduct)*bar["maximum"]/fullhp)
+	if remainingonbar < 0:
+		remainingonbar = 0
+	if i == 0:
+		hp = first(remainingonbar)
+	else:
+		hp = second(remainingonbar)
+
+	if displaymsg == True:
+		print(f"{p[i].name} {reason}")
+	return hp
+	
+
+def startProgress(damageon,n):
+	willmove = 0
 	global round
 	round += 1
 	print(round)
-	global hp1,hp2
-	
-	if n == 1:
-		p1.condition = checkCondition(p1)
-		#pokemon 1 attacks first
-		if p1.condition == "move":
-			time.sleep(1)
-			print(f"{p1.name} used {p1.move}")
-			time.sleep(1)
-			remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
-			if remaining2onbar < 0:
-				remaining2onbar = 0
-			playsound('NH.wav')
-			hp2 = second(remaining2onbar)
-			if hp2 == 0:
-				#pokeom 2 fainted
-				print(f"{p2.name} fainted!")
-				return -1
-			else:
-				#pokemon 2 did not faint
-				p2.condition = checkCondition(p2)
-				if p2.condition == "move":
-					will2move = 1
-				elif p2.condition == "hurt-itself":
-					will2move = -1
-				else:
-					pass
-		elif p1.condition == "hurt-itself":
-			time.sleep(2)
-			remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
-			if remaining1onbar < 0:
-				remaining1onbar = 0
-			playsound('NH.wav')
-			hp1 = first(remaining1onbar)
-			print(f"{p1.name} hurt itself in confusion")
-			if hp1 == 0:
-				#pokemon 1 fainted
-				print(f"{p1.name} fainted!")
-				return -2
-			else:
-				time.sleep(2)
-				p2.condition = checkCondition(p2)
-				if p2.condition == "move":
-					will2move = 1
-				elif p2.condition == "hurt-itself":
-					will2move = -1
-				else:
-					pass
-		elif p1.condition == "wont":
-			time.sleep(2)
-			p2.condition = checkCondition(p2)
-			if p2.condition == "move":
-				will2move = 1
-			elif p2.condition == "hurt-itself":
-				will2move = -1
-			else:
-				pass
 
-		if will2move == 1:
-			time.sleep(1)
-			print(f"{p2.name} used {p2.move}")
-			time.sleep(1)
-			remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
-			if remaining1onbar < 0:
-				remaining1onbar = 0
-			playsound('NH.wav')
-			hp1 = first(remaining1onbar)
-			if hp1 == 0:
-				#pokemon 1 fainted
-				print(f"{p1.name} fainted!")
-				return -2
-			else:
-				pass
-		elif will2move == -1:
-			time.sleep(2)
-			remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
-			if remaining2onbar < 0:
-				remaining2onbar = 0
-			playsound('NH.wav')
-			hp2 = second(remaining2onbar)
-			print(f"{p2.name} hurt itself in confusion")
-			if hp2 == 0:
-				print(f"{p2.name} fainted!")
-				return -1
-			else:
-				pass
+	# remainingonbar[1] = int((p[1].hp - damageon2)*Pbar[1]["maximum"]/p[1].HP)
+	# remainingonbar[0] = int((p[0].hp - damageon1)*Pbar[0]["maximum"]/p[0].HP)
+	remainingonbar = [int((p[0].hp - damageon[0])*Pbar[0]["maximum"]/p[0].HP),int((p[1].hp - damageon[1])*Pbar[1]["maximum"]/p[1].HP)]
 
-	elif n == 2:
-		p2.condition = checkCondition(p2)
-		#pokemon 2 attacks first
-		if p2.condition == "move":
-			time.sleep(1)
-			print(f"{p2.name} used {p2.move}")
-			time.sleep(1)
-			remaining1onbar = int((hp1-damageon1)*firstPbar["maximum"]/fullhp1)
-			if remaining1onbar < 0:
-				remaining1onbar = 0
-			playsound('NH.wav')
-			hp1 = first(remaining1onbar)
-			if hp1 == 0:
-				#pokeom 1 fainted
-				print(f"{p1.name} fainted!")
-				return -2
-			else:
-				#pokemon 1 did not faint
-				p1.condition = checkCondition(p1)
-				if p1.condition == "move":
-					will1move = 1
-				elif p1.condition == "hurt-itself":
-					will1move = -1
-				else:
-					pass
-		elif p2.condition == "hurt-itself":
-			time.sleep(2)
-			remaining2onbar = int((hp2-10)*secondPbar["maximum"]/fullhp2)
-			if remaining2onbar < 0:
-				remaining2onbar = 0
-			playsound('NH.wav')
-			hp2 = second(remaining2onbar)
-			print(f"{p2.name} hurt itself in confusion")
-			if hp2 == 0:
-				#pokemon 2 fainted
-				print(f"{p2.name} fainted!")
-				return -1
-			else:
-				time.sleep(2)
-				p1.condition = checkCondition(p1)
-				if p1.condition == "move":
-					will1move = 1
-				elif p1.condition == "hurt-itself":
-					will1move = -1
-				else:
-					pass
-		elif p2.condition == "wont":
-			time.sleep(2)
-			p1.condition = checkCondition(p1)
-			if p1.condition == "move":
-				will1move = 1
-			elif p1.condition == "hurt-itself":
-				will1move = -1
+	#from here
+	p[n].condition = checkCondition(p[n])
+	#pokemon 1 attacks first
+	if "move" in p[n].condition:
+		time.sleep(1)
+		print(f"{p[n].name} used {p[n].move}")
+		time.sleep(1)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[(n+1)%2],reason = "")
+		if p[(n+1)%2].hp == 0:
+			#pokeom 2 fainted
+			print(f"{p[(n+1)%2].name} fainted!")
+			return -1
+		else:
+			#pokemon 2 did not faint
+			p[(n+1)%2].condition = checkCondition(p[(n+1)%2])
+			if "move" in p[(n+1)%2].condition:
+				willmove = 1
+			elif "hurt-itself" in p[(n+1)%2].condition:
+				willmove = -1
 			else:
 				pass
+	elif "hurt-itself" in p[n].condition:
+		time.sleep(2)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "hurt itself in confusion!")
+		if p[n].hp == 0:
+			#pokemon 1 fainted
+			print(f"{p[n].name} fainted!")
+			return -2
+		else:
+			time.sleep(2)
+			p[(n+1)%2].condition = checkCondition(p[(n+1)%2])
+			if "move" in p[(n+1)%2].condition:
+				willmove = 1
+			elif "hurt-itself" in p[(n+1)%2].condition:
+				willmove = -1
+			else:
+				pass
+	elif "wont" in p[n].condition:
+		time.sleep(2)
+		p[(n+1)%2].condition = checkCondition(p[(n+1)%2])
+		if "move" in p[(n+1)%2].condition:
+			willmove = 1
+		elif "hurt-itself" in p[(n+1)%2].condition:
+			willmove = -1
+		else:
+			pass
 
-		if will1move == 1:
-			time.sleep(1)
-			print(f"{p1.name} used {p1.move}")
-			time.sleep(1)
-			remaining2onbar = int((hp2-damageon2)*secondPbar["maximum"]/fullhp2)
-			if remaining2onbar < 0:
-				remaining2onbar = 0
-			playsound('NH.wav')
-			hp2 = second(remaining2onbar)
-			if hp2 == 0:
-				#pokemon 2 fainted
-				print(f"{p2.name} fainted!")
-				return -1
-			else:
-				pass
-		elif will1move == -1:
-			time.sleep(2)
-			remaining1onbar = int((hp1-10)*firstPbar["maximum"]/fullhp1)
-			if remaining1onbar < 0:
-				remaining1onbar = 0
-			playsound('NH.wav')
-			hp1 = first(remaining1onbar)
-			print(f"{p1.name} hurt itself in confusion")
-			if hp1 == 0:
-				print(f"{p1.name} fainted!")
-				return -2
-			else:
-				pass
+	if willmove == 1:
+		time.sleep(1)
+		print(f"{p[(n+1)%2].name} used {p[(n+1)%2].move}")
+		time.sleep(1)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[n],reason = "")
+		if p[n].hp == 0:
+			#pokemon 1 fainted
+			print(f"{p[n].name} fainted!")
+			return -2
+		else:
+			pass
+	elif willmove == -1:
+		time.sleep(2)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "hurt itself in confusion!")
+		if p[(n+1)%2].hp == 0:
+			print(f"{p[(n+1)%2].name} fainted!")
+			return -1
+		else:
+			pass
+	if "poison" in p[n].condition:
+		time.sleep(2)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by poison!")
+		if p[n].hp == 0:
+			#pokemon 1 fainted
+			print(f"{p[n].name} fainted!")
+			return -2
+		else:
+			pass
+	elif "burn" in p[n].condition:
+		time.sleep(2)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by burn!")
+		if p[n].hp == 0:
+			#pokemon 1 fainted
+			print(f"{p[n].name} fainted!")
+			return -2
+		else:
+			pass
+	if "poison" in p[(n+1)%2].condition:
+		time.sleep(2)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by poison!")
+		if p[(n+1)%2].hp == 0:
+			#pokemon 1 fainted
+			print(f"{p[(n+1)%2].name} fainted!")
+			return -1
+		else:
+			pass
+	elif "burn" in p[(n+1)%2].condition:
+		time.sleep(2)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by burn!")
+		if p[(n+1)%2].hp == 0:
+			#pokemon 1 fainted
+			print(f"{p[(n+1)%2].name} fainted!")
+			return -1
+		else:
+			pass
 	return 0
 
 
@@ -239,7 +206,7 @@ def startProgress(damageon1,damageon2,n):
 def start_fight_thread(event):
     startButton.config(state = tk.DISABLED)
     global fight_thread
-    fight_thread = threading.Thread(target = fight) #args = (firstPbar,secondPbar,var1,var2))
+    fight_thread = threading.Thread(target = fight) #args = (Pbar[0],Pbar[1],var1,var2))
     fight_thread.daemon = True
     fight_thread.start()
     root.after(20,check_fight_thread)
@@ -257,27 +224,20 @@ def fight():
 	global disablity
 	damageon2 = 20
 	damageon1 = 15
-	# p1.isParalysed = True
-	# p2.isParalysed = True
-	# p1.isConfused = True
-	# p2.isConfused = True
-	# p1.confuseCount = 2
-	# p2.confuseCount = 2
-	# p1.isPoisoned = True
-	# p2.isPoisoned = True
-	# p1.isBurnt = True
-	# p2.isBurnt = True
-	# p1.isFrozen = True
-	# p1.sleepFreezeCount = 2
-	# p2.isFrozen = True
-	# p2.sleepFreezeCount = 2
+	p[0].isParalysed = True
+	p[1].isParalysed = True
+	# p[0].isPoisoned = True
+	# p[1].isPoisoned = True
+	p[0].isBurnt = True
+	p[1].isBurnt = True
+	
 	
 	# check speed to decide who'll go first
-	if p1.speed > p2.speed:
-		n = 1
+	if p[0].speed > p[1].speed:
+		n = 0
 	else:
-		n = 2
-	disablity = startProgress(damageon1,damageon2,n)
+		n = 1
+	disablity = startProgress((damageon1,damageon2),n)
 	#check for sleep or freeze; if yes then skip to next player or end turn if player2
 	#
 
@@ -297,20 +257,21 @@ if __name__ == "__main__":
 	root.title("Pokemon Battle")
 	pg = PokeGUI(root)
 
-	firstpokeLabel = pg.createLabel(pg.firstleft,text_ = p1.name)
-	firstImg = pg.createImage(file_ = f"poke_png\\{p1.rank} {p1.name}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
+	firstpokeLabel = pg.createLabel(pg.firstleft,text_ = p[0].name)
+	firstImg = pg.createImage(file_ = f"poke_png\\{p[0].rank} {p[0].name}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
 
-	secondpokeLabel = pg.createLabel(pg.firstright,text_ = p2.name)
-	secondImg = pg.createImage(file_ = f"poke_png\\{p2.rank} {p2.name}.png",canvas = pg.firstright,row_ = 1,col_ = 0)
+	secondpokeLabel = pg.createLabel(pg.firstright,text_ = p[1].name)
+	secondImg = pg.createImage(file_ = f"poke_png\\{p[1].rank} {p[1].name}.png",canvas = pg.firstright,row_ = 1,col_ = 0)
 
-	firstpokeHP = pg.createLabel(pg.secondleft,text_= f"HP: {fullhp1}/{fullhp1}",row_ = 0,col_ = 0)
-	firstPbar = pg.createProgress(pg.secondleft)
-	secondpokeHP = pg.createLabel(pg.secondright,text_= f"HP: {fullhp2}/{fullhp2}",row_ = 0,col_ = 0)
-	secondPbar = pg.createProgress(pg.secondright)
+	firstpokeHP = pg.createLabel(pg.secondleft,text_= f"HP: {p[0].HP}/{p[0].HP}",row_ = 0,col_ = 0)
+	# Pbar[0] = pg.createProgress(pg.secondleft)
+	secondpokeHP = pg.createLabel(pg.secondright,text_= f"HP: {p[1].HP}/{p[1].HP}",row_ = 0,col_ = 0)
+	Pbar = [pg.createProgress(pg.secondleft),pg.createProgress(pg.secondright)]
+	# Pbar[1] = pg.createProgress(pg.secondright)
 
 	firstMoveLabel = pg.createLabel(pg.thirdleft,text_ = "Moves",row_ = 0,col_ = 0)
-	firstmoves = p1.getMoves()[0]
-	firstdesc = p1.getMoves()[1]
+	firstmoves = p[0].getMoves()[0]
+	firstdesc = p[0].getMoves()[1]
 	firstRadio = []
 	var1 = tk.IntVar()
 	firstRadio1 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[0],variable_ = var1,value_ = 0,row_ = 1,col_ = 0)
@@ -320,8 +281,8 @@ if __name__ == "__main__":
 
 
 	secondMoveLabel = pg.createLabel(pg.thirdright,text_ = "Moves",row_ = 0,col_ = 0)
-	secondmoves = p2.getMoves()[0]
-	seconddesc = p2.getMoves()[1]
+	secondmoves = p[1].getMoves()[0]
+	seconddesc = p[1].getMoves()[1]
 	secondRadio = []
 	var2 = tk.IntVar()
 	secondRadio1 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[0],variable_ = var2,value_ = 0,row_ = 1,col_ = 0)
