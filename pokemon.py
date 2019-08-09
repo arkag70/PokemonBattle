@@ -18,7 +18,10 @@ class Pokemon:
 		i = random.randint(0,386)
 
 		self.name = pokemons[i]["name"]
+		#max HP
 		self.HP = int(pokemons[i]["hp"])
+		#current HP
+		self.hp = int(pokemons[i]["hp"])
 		self.type1 = pokemons[i]["type1"]
 		self.type2 = pokemons[i]["type2"]
 		self.attack = pokemons[i]["attack"]
