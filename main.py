@@ -6,7 +6,7 @@ import threading
 
 p = [Pokemon(),Pokemon()]
 background_theme = ["sound\\magmatheme.wav","sound\\aquatheme.wav","sound\\finaltheme.wav","sound\\rayquaza.wav"]
-sleepturns = random.randint(1,5)
+moveset = pd.read_excel("moves.xlsx",sheet_name = "sheet1")
 round = 0
 disablity = 0
 # # p[0].isFrozen = True
@@ -109,8 +109,12 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = ""):
 
 	return hp
 	
+def checkStatus(p,n):
+	#raise\lowe attack defense speed normally or harshly or sharply
+	pass
 
-def startProgress(damageon,n):
+
+def startProgress(damageon,accuracy,n):
 	willmove = 0
 	global round
 	round += 1
@@ -118,16 +122,24 @@ def startProgress(damageon,n):
 
 	# remainingonbar[1] = int((p[1].hp - damageon2)*Pbar[1]["maximum"]/p[1].HP)
 	# remainingonbar[0] = int((p[0].hp - damageon1)*Pbar[0]["maximum"]/p[0].HP)
-	remainingonbar = [int((p[0].hp - damageon[0])*Pbar[0]["maximum"]/p[0].HP),int((p[1].hp - damageon[1])*Pbar[1]["maximum"]/p[1].HP)]
+	remainingonbar = [int((p[n].hp - damageon[n])*Pbar[n]["maximum"]/p[n].HP),int((p[(n+1)%2].hp - damageon[(n+1)%2])*Pbar[(n+1)%2]["maximum"]/p[(n+1)%2].HP)]
 
 	#from here
 	p[n].condition = checkCondition(p[n])
 	#pokemon 1 attacks first
 	if "move" in p[n].condition:
 		# time.sleep(1)
-		print(f"{p[n].name} used {p[n].move}")
-		time.sleep(1)
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[(n+1)%2],reason = "")
+		if random.randint(1,100) < accuracy[n]:
+			if damageon[(n+1)%2] != 0:
+				print(f"{p[n].name} used {p[n].move}")
+				time.sleep(1)
+				p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[(n+1)%2],reason = "")
+				checkStatus(p,n)
+			else:
+				#check stats update from moves.xlsx	
+				checkStatus(p,n)
+		else:
+			print(f"{p[n].name}'s attack missed!")
 		if p[(n+1)%2].hp == 0:
 			#pokeom 2 fainted
 			playsound("sound\\faint.mp3")
@@ -171,9 +183,16 @@ def startProgress(damageon,n):
 
 	if willmove == 1:
 		# time.sleep(1)
-		print(f"{p[(n+1)%2].name} used {p[(n+1)%2].move}")
-		time.sleep(1)
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[n],reason = "")
+		if random.randint(1,100) < accuracy[(n+1)%2]:
+			if damageon[n] != 0:
+				print(f"{p[(n+1)%2].name} used {p[(n+1)%2].move}")
+				time.sleep(1)
+				p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[n],reason = "")
+				checkStatus(p,n)
+			else:
+				checkStatus(p,n)
+		else:
+			print(f"{p[(n+1)%2].name}'s attack missed!")
 		if p[n].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -284,6 +303,7 @@ def fight():
 	
 	movepower1 = int(firstdesc[index1][0])
 	movepower2 = int(seconddesc[index2][0])
+	accuracy = [int(firstdesc[index1][1]),int(seconddesc[index2][1])]
 
 	print(movepower1,movepower2)
 	maxA = p[0].maxAttack
@@ -291,12 +311,13 @@ def fight():
 	effectiveness1 = 1
 	effectiveness2 = 1
 
+
 	#	damage on opponent = move-power * (normalize(self Attack) + (1 - normalize(opponent defense)))
+	damageon = [0,0]
+	damageon[0] = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.1*movepower2)*effectiveness1
+	damageon[1] = int(((p[0].attack/maxD)+(1-(p[1].defense/maxD)))*0.1*movepower1)*effectiveness2
 
-	damageon1 = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.1*movepower2)*effectiveness1
-	damageon2 = int(((p[0].attack/maxD)+(1-(p[1].defense/maxD)))*0.1*movepower1)*effectiveness2
-
-	print(damageon1,damageon2)
+	print(damageon[0],damageon[1])
 	# # p[0].isParalysed = True
 	# # p[1].isParalysed = True
 	# # p[0].isPoisoned = True
@@ -312,7 +333,7 @@ def fight():
 		n = 0
 	else:
 		n = 1
-	disablity = startProgress((damageon1,damageon2),n)
+	disablity = startProgress(damageon,accuracy,n)
 	
 
 
