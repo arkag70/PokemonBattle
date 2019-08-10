@@ -1,13 +1,15 @@
 import pandas as pd
 import random
-from moves import moveset
+# from moves import moveset
 #filtered the file
 #dataset1 = dataset[~dataset.Name.str.contains("Mega ")]
 
 pokemons = []
 def getData():
+	global maxAttack,maxDefense
 	dataset = pd.read_csv("poke.csv")
-	return dataset.iloc[:386]
+	datasheet = dataset.iloc[:386]
+	return dataset
 
 class Pokemon:
 	def __init__(self):
@@ -16,7 +18,8 @@ class Pokemon:
 		for i in range(len(self.dataset)):
 			pokemons.append(self.dataset.iloc[i])
 		i = random.randint(0,386)
-
+		self.maxAttack = max(self.dataset['attack'])
+		self.maxDefense = max(self.dataset['defense'])
 		self.name = pokemons[i]["name"]
 		#max HP
 		self.HP = int(pokemons[i]["hp"])
@@ -48,52 +51,33 @@ class Pokemon:
 		print(self.rank,self.name)
 
 	def getMoves(self):
-
+		moveset = pd.read_excel("moves.xlsx",sheet_name = "sheet1")
+		movelist = []
 		if self.type1 == self.type2:
-			moves = []
-			desc = []
-			movlist = list(moveset[self.type1].items())
-			for movename in movlist:
-				moves.append(movename[0])
-				desc.append(movename[1])
-			together = list(zip(moves,desc))
-			random.shuffle(together)
-			moves[:],desc[:] = zip(*together)
-			moves = moves[:4]
-			desc = desc[:4]
-				
+			#list all type1 moves
+			data = moveset[moveset["type"] == self.type1]
+			for i in range(len(data)):
+				attributes = ""
+				attributes += str(data.iloc[i]['movename'])+","+str(data.iloc[i]['power'])+","+str(data.iloc[i]['accuracy'])+","+str(data.iloc[i]['pp'])+","+str(data.iloc[i]['type'])
+				movelist.append(attributes)
 		else:
-			moves1 = []
-			desc1 = []
-			movlist1 = list(moveset[self.type1].items())
-			for movename in movlist1:
-				moves1.append(movename[0])
-				desc1.append(movename[1])
-			together1 = list(zip(moves1,desc1))
-			random.shuffle(together1)
-			moves1[:],desc1[:] = zip(*together1)
-			moves1 = moves1[:2]
-			desc1 = desc1[:2]
+			data1 = moveset[moveset["type"] == self.type1]
+			data2 = moveset[moveset["type"] == self.type2]
 
-			moves2 = []
-			desc2= []
-			movlist2 = list(moveset[self.type2].items())
-			for movename in movlist2:
-				moves2.append(movename[0])
-				desc2.append(movename[1])
-			together2 = list(zip(moves2,desc2))
-			random.shuffle(together2)
-			moves2[:],desc2[:] = zip(*together2)
-			moves2 = moves2[:2]
-			desc2 = desc2[:2]
+			for i in range(len(data1)):
+				attributes = ""
+				attributes += str(data1.iloc[i]['movename'])+","+str(data1.iloc[i]['power'])+","+str(data1.iloc[i]['accuracy'])+","+str(data1.iloc[i]['pp'])+","+str(data1.iloc[i]['type'])
+				movelist.append(attributes)
+			for i in range(len(data2)):
+				attributes = ""
+				attributes += str(data2.iloc[i]['movename'])+","+str(data2.iloc[i]['power'])+","+str(data2.iloc[i]['accuracy'])+","+str(data2.iloc[i]['pp'])+","+str(data2.iloc[i]['type'])
+				movelist.append(attributes)
 
-			moves = moves1 + moves2
-			desc = desc1 + desc2
-		#print(moves,desc)
-		return moves,desc
-
-# def hello():
-# 	key, value = list(moveset["dark"].items())[5]
-# 	print(key)
-
-# hello()
+			
+		random.shuffle(movelist)
+		movelist = movelist[:4]
+		# movenames = [each.split(",")[0] for each in movelist]
+		# movedesc = [each.split(",")[1:] for each in movelist]
+		return movelist[:4]
+		# return (movenames,movedesc)		
+	

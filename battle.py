@@ -32,6 +32,9 @@ def inConfusion(p):
 def checkCondition(p):
 	status = ""
 
+	if p.isSeeded:
+		status += "seed"
+		
 	if p.isAsleep:
 		#check for sleep
 		p.sleepFreezeCount -= 1
@@ -39,11 +42,11 @@ def checkCondition(p):
 			print(f"{p.name} woke up!")
 			p.isAsleep = False
 			time.sleep(1)
-			status =  "move"
+			status += "move"
 		else:
 			print(f"{p.name} is fast asleep!")
 			
-			status =  "wont"
+			status += "wont"
 
 	elif p.isFrozen:
 		#check for freeze (Samsung 4 star)
@@ -52,12 +55,12 @@ def checkCondition(p):
 			print(f"{p.name} was defrosted!")
 			p.isFrozen = False
 			time.sleep(1)
-			status =  "move"
+			status += "move"
 		else:
 			playsound("sound\\freeze.mp3")
 			print(f"{p.name} is frozen solid!")
 			
-			status =  "wont"
+			status += "wont"
 
 	elif p.isParalysed:
 		#check for paralysis
@@ -65,19 +68,19 @@ def checkCondition(p):
 			#can't move
 			print(f"{p.name} is paralysed! It can't move")
 			playsound("sound\\paralyse.mp3")
-			status =  "wont"
+			status += "wont"
 
 		elif p.isConfused:
 			#check for confusion in paralysis
-			status =  inConfusion(p)
+			status += inConfusion(p)
 
 		else:
 			#free; no status problems
-			status =  "move"
+			status += "move"
 			
 	elif p.isConfused:
 		#check for confusion
-		status =  inConfusion(p)
+		status += inConfusion(p)
 		if p.isPoisoned:
 			status += " poison"
 		elif p.isBurnt:
@@ -87,12 +90,10 @@ def checkCondition(p):
 
 	else:
 		#free; no status problems
-		status =  "move"
+		status += "move"
 		if p.isPoisoned:
 			status += " poison"
 		elif p.isBurnt:
 			status += " burn"
-		elif p.isSeeded:
-			status += " seed"
 	
 	return status
