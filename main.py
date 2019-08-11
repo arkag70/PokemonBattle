@@ -125,14 +125,15 @@ def startProgress(damageon,accuracy,n,index):
 	p[n].condition = checkCondition(p[n])
 	
 	if "move" in p[n].condition:
+		print(f"{p[n].name} used {p[n].move}")
 		if random.randint(1,100) < accuracy[n]:
-			print(f"{p[n].name} used {p[n].move}")
 			time.sleep(1)
 			if damageon[(n+1)%2] != 0:
 				p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[(n+1)%2],reason = "")
 			#check stats update from moves.xlsx	
 			checkStatus(p,n,index)
 		else:
+			time.sleep(1)
 			print(f"{p[n].name}'s attack missed!")
 		if p[(n+1)%2].hp == 0:
 			#pokeom 2 fainted
@@ -177,13 +178,14 @@ def startProgress(damageon,accuracy,n,index):
 
 	if willmove == 1:
 		# time.sleep(1)
+		print(f"{p[(n+1)%2].name} used {p[(n+1)%2].move}")
 		if random.randint(1,100) < accuracy[(n+1)%2]:
-			print(f"{p[(n+1)%2].name} used {p[(n+1)%2].move}")
 			time.sleep(1)
 			if damageon[n] != 0:
 				p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[n],reason = "")
 			checkStatus(p,n,index)
 		else:
+			time.sleep(1)
 			print(f"{p[(n+1)%2].name}'s attack missed!")
 		if p[n].hp == 0:
 			#pokemon 1 fainted
@@ -288,8 +290,11 @@ def ppUpdate(index):
 	
 	if firstdesc[index[0]][2] == '1':
 		firstRadio[index[0]].configure(state = tk.DISABLED)
-	if seconddesc[index[0]][2] == '1':
-		secondRadio[index[0]].configure(state = tk.DISABLED)
+		var1.set((index[0]+1)%4)
+
+	if seconddesc[index[1]][2] == '1':
+		secondRadio[index[1]].configure(state = tk.DISABLED)
+		var2.set((index[1]+1)%4)
 
 	firstdesc[index[0]][2] = str(int(firstdesc[index[0]][2]) - 1)
 	seconddesc[index[1]][2] = str(int(seconddesc[index[1]][2]) - 1)
@@ -376,6 +381,7 @@ if __name__ == "__main__":
 	firstdesc = [m.split(',')[1:] for m in moves]
 	firstRadio = []
 	var1 = tk.IntVar()
+	var1.set(0)
 	firstRadio = []
 	for i in range(4):
 		firstRadio.append(pg.createRadioButton(pg.thirdleft,text_ = firstmoves[i] +" PP: "+ firstdesc[i][2],variable_ = var1,value_ = i,row_ = i+1,col_ = 0))
@@ -391,6 +397,7 @@ if __name__ == "__main__":
 	seconddesc = [m.split(',')[1:] for m in moves]
 	secondRadio = []
 	var2 = tk.IntVar()
+	var2.set(0)
 	secondRadio = []
 	for i in range(4):
 		secondRadio.append(pg.createRadioButton(pg.thirdright,text_ = secondmoves[i] +" PP: "+ seconddesc[i][2],variable_ = var2,value_ = i,row_ = i+1,col_ = 0))		
