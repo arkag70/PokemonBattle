@@ -109,35 +109,29 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = ""):
 
 	return hp
 	
-def checkStatus(p,n):
+def checkStatus(p,n,index):
 	#raise\lowe attack defense speed normally or harshly or sharply
 	pass
 
 
-def startProgress(damageon,accuracy,n):
+def startProgress(damageon,accuracy,n,index):
 	willmove = 0
 	global round
 	round += 1
 	print(round)
 
-	# remainingonbar[1] = int((p[1].hp - damageon2)*Pbar[1]["maximum"]/p[1].HP)
-	# remainingonbar[0] = int((p[0].hp - damageon1)*Pbar[0]["maximum"]/p[0].HP)
 	remainingonbar = [int((p[n].hp - damageon[n])*Pbar[n]["maximum"]/p[n].HP),int((p[(n+1)%2].hp - damageon[(n+1)%2])*Pbar[(n+1)%2]["maximum"]/p[(n+1)%2].HP)]
 
-	#from here
 	p[n].condition = checkCondition(p[n])
-	#pokemon 1 attacks first
+	
 	if "move" in p[n].condition:
-		# time.sleep(1)
 		if random.randint(1,100) < accuracy[n]:
+			print(f"{p[n].name} used {p[n].move}")
+			time.sleep(1)
 			if damageon[(n+1)%2] != 0:
-				print(f"{p[n].name} used {p[n].move}")
-				time.sleep(1)
 				p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[(n+1)%2],reason = "")
-				checkStatus(p,n)
-			else:
-				#check stats update from moves.xlsx	
-				checkStatus(p,n)
+			#check stats update from moves.xlsx	
+			checkStatus(p,n,index)
 		else:
 			print(f"{p[n].name}'s attack missed!")
 		if p[(n+1)%2].hp == 0:
@@ -184,13 +178,11 @@ def startProgress(damageon,accuracy,n):
 	if willmove == 1:
 		# time.sleep(1)
 		if random.randint(1,100) < accuracy[(n+1)%2]:
+			print(f"{p[(n+1)%2].name} used {p[(n+1)%2].move}")
+			time.sleep(1)
 			if damageon[n] != 0:
-				print(f"{p[(n+1)%2].name} used {p[(n+1)%2].move}")
-				time.sleep(1)
 				p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[n],reason = "")
-				checkStatus(p,n)
-			else:
-				checkStatus(p,n)
+			checkStatus(p,n,index)
 		else:
 			print(f"{p[(n+1)%2].name}'s attack missed!")
 		if p[n].hp == 0:
@@ -292,20 +284,35 @@ def check_fight_thread():
     	else:
         	startButton.config(state = "normal")
 
+def ppUpdate(index):
+	
+	if firstdesc[index[0]][2] == '1':
+		firstRadio[index[0]].configure(state = tk.DISABLED)
+	if seconddesc[index[0]][2] == '1':
+		secondRadio[index[0]].configure(state = tk.DISABLED)
+
+	firstdesc[index[0]][2] = str(int(firstdesc[index[0]][2]) - 1)
+	seconddesc[index[1]][2] = str(int(seconddesc[index[1]][2]) - 1)
+
+	for i in range(4):
+		firstRadio[i].configure(text = firstmoves[i] +" PP: "+ firstdesc[i][2])
+		secondRadio[i].configure(text = secondmoves[i] +" PP: "+ seconddesc[i][2])
+
 def fight():
 	global disablity
 	index1 = var1.get()
 	index2 = var2.get()
+
+	ppUpdate((index1,index2))
+
 	p[0].move = firstmoves[index1]
 	p[1].move = secondmoves[index2]
-	print(firstmoves[index1],firstdesc[index1])
-	print(secondmoves[index2],seconddesc[index2])
 	
 	movepower1 = int(firstdesc[index1][0])
 	movepower2 = int(seconddesc[index2][0])
 	accuracy = [int(firstdesc[index1][1]),int(seconddesc[index2][1])]
 
-	print(movepower1,movepower2)
+	# print(movepower1,movepower2)
 	maxA = p[0].maxAttack
 	maxD = p[0].maxDefense
 	effectiveness1 = 1
@@ -317,7 +324,7 @@ def fight():
 	damageon[0] = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.1*movepower2)*effectiveness1
 	damageon[1] = int(((p[0].attack/maxD)+(1-(p[1].defense/maxD)))*0.1*movepower1)*effectiveness2
 
-	print(damageon[0],damageon[1])
+	# print(damageon[0],damageon[1])
 	# # p[0].isParalysed = True
 	# # p[1].isParalysed = True
 	# # p[0].isPoisoned = True
@@ -326,14 +333,13 @@ def fight():
 	# # p[1].isBurnt = True
 	# # p[0].isSeeded = True
 	# # p[1].isSeeded = True
-	
-	
+	print(p[0].speed,p[1].speed)
 	# check speed to decide who'll go first
 	if p[0].speed > p[1].speed:
 		n = 0
 	else:
 		n = 1
-	disablity = startProgress(damageon,accuracy,n)
+	disablity = startProgress(damageon,accuracy,n,(index1,index2))
 	
 
 
@@ -361,10 +367,8 @@ if __name__ == "__main__":
 	secondImg = pg.createImage(file_ = f"poke_png\\{p[1].rank} {p[1].name}.png",canvas = pg.firstright,row_ = 1,col_ = 0)
 
 	firstpokeHP = pg.createLabel(pg.secondleft,text_= f"HP: {p[0].HP}/{p[0].HP}",row_ = 0,col_ = 0)
-	# Pbar[0] = pg.createProgress(pg.secondleft)
 	secondpokeHP = pg.createLabel(pg.secondright,text_= f"HP: {p[1].HP}/{p[1].HP}",row_ = 0,col_ = 0)
 	Pbar = [pg.createProgress(pg.secondleft),pg.createProgress(pg.secondright)]
-	# Pbar[1] = pg.createProgress(pg.secondright)
 
 	firstMoveLabel = pg.createLabel(pg.thirdleft,text_ = "Moves",row_ = 0,col_ = 0)
 	moves = p[0].getMoves()
@@ -372,10 +376,13 @@ if __name__ == "__main__":
 	firstdesc = [m.split(',')[1:] for m in moves]
 	firstRadio = []
 	var1 = tk.IntVar()
-	firstRadio1 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[0],variable_ = var1,value_ = 0,row_ = 1,col_ = 0)
-	firstRadio2 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[1],variable_ = var1,value_ = 1,row_ = 2,col_ = 0)
-	firstRadio3 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[2],variable_ = var1,value_ = 2,row_ = 3,col_ = 0)
-	firstRadio4 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[3],variable_ = var1,value_ = 3,row_ = 4,col_ = 0)
+	firstRadio = []
+	for i in range(4):
+		firstRadio.append(pg.createRadioButton(pg.thirdleft,text_ = firstmoves[i] +" PP: "+ firstdesc[i][2],variable_ = var1,value_ = i,row_ = i+1,col_ = 0))
+	# firstRadio1 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[0],variable_ = var1,value_ = 0,row_ = 1,col_ = 0)
+	# firstRadio2 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[1],variable_ = var1,value_ = 1,row_ = 2,col_ = 0)
+	# firstRadio3 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[2],variable_ = var1,value_ = 2,row_ = 3,col_ = 0)
+	# firstRadio4 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[3],variable_ = var1,value_ = 3,row_ = 4,col_ = 0)
 
 
 	secondMoveLabel = pg.createLabel(pg.thirdright,text_ = "Moves",row_ = 0,col_ = 0)
@@ -384,10 +391,14 @@ if __name__ == "__main__":
 	seconddesc = [m.split(',')[1:] for m in moves]
 	secondRadio = []
 	var2 = tk.IntVar()
-	secondRadio1 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[0],variable_ = var2,value_ = 0,row_ = 1,col_ = 0)
-	secondRadio2 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[1],variable_ = var2,value_ = 1,row_ = 2,col_ = 0)
-	secondRadio3 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[2],variable_ = var2,value_ = 2,row_ = 3,col_ = 0)
-	secondRadio4 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[3],variable_ = var2,value_ = 3,row_ = 4,col_ = 0)
+	secondRadio = []
+	for i in range(4):
+		secondRadio.append(pg.createRadioButton(pg.thirdright,text_ = secondmoves[i] +" PP: "+ seconddesc[i][2],variable_ = var2,value_ = i,row_ = i+1,col_ = 0))		
+
+	# secondRadio1 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[0],variable_ = var2,value_ = 0,row_ = 1,col_ = 0)
+	# secondRadio2 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[1],variable_ = var2,value_ = 1,row_ = 2,col_ = 0)
+	# secondRadio3 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[2],variable_ = var2,value_ = 2,row_ = 3,col_ = 0)
+	# secondRadio4 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[3],variable_ = var2,value_ = 3,row_ = 4,col_ = 0)
 
 	
 	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None))

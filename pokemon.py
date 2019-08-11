@@ -76,8 +76,4 @@ class Pokemon:
 			
 		random.shuffle(movelist)
 		movelist = movelist[:4]
-		# movenames = [each.split(",")[0] for each in movelist]
-		# movedesc = [each.split(",")[1:] for each in movelist]
 		return movelist[:4]
-		# return (movenames,movedesc)		
-	
