@@ -3,6 +3,7 @@ from pokemon import *
 from battle import *
 import winsound
 import threading
+from effectiveness import getEffectiveness
 
 p = [Pokemon(),Pokemon()]
 background_theme = ["sound\\magmatheme.wav","sound\\aquatheme.wav","sound\\finaltheme.wav","sound\\rayquaza.wav"]
@@ -73,11 +74,21 @@ def first(remainingonbar,f):
 				break
 	return val
 
-def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = ""):
+def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect = 1):
 	f = 1
 	displaymsg = False
 	if reason == "":
-		playsound('sound\\normal.mp3')
+		if effect >= 1 and effect <= 1.25:
+			print(f"normal damage")
+			playsound('sound\\normal.mp3')
+		elif effect < 1:
+			print(f"not very effective damage")
+			playsound('sound\\notvery.mp3')
+		elif effect > 1.25:
+			print(f"super effective damage")
+			playsound('sound\\super.mp3')
+			
+
 	elif reason == "hurt itself in confusion!":
 		playsound('sound\\normal.mp3')
 		displaymsg = True
@@ -114,7 +125,7 @@ def checkStatus(p,n,index):
 	pass
 
 
-def startProgress(damageon,accuracy,n,index):
+def startProgress(damageon,accuracy,n,index,effectiveness):
 	willmove = 0
 	global round
 	round += 1
@@ -129,7 +140,11 @@ def startProgress(damageon,accuracy,n,index):
 		if random.randint(1,100) < accuracy[n]:
 			time.sleep(1)
 			if damageon[(n+1)%2] != 0:
-				p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[(n+1)%2],reason = "")
+				p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+			elif damageon[(n+1)%2] == 0 and effectiveness[n] == 0:
+				time.sleep(1)
+				print(f"It doesn't effect {p[(n+1)%2].name}")
+				time.sleep(1)
 			#check stats update from moves.xlsx	
 			checkStatus(p,n,index)
 		else:
@@ -151,7 +166,7 @@ def startProgress(damageon,accuracy,n,index):
 				pass
 	elif "hurt-itself" in p[n].condition:
 		time.sleep(2)
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "hurt itself in confusion!")
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "hurt itself in confusion!",effect = 1)
 		if p[n].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -182,7 +197,11 @@ def startProgress(damageon,accuracy,n,index):
 		if random.randint(1,100) < accuracy[(n+1)%2]:
 			time.sleep(1)
 			if damageon[n] != 0:
-				p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[n],reason = "")
+				p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+			elif damageon[n] == 0 and effectiveness[(n+1)%2] == 0:
+				time.sleep(1)
+				print(f"It doesn't effect {p[n].name}")
+				time.sleep(1)
 			checkStatus(p,n,index)
 		else:
 			time.sleep(1)
@@ -196,7 +215,7 @@ def startProgress(damageon,accuracy,n,index):
 			pass
 	elif willmove == -1:
 		time.sleep(2)
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "hurt itself in confusion!")
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "hurt itself in confusion!",effect = 1)
 		if p[(n+1)%2].hp == 0:
 			playsound("sound\\faint.mp3")
 			print(f"{p[(n+1)%2].name} fainted!")
@@ -205,7 +224,7 @@ def startProgress(damageon,accuracy,n,index):
 			pass
 	if "poison" in p[n].condition:
 		time.sleep(2)
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by poison!")
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by poison!",effect = 1)
 		if p[n].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -215,7 +234,7 @@ def startProgress(damageon,accuracy,n,index):
 			pass
 	elif "burn" in p[n].condition:
 		time.sleep(2)
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by burn!")
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by burn!",effect = 1)
 		if p[n].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -225,8 +244,8 @@ def startProgress(damageon,accuracy,n,index):
 			pass
 	if "seed" in p[n].condition:
 		time.sleep(2)
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "health is sapped by LEECH SEED!")
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -10,reason = "gained HP!")
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "health is sapped by LEECH SEED!",effect = 1)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -10,reason = "gained HP!",effect = 1)
 		if p[n].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -236,7 +255,7 @@ def startProgress(damageon,accuracy,n,index):
 			pass
 	if "poison" in p[(n+1)%2].condition:
 		time.sleep(2)
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by poison!")
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by poison!",effect = 1)
 		if p[(n+1)%2].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -246,7 +265,7 @@ def startProgress(damageon,accuracy,n,index):
 			pass
 	elif "burn" in p[(n+1)%2].condition:
 		time.sleep(2)
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by burn!")
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by burn!",effect = 1)
 		if p[(n+1)%2].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -256,8 +275,8 @@ def startProgress(damageon,accuracy,n,index):
 			pass
 	if "seed" in p[(n+1)%2].condition:
 		time.sleep(2)
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "health is sapped by LEECH SEED!")
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -10,reason = "gained HP!")
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "health is sapped by LEECH SEED!",effect = 1)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -10,reason = "gained HP!",effect = 1)
 		if p[(n+1)%2].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -303,11 +322,18 @@ def ppUpdate(index):
 		firstRadio[i].configure(text = firstmoves[i] +" PP: "+ firstdesc[i][2])
 		secondRadio[i].configure(text = secondmoves[i] +" PP: "+ seconddesc[i][2])
 
+def checkEffect(p):
+	move1Type = str(moveset[moveset["movename"] == p[0].move]['type']).split()[1]
+	move2Type = str(moveset[moveset["movename"] == p[1].move]['type']).split()[1]
+	val = getEffectiveness((move1Type,move2Type),((p[0].type1,p[1].type1),(p[0].type2,p[1].type2)))
+	# val = getEffectiveness(("fire","grass"),(("fire","grass"),("fire","grass")))
+	print(val)
+	return val
+
 def fight():
 	global disablity
 	index1 = var1.get()
 	index2 = var2.get()
-
 	ppUpdate((index1,index2))
 
 	p[0].move = firstmoves[index1]
@@ -317,17 +343,14 @@ def fight():
 	movepower2 = int(seconddesc[index2][0])
 	accuracy = [int(firstdesc[index1][1]),int(seconddesc[index2][1])]
 
-	# print(movepower1,movepower2)
 	maxA = p[0].maxAttack
 	maxD = p[0].maxDefense
-	effectiveness1 = 1
-	effectiveness2 = 1
-
+	effectiveness = checkEffect(p)
 
 	#	damage on opponent = move-power * (normalize(self Attack) + (1 - normalize(opponent defense)))
 	damageon = [0,0]
-	damageon[0] = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.1*movepower2)*effectiveness1
-	damageon[1] = int(((p[0].attack/maxD)+(1-(p[1].defense/maxD)))*0.1*movepower1)*effectiveness2
+	damageon[0] = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.1*movepower2)*effectiveness[1]
+	damageon[1] = int(((p[0].attack/maxD)+(1-(p[1].defense/maxD)))*0.1*movepower1)*effectiveness[0]
 
 	# print(damageon[0],damageon[1])
 	# # p[0].isParalysed = True
@@ -338,13 +361,12 @@ def fight():
 	# # p[1].isBurnt = True
 	# # p[0].isSeeded = True
 	# # p[1].isSeeded = True
-	print(p[0].speed,p[1].speed)
 	# check speed to decide who'll go first
 	if p[0].speed > p[1].speed:
 		n = 0
 	else:
 		n = 1
-	disablity = startProgress(damageon,accuracy,n,(index1,index2))
+	disablity = startProgress(damageon,accuracy,n,(index1,index2),(effectiveness))
 	
 
 
