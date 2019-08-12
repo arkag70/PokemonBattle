@@ -38,7 +38,6 @@ def second(remainingonbar,f):
 		val = int(Pbar[1]["value"]*p[1].HP/Pbar[1]["maximum"])
 		secondpokeHP.config(text = f"HP: {val}/{p[1].HP}")
 		time.sleep(0.05)
-
 		if f == 1:
 			if Pbar[1]["value"] < remainingonbar + 1:
 				break
@@ -109,19 +108,20 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 		f = -1
 	if displaymsg == True:
 		print(f"{p[i].name} {reason}")
-
 	remainingonbar = int((hp - deduct)*bar["maximum"]/fullhp)
 	if remainingonbar < 0:
 		remainingonbar = 0
+	elif remainingonbar > bar["maximum"]:
+		remainingonbar = bar["maximum"]
 	if i == 0:
 		hp = first(remainingonbar,f)
 	else:
 		hp = second(remainingonbar,f)
-
+	
 	return hp
 	
 def checkStatus(p,n,index):
-	#raise\lowe attack defense speed normally or harshly or sharply
+	#raise\lower attack defense speed normally or harshly or sharply
 	pass
 
 
@@ -359,7 +359,7 @@ def fight():
 	# # p[1].isPoisoned = True
 	# # p[0].isBurnt = True
 	# # p[1].isBurnt = True
-	# # p[0].isSeeded = True
+	p[0].isSeeded = True
 	# # p[1].isSeeded = True
 	# check speed to decide who'll go first
 	if p[0].speed > p[1].speed:
