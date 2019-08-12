@@ -122,7 +122,14 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 	
 def checkStatus(p,n,index):
 	#raise\lower attack defense speed normally or harshly or sharply
-	pass
+	move_name = p[n].move
+	health = str(moveset[moveset['movename'] == move_name]["health"]).split()[1]
+	status = str(moveset[moveset['movename'] == move_name]["status"]).split()[1]
+	stats = str(moveset[moveset['movename'] == move_name]["stats"]).split()[1]
+
+	print(health,stats,status)
+
+	
 
 
 def startProgress(damageon,accuracy,n,index,effectiveness):
@@ -202,7 +209,7 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 				time.sleep(1)
 				print(f"It doesn't effect {p[n].name}")
 				time.sleep(1)
-			checkStatus(p,n,index)
+			checkStatus(p,((n+1)%2),index)
 		else:
 			time.sleep(1)
 			print(f"{p[(n+1)%2].name}'s attack missed!")
