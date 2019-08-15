@@ -1,7 +1,124 @@
+from pokemon import *
+from playsound import playsound
+def applyStats(p,n,stats):
 
+	if stats == 0:
+		pass
+	#attack
+	if stats == 1:
+		p[n].attack *= 1.25
+		print(f"{p[n].name}'s attack rose!")
+	elif stats == 1.25:
+		p[n].attack *= 1.5
+		print(f"{p[n].name}'s attack sharply rose!")
+	elif stats == 1.5:
+		p[(n+1)%2].attack *= 1.25
+		print(f"{p[(n+1)%2].name}'s attack rose!")
+	elif stats == 1.75:
+		p[(n+1)%2].attack *= 1.5
+		print(f"{p[(n+1)%2].name}'s attack sharply rose!")
+	elif stats == -1:
+		p[n].attack *= 0.8
+		print(f"{p[n].name}'s attack fell!")
+	elif stats == -1.25:
+		p[n].attack *= 0.67
+		print(f"{p[n].name}'s attack harshly fell!")
+	elif stats == -1.5:
+		p[(n+1)%2].attack *= 0.8
+		print(f"{p[(n+1)%2].name}'s attack fell!")
+	elif stats == -1.75:
+		p[(n+1)%2].attack *= 0.67
+		print(f"{p[(n+1)%2].name}'s attack harshly fell!")
+	#defense
+	elif stats == 2:
+		p[n].defense *= 1.25
+		print(f"{p[n].name}'s defense rose!")
+	elif stats == 2.25:
+		p[n].defense *= 1.5
+		print(f"{p[n].name}'s defense sharply rose!")
+	elif stats == 2.5:
+		p[(n+1)%2].defense *= 1.25
+		print(f"{p[(n+1)%2].name}'s defense rose!")
+	elif stats == 2.75:
+		p[(n+1)%2].defense *= 1.5
+		print(f"{p[(n+1)%2].name}'s defense sharply rose!")
+	elif stats == -2:
+		p[n].defense *= 0.8
+		print(f"{p[n].name}'s defense fell!")
+	elif stats == -2.25:
+		p[n].defense *= 0.67
+		print(f"{p[n].name}'s defense harshly fell!")
+	elif stats == -2.5:
+		p[(n+1)%2].defense *= 0.8
+		print(f"{p[(n+1)%2].name}'s defense fell!")
+	elif stats == -2.75:
+		p[(n+1)%2].defense *= 0.67
+		print(f"{p[(n+1)%2].name}'s defense harshly fell!")
+	#speed
+	elif stats == 3:
+		p[n].speed *= 1.25
+		print(f"{p[n].name}'s speed rose!")
+	elif stats == 3.25:
+		p[n].speed *= 1.5
+		print(f"{p[n].name}'s speed sharply rose!")
+	elif stats == 3.5:
+		p[(n+1)%2].speed *= 1.25
+		print(f"{p[(n+1)%2].name}'s speed rose!")
+	elif stats == 3.75:
+		p[(n+1)%2].speed *= 1.5
+		print(f"{p[(n+1)%2].name}'s speed sharply rose!")
+	elif stats == -3:
+		p[n].speed *= 0.8
+		print(f"{p[n].name}'s speed fell!")
+	elif stats == -3.25:
+		p[n].speed *= 0.67
+		print(f"{p[n].name}'s speed harshly fell!")
+	elif stats == -3.5:
+		p[(n+1)%2].speed *= 0.8
+		print(f"{p[(n+1)%2].name}'s speed fell!")
+	elif stats == -3.75:
+		p[(n+1)%2].speed *= 0.67
+		print(f"{p[(n+1)%2].name}'s speed harshly fell!")
+	elif stats == 4:
+		pass
+	elif stats == 4.25:
+		pass
+	elif stats == 4.5:
+		pass
+	elif stats == 4.75:
+		pass
+	elif stats == -4:
+		pass
+	elif stats == -4.25:
+		pass
+	elif stats == -4.5:
+		pass
+	elif stats == -4.75:
+		pass
+	#accuracy
+	elif stats == 5:
+		pass
+	elif stats == 5.25:
+		pass
+	elif stats == 5.5:
+		pass
+	elif stats == 5.75:
+		pass
+	elif stats == -5:
+		pass
+	elif stats == -5.25:
+		pass
+	elif stats == -5.5:
+		pass
+	elif stats == -5.75:
+		pass
+	if stats > 0:
+		playsound("sound\\rise.mp3")
+	elif stats < 0:
+		playsound("sound\\fall.mp3")
+	
 
 def getEffectiveness(mtype,types):
-	print(mtype,types)
 	val = [0,0]
 	for i in range(2):
 		#bug

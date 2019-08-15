@@ -1,15 +1,16 @@
 from gui_class import *
 from pokemon import *
-from battle import *
 import winsound
 import threading
-from effectiveness import getEffectiveness
+from functions import *
+from battle import *
 
 p = [Pokemon(),Pokemon()]
 background_theme = ["sound\\magmatheme.wav","sound\\aquatheme.wav","sound\\finaltheme.wav","sound\\rayquaza.wav"]
 moveset = pd.read_excel("moves.xlsx",sheet_name = "sheet1")
 round = 0
 disablity = 0
+
 # # p[0].isFrozen = True
 # # p[0].sleepFreezeCount = 3
 # # p[1].isFrozen = True
@@ -103,7 +104,7 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 		playsound("sound\\seed2.mp3")
 		displaymsg = True
 		f = 1
-	elif "gained HP" in reason:
+	elif "gained HP" in reason or deduct < 0:
 		playsound("sound\\seed3.mp3")
 		f = -1
 	if displaymsg == True:
@@ -120,19 +121,31 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 	
 	return hp
 	
-def checkStatus(p,n,index):
+def checkStatus(p,n,index,accuracies):
 	#raise\lower attack defense speed normally or harshly or sharply
 	move_name = p[n].move
 	health = str(moveset[moveset['movename'] == move_name]["health"]).split()[1]
 	status = str(moveset[moveset['movename'] == move_name]["status"]).split()[1]
 	stats = str(moveset[moveset['movename'] == move_name]["stats"]).split()[1]
 
-	print(health,stats,status)
+	# print(health,type(stats),status)
+	if n == 0:
+		val = int(firstdesc[index[n]][0])
+		print(val)
+	else:
+		val = int(seconddesc[index[n]][0])
+		print(val)
+	if val > 0:
+		if random.randint(1,11) <= 4: 
+			applyStats(p,n,float(stats))
+	else:
+		applyStats(p,n,float(stats))
+	
 
 	
 
 
-def startProgress(damageon,accuracy,n,index,effectiveness):
+def startProgress(damageon,accuracy,accuracies,n,index,effectiveness):
 	willmove = 0
 	global round
 	round += 1
@@ -153,7 +166,7 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 				print(f"It doesn't effect {p[(n+1)%2].name}")
 				time.sleep(1)
 			#check stats update from moves.xlsx	
-			checkStatus(p,n,index)
+			checkStatus(p,n,index,accuracies)
 		else:
 			time.sleep(1)
 			print(f"{p[n].name}'s attack missed!")
@@ -209,7 +222,7 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 				time.sleep(1)
 				print(f"It doesn't effect {p[n].name}")
 				time.sleep(1)
-			checkStatus(p,((n+1)%2),index)
+			checkStatus(p,((n+1)%2),index,accuracies)
 		else:
 			time.sleep(1)
 			print(f"{p[(n+1)%2].name}'s attack missed!")
@@ -349,11 +362,10 @@ def fight():
 	movepower1 = int(firstdesc[index1][0])
 	movepower2 = int(seconddesc[index2][0])
 	accuracy = [int(firstdesc[index1][1]),int(seconddesc[index2][1])]
-
+	accuracies  = [[int(i) for i in firstdesc[i][1]],[int(i) for i in seconddesc[i][1]]]
 	maxA = p[0].maxAttack
 	maxD = p[0].maxDefense
 	effectiveness = checkEffect(p)
-
 	#	damage on opponent = move-power * (normalize(self Attack) + (1 - normalize(opponent defense)))
 	damageon = [0,0]
 	damageon[0] = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.1*movepower2)*effectiveness[1]
@@ -366,14 +378,16 @@ def fight():
 	# # p[1].isPoisoned = True
 	# # p[0].isBurnt = True
 	# # p[1].isBurnt = True
-	p[0].isSeeded = True
+	# p[0].isSeeded = True
 	# # p[1].isSeeded = True
 	# check speed to decide who'll go first
 	if p[0].speed > p[1].speed:
 		n = 0
 	else:
 		n = 1
-	disablity = startProgress(damageon,accuracy,n,(index1,index2),(effectiveness))
+	print(p[0].attack,p[0].defense,p[0].speed)
+	print(p[1].attack,p[1].defense,p[1].speed)
+	disablity = startProgress(damageon,accuracy,accuracies,n,(index1,index2),(effectiveness))
 	
 
 
@@ -439,6 +453,6 @@ if __name__ == "__main__":
 	
 	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None))
 
-	# remarkLabel = pg.createLabel(pg.remark,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12"))
+	remarkLabel = pg.createLabel(pg.remark,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "",font_ = ("Calibri 12"))
 
 	root.mainloop()

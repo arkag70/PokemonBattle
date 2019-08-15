@@ -36,10 +36,10 @@ class PokeGUI:
 		self.label.grid(row = row_,column = col_,padx = padx_, pady = pady_)
 		return self.label
 
-	def createEntry(self,canvas,row_ = 0,col_ = 0,padx = 2,pady = 2,width_ = 50,bd_ = 2):
-		self.entry = tk.Entry(canvas,width = width_,bd = bd_)
-		self.entry.grid(row = row_,column = col_,padx = padx_, pady = pady_)
-		return self.entry
+	# def createEntry(self,canvas,row_ = 0,col_ = 0,padx = 2,pady = 2,width_ = 50,bd_ = 2):
+	# 	self.entry = tk.Entry(canvas,width = width_,bd = bd_)
+	# 	self.entry.grid(row = row_,column = col_,padx = padx_, pady = pady_)
+	# 	return self.entry
 
 	def createButton(self,canvas,command_,text_ = "Button-Text",width_ = 5,bd_ = 3,font_ = ("Calibri 12")):
 		self.button = tk.Button(canvas,text = text_,command = command_,width = width_,bd = bd_,font = font_)
