@@ -41,6 +41,7 @@ class Pokemon:
 		self.isSeeded = False
 		self.condition = "wont"
 		self.move = "Move"
+		self.acc = [0,0,0,0]
 
 		i += 1
 		if len(str(i)) == 1:

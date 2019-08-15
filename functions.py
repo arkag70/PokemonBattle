@@ -80,38 +80,71 @@ def applyStats(p,n,stats):
 		p[(n+1)%2].speed *= 0.67
 		print(f"{p[(n+1)%2].name}'s speed harshly fell!")
 	elif stats == 4:
-		pass
+		p[n].attack *= 1.25
+		p[n].defense *= 1.25
+		p[n].attack *= 1.25
+		print(f"{p[n]}'s attack, defense and speed rose!")
 	elif stats == 4.25:
-		pass
+		p[n].attack *= 1.5
+		p[n].defense *= 1.5
+		p[n].attack *= 1.5
+		print(f"{p[n]}'s attack, defense and speed sharply rose!")
 	elif stats == 4.5:
-		pass
+		p[(n+1)%2].attack *= 1.25
+		p[(n+1)%2].defense *= 1.25
+		p[(n+1)%2].attack *= 1.25
+		print(f"{p[(n+1)%2]}'s attack, defense and speed rose!")
 	elif stats == 4.75:
-		pass
+		p[(n+1)%2].attack *= 1.25
+		p[(n+1)%2].defense *= 1.25
+		p[(n+1)%2].attack *= 1.25
+		print(f"{p[(n+1)%2]}'s attack, defense and speed sharply rose!")
 	elif stats == -4:
-		pass
+		p[n].attack *= 0.8
+		p[n].defense *= 0.8
+		p[n].attack *= 0.8
+		print(f"{p[n]}'s attack, defense and speed fell!")
 	elif stats == -4.25:
-		pass
+		p[n].attack *= 0.67
+		p[n].defense *= 0.67
+		p[n].attack *= 0.67
+		print(f"{p[n]}'s attack, defense and speed harshly fell!")
 	elif stats == -4.5:
-		pass
+		p[(n+1)%2].attack *= 0.8
+		p[(n+1)%2].defense *= 0.8
+		p[(n+1)%2].attack *= 0.8
+		print(f"{p[(n+1)%2]}'s attack, defense and speed fell!")
 	elif stats == -4.75:
-		pass
+		p[(n+1)%2].attack *= 0.67
+		p[(n+1)%2].defense *= 0.67
+		p[(n+1)%2].attack *= 0.67
+		print(f"{p[(n+1)%2]}'s attack, defense and speed harshly fell!")
 	#accuracy
 	elif stats == 5:
-		pass
+		p[n].acc = [int(i)+5 for i in p[n].acc]
+		print(f"{p[n].name}'s accuracy rose!")
 	elif stats == 5.25:
-		pass
+		p[n].acc = [int(i)+10 for i in p[n].acc]
+		print(f"{p[n].name}'s accuracy sharply rose!")
 	elif stats == 5.5:
-		pass
+		p[(n+1)%2].acc = [int(i)+5 for i in p[(n+1)%2].acc]
+		print(f"{p[(n+1)%2].name}'s accuracy rose!")
 	elif stats == 5.75:
-		pass
+		p[(n+1)%2].acc = [int(i)+10 for i in p[(n+1)%2].acc]
+		print(f"{p[(n+1)%2].name}'s accuracy sharply rose!")
 	elif stats == -5:
-		pass
+		p[n].acc = [int(i)-5 for i in p[n].acc]
+		print(f"{p[n].name}'s accuracy fell!")
 	elif stats == -5.25:
-		pass
+		p[n].acc = [int(i)-10 for i in p[n].acc]
+		print(f"{p[n].name}'s accuracy harshly fell!")
 	elif stats == -5.5:
-		pass
+		p[(n+1)%2].acc = [int(i)-5 for i in p[(n+1)%2].acc]
+		print(f"{p[(n+1)%2].name}'s accuracy fell!")
 	elif stats == -5.75:
-		pass
+		p[(n+1)%2].acc = [int(i)-10 for i in p[(n+1)%2].acc]
+		print(f"{p[(n+1)%2].name}'s accuracy harshly fell!")
+
 	if stats > 0:
 		playsound("sound\\rise.mp3")
 	elif stats < 0:

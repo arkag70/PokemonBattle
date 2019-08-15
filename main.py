@@ -121,31 +121,38 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 	
 	return hp
 	
-def checkStatus(p,n,index,accuracies):
+def checkStatus(p,n,index):
 	#raise\lower attack defense speed normally or harshly or sharply
 	move_name = p[n].move
 	health = str(moveset[moveset['movename'] == move_name]["health"]).split()[1]
 	status = str(moveset[moveset['movename'] == move_name]["status"]).split()[1]
 	stats = str(moveset[moveset['movename'] == move_name]["stats"]).split()[1]
-
-	# print(health,type(stats),status)
+	# print(p[0].attack,p[0].defense,p[0].speed)
+	# print(p[1].attack,p[1].defense,p[1].speed)
 	if n == 0:
-		val = int(firstdesc[index[n]][0])
-		print(val)
+		power = int(firstdesc[index[n]][0])
 	else:
-		val = int(seconddesc[index[n]][0])
-		print(val)
-	if val > 0:
-		if random.randint(1,11) <= 4: 
+		power = int(seconddesc[index[n]][0])
+	if power > 0:
+		if random.randint(1,11) <= 3:
+			if type(stats) == str: 
+				applyStats(p,n,float(stats))
+			else:
+				applyStats(p,n,float(stats[0]))
+				applyStats(p,n,float(stats[1]))
+	else:
+		if type(stats) == str:
 			applyStats(p,n,float(stats))
-	else:
-		applyStats(p,n,float(stats))
-	
+		else:
+			applyStats(p,n,float(stats[0]))
+			applyStats(p,n,float(stats[1]))
 
 	
 
+	
 
-def startProgress(damageon,accuracy,accuracies,n,index,effectiveness):
+
+def startProgress(damageon,accuracy,n,index,effectiveness):
 	willmove = 0
 	global round
 	round += 1
@@ -166,7 +173,7 @@ def startProgress(damageon,accuracy,accuracies,n,index,effectiveness):
 				print(f"It doesn't effect {p[(n+1)%2].name}")
 				time.sleep(1)
 			#check stats update from moves.xlsx	
-			checkStatus(p,n,index,accuracies)
+			checkStatus(p,n,index)
 		else:
 			time.sleep(1)
 			print(f"{p[n].name}'s attack missed!")
@@ -222,7 +229,7 @@ def startProgress(damageon,accuracy,accuracies,n,index,effectiveness):
 				time.sleep(1)
 				print(f"It doesn't effect {p[n].name}")
 				time.sleep(1)
-			checkStatus(p,((n+1)%2),index,accuracies)
+			checkStatus(p,((n+1)%2),index)
 		else:
 			time.sleep(1)
 			print(f"{p[(n+1)%2].name}'s attack missed!")
@@ -347,7 +354,6 @@ def checkEffect(p):
 	move2Type = str(moveset[moveset["movename"] == p[1].move]['type']).split()[1]
 	val = getEffectiveness((move1Type,move2Type),((p[0].type1,p[1].type1),(p[0].type2,p[1].type2)))
 	# val = getEffectiveness(("fire","grass"),(("fire","grass"),("fire","grass")))
-	print(val)
 	return val
 
 def fight():
@@ -358,11 +364,10 @@ def fight():
 
 	p[0].move = firstmoves[index1]
 	p[1].move = secondmoves[index2]
-	
 	movepower1 = int(firstdesc[index1][0])
 	movepower2 = int(seconddesc[index2][0])
-	accuracy = [int(firstdesc[index1][1]),int(seconddesc[index2][1])]
-	accuracies  = [[int(i) for i in firstdesc[i][1]],[int(i) for i in seconddesc[i][1]]]
+	accuracy = [int(p[0].acc[index1]),int(p[1].acc[index2])]
+	print(accuracy)
 	maxA = p[0].maxAttack
 	maxD = p[0].maxDefense
 	effectiveness = checkEffect(p)
@@ -385,9 +390,7 @@ def fight():
 		n = 0
 	else:
 		n = 1
-	print(p[0].attack,p[0].defense,p[0].speed)
-	print(p[1].attack,p[1].defense,p[1].speed)
-	disablity = startProgress(damageon,accuracy,accuracies,n,(index1,index2),(effectiveness))
+	disablity = startProgress(damageon,accuracy,n,(index1,index2),(effectiveness))
 	
 
 
@@ -422,6 +425,7 @@ if __name__ == "__main__":
 	moves = p[0].getMoves()
 	firstmoves = [m.split(',')[0] for m in moves]
 	firstdesc = [m.split(',')[1:] for m in moves]
+	p[0].acc = [i[1] for i in firstdesc]
 	firstRadio = []
 	var1 = tk.IntVar()
 	var1.set(0)
@@ -438,6 +442,7 @@ if __name__ == "__main__":
 	moves = p[1].getMoves()
 	secondmoves = [m.split(',')[0] for m in moves]
 	seconddesc = [m.split(',')[1:] for m in moves]
+	p[1].acc = [i[1] for i in seconddesc]
 	secondRadio = []
 	var2 = tk.IntVar()
 	var2.set(0)
