@@ -157,51 +157,54 @@ def applyStats(p,n,stats):
 		playsound("sound\\fall.mp3")
 
 def applyStatus(p,n,status):
-
+	time.sleep(1)
+	poke = p[(n+1)%2]
 	if status == 1.0:
-		print(f"{p[(n+1)%2].name} became paralysed!")
-		p[(n+1)%2].isParalysed = True
-		playsound("sound\\paralyse.mp3")
-		time.sleep(1)
+		if (not poke.isParalysed) or (not poke.isPoisoned) or (not poke.isBurnt) or (not poke.isAsleep) or (not poke.isFrozen):
+			print(f"{poke.name} became paralysed!")
+			poke.isParalysed = True
+			playsound("sound\\paralyse.mp3")
 	elif status == 2.0:
-		print(f"{p[(n+1)%2].name} is poisoned!")
-		p[(n+1)%2].isPoisoned = True
-		playsound("sound\\poison.mp3")
-		time.sleep(1)
+		if (not poke.isParalysed) or (not poke.isPoisoned) or (not poke.isBurnt) or (not poke.isAsleep) or (not poke.isFrozen):
+			print(f"{poke.name} is poisoned!")
+			poke.isPoisoned = True
+			playsound("sound\\poison.mp3")
 	elif status == 2.5:
-		print(f"{p[(n+1)%2].name} is badly poisoned!")
-		p[(n+1)%2].isPoisoned = True
-		playsound("sound\\poison.mp3")
-		time.sleep(1)
+		if (not poke.isParalysed) or (not poke.isPoisoned) or (not poke.isBurnt) or (not poke.isAsleep) or (not poke.isFrozen):
+			print(f"{poke.name} is badly poisoned!")
+			poke.isPoisoned = True
+			playsound("sound\\poison.mp3")
 	elif status == 3.0:
-		print(f"{p[(n+1)%2].name} is burnt!")
-		p[(n+1)%2].isBurnt = True
-		playsound("sound\\burn.mp3")
-		time.sleep(1)
+		if (not poke.isParalysed) or (not poke.isPoisoned) or (not poke.isBurnt) or (not poke.isAsleep) or (not poke.isFrozen):
+			print(f"{poke.name} is burnt!")
+			poke.isBurnt = True
+			playsound("sound\\burn.mp3")
 	elif status == 4.0:
-		print(f"{p[(n+1)%2].name} became confused!")
-		p[(n+1)%2].isConfused = True
-		playsound("sound\\confused.mp3")
-		playsound("sound\\confused.mp3")
-		time.sleep(1)
+		if (not poke.isConfused):
+			print(f"{poke.name} became confused!")
+			poke.isConfused = True
+			playsound("sound\\confused.mp3")
+			playsound("sound\\confused.mp3")
 	elif status == 5.0:
-		print(f"{p[(n+1)%2].name} went to sleep!")
-		p[(n+1)%2].isAsleep = True
-		p[(n+1)%2].sleepFreezeCount = random.randint(2,5)
-		playsound("sound\\burn.mp3")
-		time.sleep(1)
+		if (not poke.isParalysed) or (not poke.isPoisoned) or (not poke.isBurnt) or (not poke.isAsleep) or (not poke.isFrozen):
+			print(f"{poke.name} went to sleep!")
+			poke.isAsleep = True
+			poke.sleepFreezeCount = random.randint(2,5)
+			playsound("sound\\burn.mp3")
 	elif status == 6.0:
-		print(f"{p[(n+1)%2].name} became frozen!")
-		p[(n+1)%2].isFrozen = True
-		p[(n+1)%2].sleepFreezeCount = random.randint(2,5)
-		playsound("sound\\freeze.mp3")
-		time.sleep(1)
+		if (not poke.isParalysed) or (not poke.isPoisoned) or (not poke.isBurnt) or (not poke.isAsleep) or (not poke.isFrozen):
+			print(f"{poke.name} became frozen!")
+			poke.isFrozen = True
+			poke.sleepFreezeCount = random.randint(2,5)
+			playsound("sound\\freeze.mp3")
 	elif status == 7.0:
-		print(f"{p[(n+1)%2].name} was seeded!")
-		p[(n+1)%2].isSeeded = True
-		playsound("sound\\seed1.mp3")
-		time.sleep(1)
-	
+		if (not poke.isSeeded):
+			print(f"{poke.name} was seeded!")
+			poke.isSeeded = True
+			playsound("sound\\seed1.mp3")
+		else:
+			print(f"{poke.name} is already seeded!")
+	time.sleep(1)
 
 def getEffectiveness(mtype,types):
 	val = [0,0]

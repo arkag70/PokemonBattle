@@ -127,15 +127,15 @@ def checkStatus(p,n,index):
 	health = str(moveset[moveset['movename'] == move_name]["health"]).split()[1]
 	status = str(moveset[moveset['movename'] == move_name]["status"]).split()[1]
 	stats = str(moveset[moveset['movename'] == move_name]["stats"]).split()[1]
-	
+	stats = stats.split(",")
 	#stats related code
 	if n == 0:
 		power = int(firstdesc[index[n]][0])
 	else:
 		power = int(seconddesc[index[n]][0])
-	if power > 0:
+
+	if power > 0 and float(stats[0]) < 0:
 		if random.randint(1,11) <= 3:
-			stats = stats.split(",")
 			if len(stats) == 1:
 				print("one")
 				applyStats(p,n,float(stats[0]))
@@ -144,7 +144,6 @@ def checkStatus(p,n,index):
 				applyStats(p,n,float(stats[0]))
 				applyStats(p,n,float(stats[1]))
 	else:
-		stats = stats.split(",")
 		if len(stats) == 1:
 			print("one")
 			applyStats(p,n,float(stats[0]))
@@ -154,8 +153,11 @@ def checkStatus(p,n,index):
 			applyStats(p,n,float(stats[1]))
 	
 	#status related code
-	applyStatus(p,n,float(status))
-
+	if power > 0:
+		if random.randint(1,11) < 3:
+			applyStatus(p,n,float(status))
+	else:
+		applyStatus(p,n,float(status))
 	
 
 	
