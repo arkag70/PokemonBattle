@@ -92,6 +92,9 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 	elif reason == "hurt itself in confusion!":
 		playsound('sound\\normal.mp3')
 		displaymsg = True
+	elif "recoil" in reason:
+		playsound('sound\\normal.mp3')
+		displaymsg = True
 	elif reason == "is hurt by burn!":
 		playsound('sound\\burn.mp3')
 		displaymsg = True
@@ -134,8 +137,8 @@ def checkStatus(p,n,index):
 	else:
 		power = int(seconddesc[index[n]][0])
 
-	if power > 0 and float(stats[0]) < 0:
-		if random.randint(1,11) <= 3:
+	if power > 0:
+		if random.randint(1,11) <= 2:
 			if len(stats) == 1:
 				print("one")
 				applyStats(p,n,float(stats[0]))
@@ -143,7 +146,7 @@ def checkStatus(p,n,index):
 				print("two")
 				applyStats(p,n,float(stats[0]))
 				applyStats(p,n,float(stats[1]))
-	else:
+	elif power == 0 or move_name == "Overheat" or move_name == "Psycho Boost":
 		if len(stats) == 1:
 			print("one")
 			applyStats(p,n,float(stats[0]))
@@ -168,7 +171,8 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	global round
 	round += 1
 	print(round)
-
+	regain_type = ["Absorb","Leech Life","Mega Drain","Giga Drain"]
+	recoil_type = ["Double-Edge"]
 	remainingonbar = [int((p[n].hp - damageon[n])*Pbar[n]["maximum"]/p[n].HP),int((p[(n+1)%2].hp - damageon[(n+1)%2])*Pbar[(n+1)%2]["maximum"]/p[(n+1)%2].HP)]
 
 	p[n].condition = checkCondition(p[n])
@@ -179,6 +183,12 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			time.sleep(1)
 			if damageon[(n+1)%2] != 0:
 				p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+				
+				if p[n].move in recoil_type:
+					p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[(n+1)%2] / 2,reason = "is hit with recoil!",effect = 1)
+				elif p[n].move in regain_type:
+					p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -1.0 * damageon[(n+1)%2] / 2,reason = "gained foe's energy!",effect = 1)
+
 			elif damageon[(n+1)%2] == 0 and effectiveness[n] == 0:
 				time.sleep(1)
 				print(f"It doesn't effect {p[(n+1)%2].name}")
@@ -236,6 +246,11 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			time.sleep(1)
 			if damageon[n] != 0:
 				p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+
+				if p[(n+1)%2].move in recoil_type:
+					p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[n] / 2,reason = "is hit with recoil!",effect = 1)	
+				elif p[(n+1)%2].move in regain_type:
+					p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -1.0 * damageon[n] / 2,reason = "gained foe's energy!",effect = 1)
 			elif damageon[n] == 0 and effectiveness[(n+1)%2] == 0:
 				time.sleep(1)
 				print(f"It doesn't effect {p[n].name}")
