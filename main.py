@@ -127,25 +127,34 @@ def checkStatus(p,n,index):
 	health = str(moveset[moveset['movename'] == move_name]["health"]).split()[1]
 	status = str(moveset[moveset['movename'] == move_name]["status"]).split()[1]
 	stats = str(moveset[moveset['movename'] == move_name]["stats"]).split()[1]
-	# print(p[0].attack,p[0].defense,p[0].speed)
-	# print(p[1].attack,p[1].defense,p[1].speed)
+	
+	#stats related code
 	if n == 0:
 		power = int(firstdesc[index[n]][0])
 	else:
 		power = int(seconddesc[index[n]][0])
 	if power > 0:
 		if random.randint(1,11) <= 3:
-			if type(stats) == str: 
-				applyStats(p,n,float(stats))
+			stats = stats.split(",")
+			if len(stats) == 1:
+				print("one")
+				applyStats(p,n,float(stats[0]))
 			else:
+				print("two")
 				applyStats(p,n,float(stats[0]))
 				applyStats(p,n,float(stats[1]))
 	else:
-		if type(stats) == str:
-			applyStats(p,n,float(stats))
+		stats = stats.split(",")
+		if len(stats) == 1:
+			print("one")
+			applyStats(p,n,float(stats[0]))
 		else:
+			print("two")
 			applyStats(p,n,float(stats[0]))
 			applyStats(p,n,float(stats[1]))
+	
+	#status related code
+	applyStatus(p,n,float(status))
 
 	
 
