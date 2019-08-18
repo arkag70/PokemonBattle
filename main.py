@@ -249,6 +249,8 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 					elif health == "1001":
 						#gift type
 						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -1.0 * damageon[(n+1)%2],reason = "gifted health to foe",effect = 1)
+				
+				checkStatus(p,n,index)
 
 		if p[(n+1)%2].hp == 0:
 			#pokeom 2 fainted
@@ -364,7 +366,9 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 					elif health == "1001":
 						#gift type
 						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -1.0 * damageon[n],reason = "gifted health to foe",effect = 1)
-					
+				
+				checkStatus(p,(n+1)%2,index)
+
 		if p[n].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
