@@ -87,6 +87,8 @@ def checkCondition(p):
 			status += " burn"
 		elif p.isSeeded:
 			status += " seed"
+		if p.isRooted:
+			status += " root"
 
 	else:
 		#free; no status problems
@@ -95,5 +97,9 @@ def checkCondition(p):
 			status += " poison"
 		elif p.isBurnt:
 			status += " burn"
+		elif p.isBurnt:
+			status += " seed"
+		if p.isRooted:
+			status += " root"
 	
 	return status

@@ -39,6 +39,7 @@ class Pokemon:
 		self.isPoisoned = False
 		self.isBurnt = False
 		self.isSeeded = False
+		self.isRooted = False
 		self.condition = "wont"
 		self.move = "Move"
 		self.acc = [0,0,0,0]

@@ -5,6 +5,8 @@ import threading
 from functions import *
 from battle import *
 
+
+hit_count = ["once","twice","three times","four times","five times"]
 p = [Pokemon(),Pokemon()]
 background_theme = ["sound\\magmatheme.wav","sound\\aquatheme.wav","sound\\finaltheme.wav","sound\\rayquaza.wav"]
 moveset = pd.read_excel("moves.xlsx",sheet_name = "sheet1")
@@ -100,7 +102,6 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 		displaymsg = True
 	elif reason == "is hurt by poison!":
 		playsound('sound\\poison.mp3')
-		playsound('sound\\poison.mp3')
 		displaymsg = True
 	elif "LEECH SEED" in reason:
 		playsound("sound\\seed1.mp3")
@@ -127,7 +128,6 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 def checkStatus(p,n,index):
 	#raise\lower attack defense speed normally or harshly or sharply
 	move_name = p[n].move
-	health = str(moveset[moveset['movename'] == move_name]["health"]).split()[1]
 	status = str(moveset[moveset['movename'] == move_name]["status"]).split()[1]
 	stats = str(moveset[moveset['movename'] == move_name]["stats"]).split()[1]
 	stats = stats.split(",")
@@ -137,23 +137,22 @@ def checkStatus(p,n,index):
 	else:
 		power = int(seconddesc[index[n]][0])
 
-	if power > 0:
-		if random.randint(1,11) <= 2:
-			if len(stats) == 1:
-				print("one")
-				applyStats(p,n,float(stats[0]))
-			else:
-				print("two")
-				applyStats(p,n,float(stats[0]))
-				applyStats(p,n,float(stats[1]))
-	elif power == 0 or move_name == "Overheat" or move_name == "Psycho Boost":
+	if power == 0 or move_name == "Overheat" or move_name == "Psycho Boost":
 		if len(stats) == 1:
-			print("one")
 			applyStats(p,n,float(stats[0]))
 		else:
-			print("two")
 			applyStats(p,n,float(stats[0]))
 			applyStats(p,n,float(stats[1]))
+	
+	
+	elif power > 0:
+		if random.randint(1,11) <= 2:
+			if len(stats) == 1:
+				applyStats(p,n,float(stats[0]))
+			else:
+				applyStats(p,n,float(stats[0]))
+				applyStats(p,n,float(stats[1]))
+	
 	
 	#status related code
 	if power > 0:
@@ -170,34 +169,87 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	willmove = 0
 	global round
 	round += 1
-	print(round)
-	regain_type = ["Absorb","Leech Life","Mega Drain","Giga Drain"]
-	recoil_type = ["Double-Edge"]
+	print(f"Round {round}")
 	remainingonbar = [int((p[n].hp - damageon[n])*Pbar[n]["maximum"]/p[n].HP),int((p[(n+1)%2].hp - damageon[(n+1)%2])*Pbar[(n+1)%2]["maximum"]/p[(n+1)%2].HP)]
 
 	p[n].condition = checkCondition(p[n])
 	
 	if "move" in p[n].condition:
+		health_col = str(moveset[moveset['movename'] == p[(n+1)%2].move]["health"]).split()[1].split(';')
+		crit_factor = int(health_col[0])
+		health = health_col[1]
 		print(f"{p[n].name} used {p[n].move}")
-		if random.randint(1,100) < accuracy[n]:
+		#check if it effects opponent
+		if effectiveness[n] == 0:
 			time.sleep(1)
-			if damageon[(n+1)%2] != 0:
-				p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[(n+1)%2],reason = "",effect = effectiveness[n])
-				
-				if p[n].move in recoil_type:
-					p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[(n+1)%2] / 2,reason = "is hit with recoil!",effect = 1)
-				elif p[n].move in regain_type:
-					p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -1.0 * damageon[(n+1)%2] / 2,reason = "gained foe's energy!",effect = 1)
-
-			elif damageon[(n+1)%2] == 0 and effectiveness[n] == 0:
-				time.sleep(1)
-				print(f"It doesn't effect {p[(n+1)%2].name}")
-				time.sleep(1)
-			#check stats update from moves.xlsx	
-			checkStatus(p,n,index)
+			print(f"It doesn't effect {p[(n+1)%2].name}")
 		else:
+			#It effects and now check accuracy
 			time.sleep(1)
-			print(f"{p[n].name}'s attack missed!")
+			if random.randint(1,100) > accuracy[n]:
+				#miss
+				print(f"{p[n].name}'s attack missed!")
+			else:
+				#hit
+				if damageon[(n+1)%2] == 0:
+					# zero powered move : ingrain, leech seed, recover, flail
+					pass
+				else:
+					#get type of hit (gain,recoil,hits)
+					if health == "1000":
+						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
+						#tackle
+						if p[n].move == "Magnitude":
+							value = random.randint(1,10)
+							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * value * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+							print(f"Magnitude {value}")
+
+						elif p[n].move == "Flail":
+							value = 1.2 * (p[(n+1)%2].HP - p[(n+1)%2].hp)
+							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * value * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+
+						else:
+							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+						
+						if crit() == 1.5:
+								print("It's a critical hit")
+					
+					elif int(health[0]) >= 2:
+						#multi hit moves - double or 2-5 times
+						for i in range(random.randint(2,int(health[0]))):
+							crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
+							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+							if crit() == 1.5:
+								print("It's a critical hit")	
+							if p[(n+1)%2].hp == 0:
+								#pokemon 2 fainted
+								print(f"Hit {hit_count[i]}!")
+								playsound("sound\\faint.mp3")
+								print(f"{p[(n+1)%2].name} fainted!")
+								return -1
+						#after loop
+						print(f"Hit {hit_count[i]}!")
+
+					elif health == "1100":
+						#recoil
+						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
+						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[(n+1)%2] / 2,reason = "is hit with recoil!",effect = 1)
+						if crit() == 1.5:
+							print("It's a critical hit")
+
+					elif health == "1010":
+						#gain type
+						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
+						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -1.0 * crit() * damageon[(n+1)%2] / 2,reason = "gained foe's energy!",effect = 1)	
+						if crit() == 1.5:
+							print("It's a critical hit")
+
+					elif health == "1001":
+						#gift type
+						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -1.0 * damageon[(n+1)%2],reason = "gifted health to foe",effect = 1)
+
 		if p[(n+1)%2].hp == 0:
 			#pokeom 2 fainted
 			playsound("sound\\faint.mp3")
@@ -241,24 +293,78 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 
 	if willmove == 1:
 		# time.sleep(1)
+		health_col = str(moveset[moveset['movename'] == p[(n+1)%2].move]["health"]).split()[1].split(';')
+		crit_factor = int(health_col[0])
+		health = health_col[1]
 		print(f"{p[(n+1)%2].name} used {p[(n+1)%2].move}")
-		if random.randint(1,100) < accuracy[(n+1)%2]:
+		#check if it effects opponent
+		if effectiveness[(n+1)%2] == 0:
 			time.sleep(1)
-			if damageon[n] != 0:
-				p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = damageon[n],reason = "",effect = effectiveness[(n+1)%2])
-
-				if p[(n+1)%2].move in recoil_type:
-					p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = damageon[n] / 2,reason = "is hit with recoil!",effect = 1)	
-				elif p[(n+1)%2].move in regain_type:
-					p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -1.0 * damageon[n] / 2,reason = "gained foe's energy!",effect = 1)
-			elif damageon[n] == 0 and effectiveness[(n+1)%2] == 0:
-				time.sleep(1)
-				print(f"It doesn't effect {p[n].name}")
-				time.sleep(1)
-			checkStatus(p,((n+1)%2),index)
+			print(f"It doesn't effect {p[n].name}")
 		else:
+			#It effects and now check accuracy
 			time.sleep(1)
-			print(f"{p[(n+1)%2].name}'s attack missed!")
+			if random.randint(1,100) > accuracy[(n+1)%2]:
+				#miss
+				print(f"{p[(n+1)%2].name}'s attack missed!")
+			else:
+				#hit
+				if damageon[n] == 0:
+					# zero powered move : ingrain, leech seed, recover, flail
+					pass
+				else:
+					#get type of hit (gain,recoil,hits)
+					
+					if health == "1000":
+						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
+						#tackle
+						if p[(n+1)%2].move == "Magnitude":
+							value = random.randint(1,10)
+							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * value * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+							print(f"Magnitude {value}")
+						elif p[(n+1)%2].move == "Flail":
+							value = 1.2 * (p[n].HP - p[n].hp)
+							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * value * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+						else:
+							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+						if crit() == 1.5:
+							print("It's a critical hit")
+					
+					elif int(health[0]) >= 2:
+						#multi hit moves - double or 2-5 times
+						for i in range(random.randint(2,int(health[0]))):
+							crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
+							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+							if crit() == 1.5:
+								print("It's a critical hit")
+							if p[n].hp == 0:
+								#pokemon 2 fainted
+								print(f"Hit {hit_count[i]}!")
+								playsound("sound\\faint.mp3")
+								print(f"{p[n].name} fainted!")
+								return -1
+						#after loop
+						print(f"Hit {hit_count[i]}!")
+
+					elif health == "1100":
+						#recoil
+						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
+						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[n] / 2,reason = "is hit with recoil!",effect = 1)
+						if crit() == 1.5:
+							print("It's a critical hit")
+
+					elif health == "1010":
+						#gain type
+						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
+						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -1.0 * crit() * damageon[n] / 2,reason = "gained foe's energy!",effect = 1)
+						if crit() == 1.5:
+							print("It's a critical hit")
+					elif health == "1001":
+						#gift type
+						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -1.0 * damageon[n],reason = "gifted health to foe",effect = 1)
+					
 		if p[n].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -306,6 +412,12 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			return -2
 		else:
 			pass
+	if "root" in p[n].condition and (p[n].hp < p[n].HP):
+		time.sleep(2)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -5,reason = "absorbed nutrients with its roots!",effect = 1)
+		playsound("sound\\seed2.mp3")
+		playsound("sound\\seed3.mp3")
+	
 	if "poison" in p[(n+1)%2].condition:
 		time.sleep(2)
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by poison!",effect = 1)
@@ -337,6 +449,11 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			return -1
 		else:
 			pass
+	if "root" in p[(n+1)%2].condition and (p[(n+1)%2].hp < p[(n+1)%2].HP):
+		time.sleep(2)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -5,reason = "absorbed nutrients with its roots!",effect = 1)
+		playsound("sound\\seed2.mp3")
+		playsound("sound\\seed3.mp3")
 	return 0
 
 
@@ -393,14 +510,13 @@ def fight():
 	movepower1 = int(firstdesc[index1][0])
 	movepower2 = int(seconddesc[index2][0])
 	accuracy = [int(p[0].acc[index1]),int(p[1].acc[index2])]
-	print(accuracy)
 	maxA = p[0].maxAttack
 	maxD = p[0].maxDefense
 	effectiveness = checkEffect(p)
 	#	damage on opponent = move-power * (normalize(self Attack) + (1 - normalize(opponent defense)))
 	damageon = [0,0]
-	damageon[0] = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.1*movepower2)*effectiveness[1]
-	damageon[1] = int(((p[0].attack/maxD)+(1-(p[1].defense/maxD)))*0.1*movepower1)*effectiveness[0]
+	damageon[0] = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.2*movepower2)*effectiveness[1]
+	damageon[1] = int(((p[0].attack/maxD)+(1-(p[1].defense/maxD)))*0.2*movepower1)*effectiveness[0]
 
 	# print(damageon[0],damageon[1])
 	# # p[0].isParalysed = True

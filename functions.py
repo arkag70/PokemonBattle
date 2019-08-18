@@ -205,6 +205,14 @@ def applyStatus(p,n,status):
 			playsound("sound\\seed1.mp3")
 		else:
 			print(f"{poke.name} is already seeded!")
+	elif status == 8.0:
+		if (not poke.isRooted):
+			print(f"{poke.name} planted its roots!")
+			poke.isRooted = True
+			playsound("sound\\roots.mp3")
+			playsound("sound\\roots.mp3")
+		else:
+			print(f"{poke.name} is already seeded!")
 	elif status == -10.0:
 		if poke.isSeeded or poke.isFrozen or poke.isAsleep or poke.isConfused or poke.isBurnt or poke.isPoisoned or poke.isParalysed:
 			poke.isParalysed = False
