@@ -9,6 +9,7 @@ def getData():
 	global maxAttack,maxDefense
 	dataset = pd.read_csv("poke.csv")
 	datasheet = dataset.iloc[:385]
+	print(datasheet.tail(1))
 	return dataset
 
 class Pokemon:
