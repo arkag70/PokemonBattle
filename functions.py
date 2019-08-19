@@ -210,8 +210,8 @@ def applyStatus(p,n,status):
 		if (not p[n].isRooted):
 			print(f"{p[n].name} planted its roots!")
 			p[n].isRooted = True
-			# playsound("sound\\roots.mp3")
-			# playsound("sound\\roots.mp3")
+			playsound("sound\\roots.mp3")
+			playsound("sound\\roots.mp3")
 		else:
 			print("But it failed!")
 	elif status == -10.0:

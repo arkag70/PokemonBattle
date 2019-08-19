@@ -9,7 +9,6 @@ def getData():
 	global maxAttack,maxDefense
 	dataset = pd.read_csv("poke.csv")
 	datasheet = dataset.iloc[:385]
-	print(datasheet.tail(1))
 	return dataset
 
 class Pokemon:
@@ -44,6 +43,7 @@ class Pokemon:
 		self.condition = "wont"
 		self.move = "Move"
 		self.acc = [0,0,0,0]
+		self.bellyDrum_Memento = False
 
 		i += 1
 		if len(str(i)) == 1:
