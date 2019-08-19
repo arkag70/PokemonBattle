@@ -108,8 +108,9 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 		playsound("sound\\seed2.mp3")
 		displaymsg = True
 		f = 1
-	elif "gained HP" in reason or deduct < 0:
+	elif deduct < 0:
 		playsound("sound\\seed3.mp3")
+		displaymsg = True
 		f = -1
 	if displaymsg == True:
 		print(f"{p[i].name} {reason}")
@@ -408,7 +409,7 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	if "seed" in p[n].condition:
 		time.sleep(2)
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "health is sapped by LEECH SEED!",effect = 1)
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -10,reason = "gained HP!",effect = 1)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -10,reason = "gained foe's energy!!",effect = 1)
 		if p[n].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -419,8 +420,6 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	if "root" in p[n].condition and (p[n].hp < p[n].HP):
 		time.sleep(2)
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -5,reason = "absorbed nutrients with its roots!",effect = 1)
-		playsound("sound\\seed2.mp3")
-		playsound("sound\\seed3.mp3")
 	
 	if "poison" in p[(n+1)%2].condition:
 		time.sleep(2)
@@ -445,7 +444,7 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	if "seed" in p[(n+1)%2].condition:
 		time.sleep(2)
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "health is sapped by LEECH SEED!",effect = 1)
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -10,reason = "gained HP!",effect = 1)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -10,reason = "gained foe's energy!!",effect = 1)
 		if p[(n+1)%2].hp == 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.mp3")
@@ -456,8 +455,6 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	if "root" in p[(n+1)%2].condition and (p[(n+1)%2].hp < p[(n+1)%2].HP):
 		time.sleep(2)
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -5,reason = "absorbed nutrients with its roots!",effect = 1)
-		playsound("sound\\seed2.mp3")
-		playsound("sound\\seed3.mp3")
 	return 0
 
 
