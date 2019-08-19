@@ -158,6 +158,7 @@ def applyStats(p,n,stats):
 
 def applyStatus(p,n,status):
 	time.sleep(1)
+	
 	poke = p[(n+1)%2]
 	if status == 1.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
@@ -206,13 +207,13 @@ def applyStatus(p,n,status):
 		else:
 			print(f"{poke.name} is already seeded!")
 	elif status == 8.0:
-		if (not poke.isRooted):
-			print(f"{poke.name} planted its roots!")
-			poke.isRooted = True
-			playsound("sound\\roots.mp3")
-			playsound("sound\\roots.mp3")
+		if (not p[n].isRooted):
+			print(f"{p[n].name} planted its roots!")
+			p[n].isRooted = True
+			# playsound("sound\\roots.mp3")
+			# playsound("sound\\roots.mp3")
 		else:
-			print(f"{poke.name} is already seeded!")
+			print("But it failed!")
 	elif status == -10.0:
 		if poke.isSeeded or poke.isFrozen or poke.isAsleep or poke.isConfused or poke.isBurnt or poke.isPoisoned or poke.isParalysed:
 			poke.isParalysed = False
