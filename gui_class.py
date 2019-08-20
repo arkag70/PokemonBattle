@@ -26,10 +26,10 @@ class PokeGUI:
 		self.thirdright.grid(row = 2,column = 1)
 
 		self.bottom = tk.Frame(self.master)
-		self.bottom.grid(row = 3,column = 0)
+		self.bottom.grid(row = 3,column = 0,columnspan = 4,pady = 5)
 
 		self.remark = tk.Frame(self.master)
-		self.remark.grid(row = 4,column = 0)
+		self.remark.grid(row = 4,column = 0,columnspan = 4)
 
 	def createLabel(self,canvas,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12 bold")):
 		self.label = tk.Label(canvas,text = text_,font=font_,background = "#f0ead6")
@@ -41,9 +41,9 @@ class PokeGUI:
 	# 	self.entry.grid(row = row_,column = col_,padx = padx_, pady = pady_)
 	# 	return self.entry
 
-	def createButton(self,canvas,command_,text_ = "Button-Text",width_ = 5,bd_ = 3,font_ = ("Calibri 12")):
+	def createButton(self,canvas,command_,text_ = "Button-Text",width_ = 10,bd_ = 3,font_ = ("Calibri 12")):
 		self.button = tk.Button(canvas,text = text_,command = command_,width = width_,bd = bd_,font = font_)
-		self.button.grid(row = 0,column = 0,sticky = tk.W + tk.E)
+		self.button.grid(row = 0,column = 0)
 		return self.button
 
 	def createRadioButton(self,canvas,variable_,text_ = "radio-item",value_ = 1,row_ = 0, col_ = 0):
@@ -67,6 +67,27 @@ class PokeGUI:
 		self.pbar["maximum"] = length_
 		self.pbar["value"] = length_
 		return self.pbar
+
+	def createListBox(self,canvas):
+		v_scrollbar_i = tk.Scrollbar(canvas,orient = tk.VERTICAL,bd = 2) 
+		h_scrollbar_i = tk.Scrollbar(canvas,orient = tk.HORIZONTAL,bd = 2)
+
+		inputs = tk.Listbox(canvas, width=60, height=5,
+					yscrollcommand = v_scrollbar_i.set,
+					xscrollcommand = h_scrollbar_i.set,
+					bd = 2)
+
+		v_scrollbar_i.config(command=inputs.yview)
+		h_scrollbar_i.config(command=inputs.xview)
+
+		v_scrollbar_i.pack(side="right", fill="y")
+		h_scrollbar_i.pack(side="bottom", fill="x")
+
+		inputs.pack(side = tk.LEFT)
+		inputs.configure(font=("Calibri", 12))
+
+		return inputs
+
 
 
 

@@ -7,213 +7,214 @@ import time
 
 	
 def applyStats(p,n,stats):
-
+	statmsg = ""
 	if stats == 0:
 		pass
 	#attack
 	if stats == 1:
 		p[n].attack *= 1.25
-		print(f"{p[n].name}'s attack rose!")
+		statmsg = f"{p[n].name}'s attack rose!"
 	elif stats == 1.25:
 		p[n].attack *= 1.5
-		print(f"{p[n].name}'s attack sharply rose!")
+		statmsg = f"{p[n].name}'s attack sharply rose!"
 	elif stats == 1.5:
 		p[(n+1)%2].attack *= 1.25
-		print(f"{p[(n+1)%2].name}'s attack rose!")
+		statmsg = f"{p[(n+1)%2].name}'s attack rose!"
 	elif stats == 1.75:
 		p[(n+1)%2].attack *= 1.5
-		print(f"{p[(n+1)%2].name}'s attack sharply rose!")
+		statmsg = f"{p[(n+1)%2].name}'s attack sharply rose!"
 	elif stats == -1:
 		p[n].attack *= 0.8
-		print(f"{p[n].name}'s attack fell!")
+		statmsg = f"{p[n].name}'s attack fell!"
 	elif stats == -1.25:
 		p[n].attack *= 0.67
-		print(f"{p[n].name}'s attack harshly fell!")
+		statmsg = f"{p[n].name}'s attack harshly fell!"
 	elif stats == -1.5:
 		p[(n+1)%2].attack *= 0.8
-		print(f"{p[(n+1)%2].name}'s attack fell!")
+		statmsg = f"{p[(n+1)%2].name}'s attack fell!"
 	elif stats == -1.75:
 		p[(n+1)%2].attack *= 0.67
-		print(f"{p[(n+1)%2].name}'s attack harshly fell!")
+		statmsg = f"{p[(n+1)%2].name}'s attack harshly fell!"
 	#defense
 	elif stats == 2:
 		p[n].defense *= 1.25
-		print(f"{p[n].name}'s defense rose!")
+		statmsg = f"{p[n].name}'s defense rose!"
 	elif stats == 2.25:
 		p[n].defense *= 1.5
-		print(f"{p[n].name}'s defense sharply rose!")
+		statmsg = f"{p[n].name}'s defense sharply rose!"
 	elif stats == 2.5:
 		p[(n+1)%2].defense *= 1.25
-		print(f"{p[(n+1)%2].name}'s defense rose!")
+		statmsg = f"{p[(n+1)%2].name}'s defense rose!"
 	elif stats == 2.75:
 		p[(n+1)%2].defense *= 1.5
-		print(f"{p[(n+1)%2].name}'s defense sharply rose!")
+		statmsg = f"{p[(n+1)%2].name}'s defense sharply rose!"
 	elif stats == -2:
 		p[n].defense *= 0.8
-		print(f"{p[n].name}'s defense fell!")
+		statmsg = f"{p[n].name}'s defense fell!"
 	elif stats == -2.25:
 		p[n].defense *= 0.67
-		print(f"{p[n].name}'s defense harshly fell!")
+		statmsg = f"{p[n].name}'s defense harshly fell!"
 	elif stats == -2.5:
 		p[(n+1)%2].defense *= 0.8
-		print(f"{p[(n+1)%2].name}'s defense fell!")
+		statmsg = f"{p[(n+1)%2].name}'s defense fell!"
 	elif stats == -2.75:
 		p[(n+1)%2].defense *= 0.67
-		print(f"{p[(n+1)%2].name}'s defense harshly fell!")
+		statmsg = f"{p[(n+1)%2].name}'s defense harshly fell!"
 	#speed
 	elif stats == 3:
 		p[n].speed *= 1.25
-		print(f"{p[n].name}'s speed rose!")
+		statmsg = f"{p[n].name}'s speed rose!"
 	elif stats == 3.25:
 		p[n].speed *= 1.5
-		print(f"{p[n].name}'s speed sharply rose!")
+		statmsg = f"{p[n].name}'s speed sharply rose!"
 	elif stats == 3.5:
 		p[(n+1)%2].speed *= 1.25
-		print(f"{p[(n+1)%2].name}'s speed rose!")
+		statmsg = f"{p[(n+1)%2].name}'s speed rose!"
 	elif stats == 3.75:
 		p[(n+1)%2].speed *= 1.5
-		print(f"{p[(n+1)%2].name}'s speed sharply rose!")
+		statmsg = f"{p[(n+1)%2].name}'s speed sharply rose!"
 	elif stats == -3:
 		p[n].speed *= 0.8
-		print(f"{p[n].name}'s speed fell!")
+		statmsg = f"{p[n].name}'s speed fell!"
 	elif stats == -3.25:
 		p[n].speed *= 0.67
-		print(f"{p[n].name}'s speed harshly fell!")
+		statmsg = f"{p[n].name}'s speed harshly fell!"
 	elif stats == -3.5:
 		p[(n+1)%2].speed *= 0.8
-		print(f"{p[(n+1)%2].name}'s speed fell!")
+		statmsg = f"{p[(n+1)%2].name}'s speed fell!"
 	elif stats == -3.75:
 		p[(n+1)%2].speed *= 0.67
-		print(f"{p[(n+1)%2].name}'s speed harshly fell!")
+		statmsg = f"{p[(n+1)%2].name}'s speed harshly fell!"
 	elif stats == 4:
 		p[n].attack *= 1.25
 		p[n].defense *= 1.25
 		p[n].attack *= 1.25
-		print(f"{p[n]}'s attack, defense and speed rose!")
+		statmsg = f"{p[n]}'s attack, defense and speed rose!"
 	elif stats == 4.25:
 		p[n].attack *= 1.5
 		p[n].defense *= 1.5
 		p[n].attack *= 1.5
-		print(f"{p[n]}'s attack, defense and speed sharply rose!")
+		statmsg = f"{p[n]}'s attack, defense and speed sharply rose!"
 	elif stats == 4.5:
 		p[(n+1)%2].attack *= 1.25
 		p[(n+1)%2].defense *= 1.25
 		p[(n+1)%2].attack *= 1.25
-		print(f"{p[(n+1)%2]}'s attack, defense and speed rose!")
+		statmsg = f"{p[(n+1)%2]}'s attack, defense and speed rose!"
 	elif stats == 4.75:
 		p[(n+1)%2].attack *= 1.25
 		p[(n+1)%2].defense *= 1.25
 		p[(n+1)%2].attack *= 1.25
-		print(f"{p[(n+1)%2]}'s attack, defense and speed sharply rose!")
+		statmsg = f"{p[(n+1)%2]}'s attack, defense and speed sharply rose!"
 	elif stats == -4:
 		p[n].attack *= 0.8
 		p[n].defense *= 0.8
 		p[n].attack *= 0.8
-		print(f"{p[n]}'s attack, defense and speed fell!")
+		statmsg = f"{p[n]}'s attack, defense and speed fell!"
 	elif stats == -4.25:
 		p[n].attack *= 0.67
 		p[n].defense *= 0.67
 		p[n].attack *= 0.67
-		print(f"{p[n]}'s attack, defense and speed harshly fell!")
+		statmsg = f"{p[n]}'s attack, defense and speed harshly fell!"
 	elif stats == -4.5:
 		p[(n+1)%2].attack *= 0.8
 		p[(n+1)%2].defense *= 0.8
 		p[(n+1)%2].attack *= 0.8
-		print(f"{p[(n+1)%2]}'s attack, defense and speed fell!")
+		statmsg = f"{p[(n+1)%2]}'s attack, defense and speed fell!"
 	elif stats == -4.75:
 		p[(n+1)%2].attack *= 0.67
 		p[(n+1)%2].defense *= 0.67
 		p[(n+1)%2].attack *= 0.67
-		print(f"{p[(n+1)%2]}'s attack, defense and speed harshly fell!")
+		statmsg = f"{p[(n+1)%2]}'s attack, defense and speed harshly fell!"
 	#accuracy
 	elif stats == 5:
 		p[n].acc = [int(i)+5 for i in p[n].acc]
-		print(f"{p[n].name}'s accuracy rose!")
+		statmsg = f"{p[n].name}'s accuracy rose!"
 	elif stats == 5.25:
 		p[n].acc = [int(i)+10 for i in p[n].acc]
-		print(f"{p[n].name}'s accuracy sharply rose!")
+		statmsg = f"{p[n].name}'s accuracy sharply rose!"
 	elif stats == 5.5:
 		p[(n+1)%2].acc = [int(i)+5 for i in p[(n+1)%2].acc]
-		print(f"{p[(n+1)%2].name}'s accuracy rose!")
+		statmsg = f"{p[(n+1)%2].name}'s accuracy rose!"
 	elif stats == 5.75:
 		p[(n+1)%2].acc = [int(i)+10 for i in p[(n+1)%2].acc]
-		print(f"{p[(n+1)%2].name}'s accuracy sharply rose!")
+		statmsg = f"{p[(n+1)%2].name}'s accuracy sharply rose!"
 	elif stats == -5:
 		p[n].acc = [int(i)-5 for i in p[n].acc]
-		print(f"{p[n].name}'s accuracy fell!")
+		statmsg = f"{p[n].name}'s accuracy fell!"
 	elif stats == -5.25:
 		p[n].acc = [int(i)-10 for i in p[n].acc]
-		print(f"{p[n].name}'s accuracy harshly fell!")
+		statmsg = f"{p[n].name}'s accuracy harshly fell!"
 	elif stats == -5.5:
 		p[(n+1)%2].acc = [int(i)-5 for i in p[(n+1)%2].acc]
-		print(f"{p[(n+1)%2].name}'s accuracy fell!")
+		statmsg = f"{p[(n+1)%2].name}'s accuracy fell!"
 	elif stats == -5.75:
 		p[(n+1)%2].acc = [int(i)-10 for i in p[(n+1)%2].acc]
-		print(f"{p[(n+1)%2].name}'s accuracy harshly fell!")
+		statmsg = f"{p[(n+1)%2].name}'s accuracy harshly fell!"
 
 	if stats > 0:
 		playsound("sound\\rise.mp3")
 	elif stats < 0:
 		playsound("sound\\fall.mp3")
+	return statmsg
 
 def applyStatus(p,n,status):
 	time.sleep(1)
-	
+	statusmsg = ""
 	poke = p[(n+1)%2]
 	if status == 1.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
-			print(f"{poke.name} became paralysed!")
+			statusmsg = f"{poke.name} became paralysed!"
 			poke.isParalysed = True
 			playsound("sound\\paralyse.mp3")
 	elif status == 2.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
-			print(f"{poke.name} is poisoned!")
+			statusmsg = f"{poke.name} is poisoned!"
 			poke.isPoisoned = True
 			playsound("sound\\poison.mp3")
 	elif status == 2.5:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
-			print(f"{poke.name} is badly poisoned!")
+			statusmsg = f"{poke.name} is badly poisoned!"
 			poke.isPoisoned = True
 			playsound("sound\\poison.mp3")
 	elif status == 3.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
-			print(f"{poke.name} is burnt!")
+			statusmsg = f"{poke.name} is burnt!"
 			poke.isBurnt = True
 			playsound("sound\\burn.mp3")
 	elif status == 4.0:
 		if (not poke.isConfused):
-			print(f"{poke.name} became confused!")
+			statusmsg = f"{poke.name} became confused!"
 			poke.isConfused = True
 			poke.confuseCount = random.randint(2,5)
 			playsound("sound\\confused.mp3")
 			playsound("sound\\confused.mp3")
 	elif status == 5.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
-			print(f"{poke.name} went to sleep!")
+			statusmsg = f"{poke.name} went to sleep!"
 			poke.isAsleep = True
 			poke.sleepFreezeCount = random.randint(2,5)
 			playsound("sound\\burn.mp3")
 	elif status == 6.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
-			print(f"{poke.name} became frozen!")
+			statusmsg = f"{poke.name} became frozen!"
 			poke.isFrozen = True
 			poke.sleepFreezeCount = random.randint(2,5)
 			playsound("sound\\freeze.mp3")
 	elif status == 7.0:
 		if (not poke.isSeeded):
-			print(f"{poke.name} was seeded!")
+			statusmsg = f"{poke.name} was seeded!"
 			poke.isSeeded = True
 			playsound("sound\\seed1.mp3")
 		else:
-			print(f"{poke.name} is already seeded!")
+			statusmsg = f"{poke.name} is already seeded!"
 	elif status == 8.0:
 		if (not p[n].isRooted):
-			print(f"{p[n].name} planted its roots!")
+			statusmsg = f"{p[n].name} planted its roots!"
 			p[n].isRooted = True
 			playsound("sound\\roots.mp3")
 			playsound("sound\\roots.mp3")
 		else:
-			print("But it failed!")
+			statusmsg = "But it failed!"
 	elif status == -10.0:
 		if poke.isSeeded or poke.isFrozen or poke.isAsleep or poke.isConfused or poke.isBurnt or poke.isPoisoned or poke.isParalysed:
 			poke.isParalysed = False
@@ -223,11 +224,12 @@ def applyStatus(p,n,status):
 			poke.isAsleep = False
 			poke.isFrozen = False
 			poke.isSeeded = False
-			print(f"{poke.name} was healed of all status problems!")
+			statusmsg = f"{poke.name} was healed of all status problems!"
 			playsound("sound\\seed3.mp3")
 		else:
-			print(f"But it failed!")
+			statusmsg = f"But it failed!"
 	time.sleep(1)
+	return statusmsg
 
 def getEffectiveness(mtype,types):
 	val = [0,0]
