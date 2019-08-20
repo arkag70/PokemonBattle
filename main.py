@@ -194,18 +194,18 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 				#hit
 				if damageon[(n+1)%2] == 0:
 					if health == -50:
-						if p[n].bellyDrum_Memento == False:
+						if p[n].bellyDrum_Memento == False and p[n].hp > p[n].HP/2:
 							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = p[n].HP/2,reason = "",effect = 1)
 							if p[n].hp <= 0:
 								playsound("sound\\faint.mp3")
 								print(f"{p[n].name} fainted!")
 								return -2
 							elif p[n].move == "Belly Drum":
-								p[n].attack = 150
+								p[n].attack *= 4
 								print(f"{p[n].name} maximized its attacks!")
 								playsound("sound\\rise.mp3")
 							elif p[n].move == "Memento":
-								p[(n+1)%2].attack = 15
+								p[(n+1)%2].attack *= 0.25
 								print(f"{p[n].name} sharply lowered {p[(n+1)%2].name}'s attack!")
 								playsound("sound\\fall.mp3")
 							p[n].bellyDrum_Memento = True
@@ -333,18 +333,18 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 				if damageon[n] == 0:
 					# zero powered move : ingrain, leech seed, recover, flail
 					if health == -50:
-						if p[(n+1)%2].bellyDrum_Memento == False:
+						if p[(n+1)%2].bellyDrum_Memento == False and p[(n+1)%2].hp > p[(n+1)%2].HP/2:
 							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = p[(n+1)%2].HP/2,reason = "",effect = 1)
 							if p[(n+1)%2].hp <= 0:
 								playsound("sound\\faint.mp3")
 								print(f"{p[(n+1)%2].name} fainted!")
 								return -1						
 							elif p[(n+1)%2].move == "Belly Drum":
-								p[(n+1)%2].attack = 150
+								p[(n+1)%2].attack *= 4
 								print(f"{p[(n+1)%2].name} maximized its attack!")
 								playsound("sound\\rise.mp3")
 							elif p[(n+1)%2].move == "Memento":
-								p[n].attack = 15
+								p[n].attack *= 0.25
 								print(f"{p[(n+1)%2].name} sharply lowered {p[n]}'s attack!")
 								playsound("sound\\fall.mp3")
 							p[(n+1)%2].bellyDrum_Memento == True
