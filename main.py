@@ -178,7 +178,6 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	if "move" in p[n].condition:
 		health = int(str(moveset[moveset['movename'] == p[n].move]["health"]).split()[1])
 		crit_factor = int(str(moveset[moveset['movename'] == p[n].move]["critical"]).split()[1])
-		print(crit_factor,health)
 		print(f"{p[n].name} used {p[n].move}")
 		#check if it effects opponent
 		if effectiveness[n] == 0:
@@ -222,11 +221,6 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 							value = random.randint(1,10)
 							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * value * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
 							print(f"Magnitude {value}")
-
-						elif p[n].move == "Flail":
-							value = 1.2 * (p[(n+1)%2].HP - p[(n+1)%2].hp)
-							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * value * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
-
 						else:
 							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
 						
@@ -316,7 +310,6 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 		# time.sleep(1)
 		health = int(str(moveset[moveset['movename'] == p[(n+1)%2].move]["health"]).split()[1])
 		crit_factor = int(str(moveset[moveset['movename'] == p[(n+1)%2].move]["critical"]).split()[1])
-		print(crit_factor,health)
 		print(f"{p[(n+1)%2].name} used {p[(n+1)%2].move}")
 		#check if it effects opponent
 		if effectiveness[(n+1)%2] == 0:
@@ -362,9 +355,6 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 							value = random.randint(1,10)
 							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * value * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
 							print(f"Magnitude {value}")
-						elif p[(n+1)%2].move == "Flail":
-							value = 1.2 * (p[n].HP - p[n].hp)
-							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * value * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
 						else:
 							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
 						if crit() == 1.5:
@@ -537,6 +527,22 @@ def checkEffect(p):
 	# val = getEffectiveness(("fire","grass"),(("fire","grass"),("fire","grass")))
 	return val
 
+def getFlail(p):
+
+	fraction = p.hp/p.HP
+	if fraction > 0.6875:
+		return 20
+	elif fraction > 0.3542:
+		return 40
+	elif fraction > 0.2083:
+		return 80
+	elif fraction > 0.1042:
+		return 100
+	elif fraction > 0.0417:
+		return 150
+	else:
+		return 200
+
 def fight():
 	global disablity
 	index1 = var1.get()
@@ -545,8 +551,16 @@ def fight():
 
 	p[0].move = firstmoves[index1]
 	p[1].move = secondmoves[index2]
-	movepower1 = int(firstdesc[index1][0])
-	movepower2 = int(seconddesc[index2][0])
+
+	if p[0].move == "Flail":
+		movepower1 = getFlail(p[0])
+	else:	
+		movepower1 = int(firstdesc[index1][0])
+	if p[1].move == "Flail":
+		movepower2 = getFlail(p[1])
+	else:
+		movepower2 = int(seconddesc[index2][0])
+
 	accuracy = [int(p[0].acc[index1]),int(p[1].acc[index2])]
 	maxA = p[0].maxAttack
 	maxD = p[0].maxDefense
@@ -555,6 +569,7 @@ def fight():
 	damageon = [0,0]
 	damageon[0] = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.2*movepower2)*effectiveness[1]
 	damageon[1] = int(((p[0].attack/maxD)+(1-(p[1].defense/maxD)))*0.2*movepower1)*effectiveness[0]
+
 
 	# print(damageon[0],damageon[1])
 	# # p[0].isParalysed = True
@@ -572,6 +587,8 @@ def fight():
 		n = 1
 	disablity = startProgress(damageon,accuracy,n,(index1,index2),(effectiveness))
 	
+	# increment_power_check(p[0].move,index1)
+	# increment_power_check(p[1].move,index2)
 
 
 '''
