@@ -5,7 +5,10 @@ import threading
 from functions import *
 from battle import *
 
-
+ice_ball = 0
+roll_out = 0
+fury_cutter = 1
+basepow = [30,30,10]
 hit_count = ["once","twice","three times","four times","five times"]
 p = [Pokemon(),Pokemon()]
 background_theme = ["sound\\magmatheme.wav","sound\\aquatheme.wav","sound\\finaltheme.wav","sound\\rayquaza.wav"]
@@ -151,7 +154,7 @@ def checkStatus(p,n,index):
 	
 	
 	elif power > 0:
-		if random.randint(1,11) <= 2:
+		if random.randint(1,11) <= 11:
 			if len(stats) == 1:
 				display(applyStats(p,n,float(stats[0])))
 			else:
@@ -161,7 +164,7 @@ def checkStatus(p,n,index):
 	
 	#status related code
 	if power > 0:
-		if random.randint(1,11) < 3:
+		if random.randint(1,11) < 11:
 			display(applyStatus(p,n,float(status)))
 	else:
 		display(applyStatus(p,n,float(status)))
@@ -551,6 +554,35 @@ def getFlail(p):
 	else:
 		return 200
 
+def getMovePower(p,index,desc):
+	global ice_ball,roll_out,fury_cutter
+	movepower = [0,0]
+	for i in range(2):
+		if p[i].move == "Ice Ball":
+			roll_out = 0
+			movepower[i] = basepow[0] * (1 + ice_ball)
+			ice_ball  = (ice_ball + 1) % 5
+		elif p[i].move == "Rollout":
+			ice_ball = 0
+			movepower[i] = basepow[1] * (1 + roll_out)
+			roll_out  = (roll_out + 1) % 5
+		elif p[i].move == "Fury Cutter":
+			ice_ball = 0
+			roll_out = 0
+			movepower[i] = basepow[2] * fury_cutter
+			if fury_cutter < 16:
+				fury_cutter  = (fury_cutter * 2)
+
+		elif p[i].move == "Flail":
+			movepower[i] = getFlail(p[i])
+		else:		#firstdesc[index1][0]
+			movepower[i] = int(desc[i][index[i]][0])
+	return movepower	
+
+			
+
+
+
 def fight():
 	global disablity
 	index1 = var1.get()
@@ -560,14 +592,15 @@ def fight():
 	p[0].move = firstmoves[index1]
 	p[1].move = secondmoves[index2]
 
-	if p[0].move == "Flail":
-		movepower1 = getFlail(p[0])
-	else:	
-		movepower1 = int(firstdesc[index1][0])
-	if p[1].move == "Flail":
-		movepower2 = getFlail(p[1])
-	else:
-		movepower2 = int(seconddesc[index2][0])
+	movepower1,movepower2 = getMovePower(p,(index1,index2),(firstdesc,seconddesc))
+	# if p[0].move == "Flail":
+	# 	movepower1 = getFlail(p[0])
+	# else:	
+	# 	movepower1 = int(firstdesc[index1][0])
+	# if p[1].move == "Flail":
+	# 	movepower2 = getFlail(p[1])
+	# else:
+	# 	movepower2 = int(seconddesc[index2][0])
 
 	accuracy = [int(p[0].acc[index1]),int(p[1].acc[index2])]
 	maxA = p[0].maxAttack

@@ -22,6 +22,7 @@ def inConfusion(p):
 		return val,"move"
 	else:
 		val = f"{p.name} is confused!"
+		time.sleep(1)
 		playsound("sound\\confused.mp3")
 		playsound("sound\\confused.mp3")
 		if random.randint(0,10) % 2 != 0:

@@ -89,42 +89,42 @@ def applyStats(p,n,stats):
 		p[n].attack *= 1.25
 		p[n].defense *= 1.25
 		p[n].attack *= 1.25
-		statmsg = f"{p[n]}'s attack, defense and speed rose!"
+		statmsg = f"{p[n].name}'s attack, defense and speed rose!"
 	elif stats == 4.25:
 		p[n].attack *= 1.5
 		p[n].defense *= 1.5
 		p[n].attack *= 1.5
-		statmsg = f"{p[n]}'s attack, defense and speed sharply rose!"
+		statmsg = f"{p[n].name}'s attack, defense and speed sharply rose!"
 	elif stats == 4.5:
 		p[(n+1)%2].attack *= 1.25
 		p[(n+1)%2].defense *= 1.25
 		p[(n+1)%2].attack *= 1.25
-		statmsg = f"{p[(n+1)%2]}'s attack, defense and speed rose!"
+		statmsg = f"{p[(n+1)%2].name}'s attack, defense and speed rose!"
 	elif stats == 4.75:
 		p[(n+1)%2].attack *= 1.25
 		p[(n+1)%2].defense *= 1.25
 		p[(n+1)%2].attack *= 1.25
-		statmsg = f"{p[(n+1)%2]}'s attack, defense and speed sharply rose!"
+		statmsg = f"{p[(n+1)%2].name}'s attack, defense and speed sharply rose!"
 	elif stats == -4:
 		p[n].attack *= 0.8
 		p[n].defense *= 0.8
 		p[n].attack *= 0.8
-		statmsg = f"{p[n]}'s attack, defense and speed fell!"
+		statmsg = f"{p[n].name}'s attack, defense and speed fell!"
 	elif stats == -4.25:
 		p[n].attack *= 0.67
 		p[n].defense *= 0.67
 		p[n].attack *= 0.67
-		statmsg = f"{p[n]}'s attack, defense and speed harshly fell!"
+		statmsg = f"{p[n].name}'s attack, defense and speed harshly fell!"
 	elif stats == -4.5:
 		p[(n+1)%2].attack *= 0.8
 		p[(n+1)%2].defense *= 0.8
 		p[(n+1)%2].attack *= 0.8
-		statmsg = f"{p[(n+1)%2]}'s attack, defense and speed fell!"
+		statmsg = f"{p[(n+1)%2].name}'s attack, defense and speed fell!"
 	elif stats == -4.75:
 		p[(n+1)%2].attack *= 0.67
 		p[(n+1)%2].defense *= 0.67
 		p[(n+1)%2].attack *= 0.67
-		statmsg = f"{p[(n+1)%2]}'s attack, defense and speed harshly fell!"
+		statmsg = f"{p[(n+1)%2].name}'s attack, defense and speed harshly fell!"
 	#accuracy
 	elif stats == 5:
 		p[n].acc = [int(i)+5 for i in p[n].acc]
