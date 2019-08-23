@@ -154,7 +154,7 @@ def checkStatus(p,n,index):
 	
 	
 	elif power > 0:
-		if random.randint(1,11) <= 11:
+		if random.randint(1,11) <= 3:
 			if len(stats) == 1:
 				display(applyStats(p,n,float(stats[0])))
 			else:
@@ -164,7 +164,7 @@ def checkStatus(p,n,index):
 	
 	#status related code
 	if power > 0:
-		if random.randint(1,11) < 11:
+		if random.randint(1,11) < 3:
 			display(applyStatus(p,n,float(status)))
 	else:
 		display(applyStatus(p,n,float(status)))
@@ -180,8 +180,9 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	display(f"Round {round}")
 	remainingonbar = [int((p[n].hp - damageon[n])*Pbar[n]["maximum"]/p[n].HP),int((p[(n+1)%2].hp - damageon[(n+1)%2])*Pbar[(n+1)%2]["maximum"]/p[(n+1)%2].HP)]
 
-	display(checkCondition(p[n])[0])
-	p[n].condition = checkCondition(p[n])[1]
+	
+	v,p[n].condition = checkCondition(p[n])
+	display(v)
 	
 	if "move" in p[n].condition:
 		health = int(str(moveset[moveset['movename'] == p[n].move]["health"]).split()[1])
@@ -280,8 +281,8 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			return -1
 		else:
 			#pokemon 2 did not faint
-			display(checkCondition(p[(n+1)%2])[0])
-			p[(n+1)%2].condition = checkCondition(p[(n+1)%2])[1]
+			v,p[(n+1)%2].condition = checkCondition(p[(n+1)%2])
+			display(v)
 			if "move" in p[(n+1)%2].condition:
 				willmove = 1
 			elif "hurt-itself" in p[(n+1)%2].condition:
@@ -298,8 +299,8 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			return -2
 		else:
 			time.sleep(2)
-			display(checkCondition(p[(n+1)%2])[0])
-			p[(n+1)%2].condition = checkCondition(p[(n+1)%2])[1]
+			v,p[(n+1)%2].condition = checkCondition(p[(n+1)%2])
+			display(v)
 			if "move" in p[(n+1)%2].condition:
 				willmove = 1
 			elif "hurt-itself" in p[(n+1)%2].condition:
@@ -308,8 +309,8 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 				pass
 	elif "wont" in p[n].condition:
 		time.sleep(2)
-		display(checkCondition(p[(n+1)%2])[0])
-		p[(n+1)%2].condition = checkCondition(p[(n+1)%2])[1]
+		v,p[(n+1)%2].condition = checkCondition(p[(n+1)%2])
+		display(v)
 		if "move" in p[(n+1)%2].condition:
 			willmove = 1
 		elif "hurt-itself" in p[(n+1)%2].condition:

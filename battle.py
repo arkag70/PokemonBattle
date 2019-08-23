@@ -74,8 +74,9 @@ def checkCondition(p):
 
 		elif p.isConfused:
 			#check for confusion in paralysis
-			status += inConfusion(p)[1]
-			val = inConfusion(p)[0]
+			v,s = inConfusion(p)
+			val += v
+			status += s
 
 		else:
 			#free; no status problems
@@ -83,8 +84,9 @@ def checkCondition(p):
 			
 	elif p.isConfused:
 		#check for confusion
-		status += inConfusion(p)[1]
-		val += inConfusion(p)[0]
+		v,s = inConfusion(p)
+		val += v
+		status += s
 		if p.isPoisoned:
 			status += " poison"
 		elif p.isBurnt:
