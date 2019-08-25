@@ -6,10 +6,9 @@ import random
 
 pokemons = []
 def getData():
-	global maxAttack,maxDefense
 	dataset = pd.read_csv("poke.csv")
 	datasheet = dataset.iloc[:385]
-	return dataset
+	return datasheet
 
 class Pokemon:
 	def __init__(self):

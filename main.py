@@ -20,16 +20,6 @@ def display(text):
 	remarkBox.insert(tk.END,text)
 	remarkBox.yview(tk.END)
 
-# # p[0].isFrozen = True
-# # p[0].sleepFreezeCount = 3
-# # p[1].isFrozen = True
-# p[1].sleepFreezeCount = 3
-
-# p[0].isConfused = True
-# p[1].isConfused = True
-# p[0].confuseCount = 2
-# p[1].confuseCount = 2
-
 def second(remainingonbar,f):
 	s = ttk.Style()
 	s.theme_use('default')
@@ -39,9 +29,6 @@ def second(remainingonbar,f):
 			s.configure("s.Horizontal.TProgressbar", foreground='red', background='red')
 			Pbar[1].configure(style="s.Horizontal.TProgressbar")
 		elif Pbar[1]["value"] <= 75:
-			s.configure("s.Horizontal.TProgressbar",foreground='orange', background='orange')
-			Pbar[1].configure(style="s.Horizontal.TProgressbar")
-		elif Pbar[1]["value"] <= 112:
 			s.configure("s.Horizontal.TProgressbar",foreground='yellow', background='yellow')
 			Pbar[1].configure(style="s.Horizontal.TProgressbar")
 		else:
@@ -68,9 +55,6 @@ def first(remainingonbar,f):
 			s.configure("f.Horizontal.TProgressbar", foreground='red', background='red')
 			Pbar[0].configure(style="f.Horizontal.TProgressbar")
 		elif Pbar[0]["value"] <= 75:
-			s.configure("f.Horizontal.TProgressbar",foreground='orange', background='orange')
-			Pbar[0].configure(style="f.Horizontal.TProgressbar")
-		elif Pbar[0]["value"] <= 112:
 			s.configure("f.Horizontal.TProgressbar",foreground='yellow', background='yellow')
 			Pbar[0].configure(style="f.Horizontal.TProgressbar")
 		else:
