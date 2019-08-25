@@ -5,12 +5,12 @@ import time
 class PokeGUI:
 
 	def __init__(self,canvas):
-		self.master = tk.Frame(canvas)
+		self.master = tk.Frame(canvas,bg = "#5a6d9c")
 		self.master.grid(row = 0,column = 0)
-		self.firstleft = tk.Frame(self.master,highlightbackground="black", highlightthickness=1,background = "#f0ead6")
+		self.firstleft = tk.Frame(self.master,highlightbackground="black", highlightthickness=1,background = "#5a6d9c")
 		self.firstleft.grid(row = 0,column = 0)
 
-		self.firstright = tk.Frame(self.master,highlightbackground="black", highlightthickness=1,background = "#f0ead6")
+		self.firstright = tk.Frame(self.master,highlightbackground="black", highlightthickness=1,background = "#5a6d9c")
 		self.firstright.grid(row = 0,column = 1)
 
 		self.secondleft = tk.Frame(self.master,highlightbackground="black", highlightthickness=1)
@@ -19,10 +19,10 @@ class PokeGUI:
 		self.secondright = tk.Frame(self.master,highlightbackground="black", highlightthickness=1)
 		self.secondright.grid(row = 1,column = 1)
 
-		self.thirdleft = tk.Frame(self.master,highlightbackground="black", highlightthickness=1)
+		self.thirdleft = tk.Frame(self.master,highlightbackground="black", highlightthickness=0,bg = "#5a6d9c")
 		self.thirdleft.grid(row = 2,column = 0)
 
-		self.thirdright = tk.Frame(self.master,highlightbackground="black", highlightthickness=1)
+		self.thirdright = tk.Frame(self.master,highlightbackground="black", highlightthickness=0,bg = "#5a6d9c")
 		self.thirdright.grid(row = 2,column = 1)
 
 		self.bottom = tk.Frame(self.master)
@@ -31,8 +31,8 @@ class PokeGUI:
 		self.remark = tk.Frame(self.master)
 		self.remark.grid(row = 4,column = 0,columnspan = 4)
 
-	def createLabel(self,canvas,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12 bold")):
-		self.label = tk.Label(canvas,text = text_,font=font_,background = "#f0ead6")
+	def createLabel(self,canvas,color_ = "black",row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12 bold"),bg_ = "white"):
+		self.label = tk.Label(canvas,text = text_,font=font_,bg = bg_,fg = color_)
 		self.label.grid(row = row_,column = col_,padx = padx_, pady = pady_)
 		return self.label
 
@@ -42,18 +42,18 @@ class PokeGUI:
 	# 	return self.entry
 
 	def createButton(self,canvas,command_,text_ = "Button-Text",width_ = 10,bd_ = 3,font_ = ("Calibri 12")):
-		self.button = tk.Button(canvas,text = text_,command = command_,width = width_,bd = bd_,font = font_)
+		self.button = tk.Button(canvas,text = text_,command = command_,width = width_,bd = bd_,font = font_,bg = "green",fg = "white")
 		self.button.grid(row = 0,column = 0)
 		return self.button
 
-	def createRadioButton(self,canvas,variable_,text_ = "radio-item",value_ = 1,row_ = 0, col_ = 0):
-		self.radio = tk.Radiobutton(canvas,text = text_,variable = variable_,value = value_)
+	def createRadioButton(self,canvas,variable_,text_ = "radio-item",value_ = 1,row_ = 0, col_ = 0,color_ = "light grey"):
+		self.radio = tk.Radiobutton(canvas,text = text_,variable = variable_,value = value_,bg = "#5a6d9c",fg = color_,font = "Calibri 12")
 		self.radio.grid(row = row_,column = col_,sticky = "W")
 		return self.radio
 
 	def createImage(self,file_,canvas,row_ = 0,col_ = 0):
 		photo = tk.PhotoImage(file=file_)
-		imglabel= tk.Label(canvas,image = photo,background = "#f0dd8e")
+		imglabel= tk.Label(canvas,image = photo,background = "#fffa94")
 		imglabel.image = photo
 		imglabel.grid(row = row_,column = col_)
 		return imglabel
@@ -87,11 +87,3 @@ class PokeGUI:
 		inputs.configure(font=("Calibri", 12))
 
 		return inputs
-
-
-
-
-
-
-
-

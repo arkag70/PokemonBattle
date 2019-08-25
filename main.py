@@ -39,6 +39,9 @@ def second(remainingonbar,f):
 			s.configure("s.Horizontal.TProgressbar", foreground='red', background='red')
 			Pbar[1].configure(style="s.Horizontal.TProgressbar")
 		elif Pbar[1]["value"] <= 75:
+			s.configure("s.Horizontal.TProgressbar",foreground='orange', background='orange')
+			Pbar[1].configure(style="s.Horizontal.TProgressbar")
+		elif Pbar[1]["value"] <= 112:
 			s.configure("s.Horizontal.TProgressbar",foreground='yellow', background='yellow')
 			Pbar[1].configure(style="s.Horizontal.TProgressbar")
 		else:
@@ -65,6 +68,9 @@ def first(remainingonbar,f):
 			s.configure("f.Horizontal.TProgressbar", foreground='red', background='red')
 			Pbar[0].configure(style="f.Horizontal.TProgressbar")
 		elif Pbar[0]["value"] <= 75:
+			s.configure("f.Horizontal.TProgressbar",foreground='orange', background='orange')
+			Pbar[0].configure(style="f.Horizontal.TProgressbar")
+		elif Pbar[0]["value"] <= 112:
 			s.configure("f.Horizontal.TProgressbar",foreground='yellow', background='yellow')
 			Pbar[0].configure(style="f.Horizontal.TProgressbar")
 		else:
@@ -529,8 +535,8 @@ def ppUpdate(index):
 	seconddesc[index[1]][2] = str(int(seconddesc[index[1]][2]) - 1)
 
 	for i in range(4):
-		firstRadio[i].configure(text = firstmoves[i] +" PP: "+ firstdesc[i][2])
-		secondRadio[i].configure(text = secondmoves[i] +" PP: "+ seconddesc[i][2])
+		firstRadioPP[i].configure(text = " PP: "+ firstdesc[i][2])
+		secondRadioPP[i].configure(text = " PP: "+ seconddesc[i][2])
 
 def checkEffect(p):
 	move1Type = str(moveset[moveset["movename"] == p[0].move]['type']).split()[1]
@@ -585,6 +591,7 @@ def getMovePower(p,index,desc):
 
 
 def fight():
+	startButton.config(bg = "light green",text = "wait...")
 	global disablity
 	index1 = var1.get()
 	index2 = var2.get()
@@ -628,9 +635,8 @@ def fight():
 	else:
 		n = 1
 	disablity = startProgress(damageon,accuracy,n,(index1,index2),(effectiveness))
+	startButton.config(bg = "green",text = "GO",fg = "white")
 	
-	# increment_power_check(p[0].move,index1)
-	# increment_power_check(p[1].move,index2)
 
 
 '''
@@ -651,17 +657,17 @@ if __name__ == "__main__":
 	root.title("Pokemon Battle")
 	pg = PokeGUI(root)
 
-	firstpokeLabel = pg.createLabel(pg.firstleft,text_ = p[0].name)
+	firstpokeLabel = pg.createLabel(pg.firstleft,text_ = p[0].name,bg_ = "#5a6d9c",color_="white")
 	firstImg = pg.createImage(file_ = f"poke_png\\{p[0].rank} {p[0].name}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
 
-	secondpokeLabel = pg.createLabel(pg.firstright,text_ = p[1].name)
+	secondpokeLabel = pg.createLabel(pg.firstright,text_ = p[1].name,bg_ = "#5a6d9c",color_="white")
 	secondImg = pg.createImage(file_ = f"poke_png\\{p[1].rank} {p[1].name}.png",canvas = pg.firstright,row_ = 1,col_ = 0)
 
-	firstpokeHP = pg.createLabel(pg.secondleft,text_= f"HP: {p[0].HP}/{p[0].HP}",row_ = 0,col_ = 0)
-	secondpokeHP = pg.createLabel(pg.secondright,text_= f"HP: {p[1].HP}/{p[1].HP}",row_ = 0,col_ = 0)
+	firstpokeHP = pg.createLabel(pg.secondleft,text_= f"HP: {p[0].HP}/{p[0].HP}",row_ = 0,col_ = 0,bg_ = "white")
+	secondpokeHP = pg.createLabel(pg.secondright,text_= f"HP: {p[1].HP}/{p[1].HP}",row_ = 0,col_ = 0,bg_ = "white")
 	Pbar = [pg.createProgress(pg.secondleft),pg.createProgress(pg.secondright)]
 
-	firstMoveLabel = pg.createLabel(pg.thirdleft,text_ = "Moves",row_ = 0,col_ = 0)
+	firstMoveLabel = pg.createLabel(pg.thirdleft,text_ = "Moves",row_ = 0,col_ = 0,bg_ = "#5a6d9c")
 	moves = p[0].getMoves()
 	firstmoves = [m.split(',')[0] for m in moves]
 	firstdesc = [m.split(',')[1:] for m in moves]
@@ -670,15 +676,18 @@ if __name__ == "__main__":
 	var1 = tk.IntVar()
 	var1.set(0)
 	firstRadio = []
+	firstRadioPP = []
+	# pg.createLabel(pg.thirdleftPP,text_ = "    ",row_ = 0,col_ = 0)
 	for i in range(4):
-		firstRadio.append(pg.createRadioButton(pg.thirdleft,text_ = firstmoves[i] +" PP: "+ firstdesc[i][2],variable_ = var1,value_ = i,row_ = i+1,col_ = 0))
+		firstRadio.append(pg.createRadioButton(pg.thirdleft,text_ = firstmoves[i],variable_ = var1,value_ = i,row_ = i+1,col_ = 0,color_ = "black"))
+		firstRadioPP.append(pg.createLabel(pg.thirdleft,text_ = " PP: "+ firstdesc[i][2],row_ = i+1,col_ = 1,font_ = "Calibri 12",bg_ = "#5a6d9c",color_ = "white"))
 	# firstRadio1 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[0],variable_ = var1,value_ = 0,row_ = 1,col_ = 0)
 	# firstRadio2 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[1],variable_ = var1,value_ = 1,row_ = 2,col_ = 0)
 	# firstRadio3 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[2],variable_ = var1,value_ = 2,row_ = 3,col_ = 0)
 	# firstRadio4 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[3],variable_ = var1,value_ = 3,row_ = 4,col_ = 0)
 
 
-	secondMoveLabel = pg.createLabel(pg.thirdright,text_ = "Moves",row_ = 0,col_ = 0)
+	secondMoveLabel = pg.createLabel(pg.thirdright,text_ = "Moves",row_ = 0,col_ = 0,bg_ = "#5a6d9c")
 	moves = p[1].getMoves()
 	secondmoves = [m.split(',')[0] for m in moves]
 	seconddesc = [m.split(',')[1:] for m in moves]
@@ -687,8 +696,12 @@ if __name__ == "__main__":
 	var2 = tk.IntVar()
 	var2.set(0)
 	secondRadio = []
+	secondRadioPP = []
+	# pg.createLabel(pg.thirdrightPP,text_ = "    ",row_ = 0,col_ = 0)
 	for i in range(4):
-		secondRadio.append(pg.createRadioButton(pg.thirdright,text_ = secondmoves[i] +" PP: "+ seconddesc[i][2],variable_ = var2,value_ = i,row_ = i+1,col_ = 0))		
+		secondRadio.append(pg.createRadioButton(pg.thirdright,text_ = secondmoves[i],variable_ = var2,value_ = i,row_ = i+1,col_ = 0,color_="black"))
+		secondRadioPP.append(pg.createLabel(pg.thirdright,text_ = " PP: "+ seconddesc[i][2],row_ = i+1,col_ = 1,font_ = "Calibri 12",bg_ = "#5a6d9c",color_ = "white"))
+
 
 	# secondRadio1 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[0],variable_ = var2,value_ = 0,row_ = 1,col_ = 0)
 	# secondRadio2 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[1],variable_ = var2,value_ = 1,row_ = 2,col_ = 0)
