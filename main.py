@@ -135,7 +135,7 @@ def checkStatus(p,n,index):
 	else:
 		power = int(seconddesc[index[n]][0])
 
-	if power == 0 or move_name == "Overheat" or move_name == "Psycho Boost":
+	if power == 0 or move_name in ["Overheat","Psycho Boost"]:
 		if len(stats) == 1:
 			display(applyStats(p,n,float(stats[0])))
 		else:
@@ -153,11 +153,12 @@ def checkStatus(p,n,index):
 	
 	
 	#status related code
-	if power > 0:
+	if power == 0 or move_name in ['Outrage']:
+		display(applyStatus(p,n,float(status)))
+	else:
 		if random.randint(1,11) < 3:
 			display(applyStatus(p,n,float(status)))
-	else:
-		display(applyStatus(p,n,float(status)))
+	
 	
 
 	

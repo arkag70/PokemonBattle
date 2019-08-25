@@ -188,6 +188,13 @@ def applyStatus(p,n,status):
 			poke.confuseCount = random.randint(2,5)
 			playsound("sound\\confused.mp3")
 			playsound("sound\\confused.mp3")
+	elif status == -4.0:
+		if (not p[n].isConfused):
+			statusmsg = f"{p[n].name} became confused!"
+			p[n].isConfused = True
+			p[n].confuseCount = random.randint(2,5)
+			playsound("sound\\confused.mp3")
+			playsound("sound\\confused.mp3")
 	elif status == 5.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} went to sleep!"
