@@ -7,7 +7,7 @@ import random
 pokemons = []
 def getData():
 	dataset = pd.read_csv("poke.csv")
-	datasheet = dataset.iloc[:385]
+	datasheet = dataset.iloc[:386]
 	return datasheet
 
 class Pokemon:
