@@ -5,4 +5,4 @@ GUI based pokemon battle game
 2) Unzip the package
 3) install libs -> pip install -r requirements.txt
 4) run as -> python main.py
-Note : Use python 3.x
+Note : Use python 3.x on windows
