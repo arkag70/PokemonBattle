@@ -1,6 +1,5 @@
 from gui_class import *
 from pokemon import *
-import winsound
 import threading
 from functions import *
 from battle import *
@@ -653,7 +652,6 @@ def loopSound():
 
 if __name__ == "__main__":
 	
-	# winsound.PlaySound(file, winsound.SND_ASYNC | winsound.SND_NOSTOP | winsound.SND_LOOP)
 	root = tk.Tk()
 	start_sound_thread()
 	root.resizable(width=False, height=False)
@@ -680,7 +678,6 @@ if __name__ == "__main__":
 	var1.set(0)
 	firstRadio = []
 	firstRadioPP = []
-	# pg.createLabel(pg.thirdleftPP,text_ = "    ",row_ = 0,col_ = 0)
 	for i in range(4):
 		firstRadio.append(pg.createRadioButton(pg.thirdleft,text_ = firstmoves[i],variable_ = var1,value_ = i,row_ = i+1,col_ = 0,color_ = "black"))
 		firstRadioPP.append(pg.createLabel(pg.thirdleft,text_ = " PP: "+ firstdesc[i][2],row_ = i+1,col_ = 1,font_ = "Calibri 12",bg_ = "#5a6d9c",color_ = "white"))
