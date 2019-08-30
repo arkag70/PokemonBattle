@@ -79,26 +79,26 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 	if reason == "":
 		if effect >= 1 and effect <= 1.25:
 			display(f"normal damage")
-			playsound('sound\\normal.mp3')
+			playsound('sound\\normal.mp3',True)
 		elif effect < 1:
 			display(f"not very effective damage")
-			playsound('sound\\notvery.mp3')
+			playsound('sound\\notvery.mp3',True)
 		elif effect > 1.25:
 			display(f"super effective damage")
-			playsound('sound\\super.mp3')
+			playsound('sound\\super.mp3',True)
 			
 
 	elif reason == "hurt itself in confusion!":
-		playsound('sound\\normal.mp3')
+		playsound('sound\\normal.mp3',True)
 		displaymsg = True
 	elif "recoil" in reason:
-		playsound('sound\\normal.mp3')
+		playsound('sound\\normal.mp3',True)
 		displaymsg = True
 	elif reason == "is hurt by burn!":
-		playsound('sound\\burn.mp3')
+		playsound('sound\\burn.mp3',True)
 		displaymsg = True
 	elif reason == "is hurt by poison!":
-		playsound('sound\\poison.mp3')
+		playsound('sound\\poison.mp3',True)
 		displaymsg = True
 	elif "LEECH SEED" in reason:
 		playsound("sound\\seed1.mp3")
@@ -632,12 +632,30 @@ createRadioButton(canvas,text_ = "radio-item",variable_ = var,value_ = 1,row_ = 
 createImage(file_,canvas,row_ = 0,col_ = 0)
 (orient_="horizontal",length_=200, mode_="determinate",row_ = 0, col_ = 1)
 '''
+
+def start_sound_thread():
+    global sound_thread
+    sound_thread = threading.Thread(target = loopSound)
+    sound_thread.daemon = True
+    sound_thread.start()
+    root.after(20,check_sound_thread)
+
+def check_sound_thread():
+    if sound_thread.is_alive():
+        root.after(100,check_sound_thread)
+    else:
+    	pass
+
+def loopSound():
+	file = random.choice(background_theme)
+	while True:
+		playsound(file, block=True)
+
 if __name__ == "__main__":
 	
-	file = random.choice(background_theme)
-	winsound.PlaySound(file, winsound.SND_ASYNC | winsound.SND_NOSTOP | winsound.SND_LOOP)
-
+	# winsound.PlaySound(file, winsound.SND_ASYNC | winsound.SND_NOSTOP | winsound.SND_LOOP)
 	root = tk.Tk()
+	start_sound_thread()
 	root.resizable(width=False, height=False)
 	root.title("Pokemon Battle")
 	pg = PokeGUI(root)
@@ -697,5 +715,4 @@ if __name__ == "__main__":
 	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None))
 
 	remarkBox = pg.createListBox(pg.remark)
-
 	root.mainloop()
