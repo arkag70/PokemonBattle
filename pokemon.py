@@ -6,7 +6,8 @@ import random
 
 pokemons = []
 def getData():
-	dataset = pd.read_csv("poke.csv")
+	# dataset = pd.read_csv("poke.csv")
+	dataset = pd.read_excel("poke.xlsx",sheet_name = "poke")
 	datasheet = dataset.iloc[:386]
 	return datasheet
 

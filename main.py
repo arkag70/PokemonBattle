@@ -653,6 +653,7 @@ def loopSound():
 if __name__ == "__main__":
 	
 	root = tk.Tk()
+	root.wm_iconbitmap("poke_png\\pokeico.ico")
 	start_sound_thread()
 	root.resizable(width=False, height=False)
 	root.title("Pokemon Battle")
