@@ -159,7 +159,13 @@ def checkStatus(p,n,index):
 			display(applyStatus(p,n,float(status)))
 	
 	
-
+def critical_hit(crit_factor):
+	
+	if random.randint(1,crit_factor) == 5:
+		display("It's a critical hit!")
+		return 1.5
+	else:
+		return 1.0
 	
 
 
@@ -214,25 +220,21 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 				else:
 					#get type of hit (gain,recoil,hits)
 					if health == 1000:
-						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
+						crit = critical_hit(crit_factor)
 						#tackle
 						if p[n].move == "Magnitude":
 							value = random.randint(1,10)
-							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * value * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit * value * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
 							display(f"Magnitude {value}")
 						else:
-							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
-						
-						if crit() == 1.5:
-								display("It's a critical hit")
+							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
 					
 					elif int(health/1000) >= 2:
 						#multi hit moves - double or 2-5 times
 						for i in range(random.randint(2,int(health/1000))):
-							crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
-							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
-							if crit() == 1.5:
-								display("It's a critical hit")	
+							crit = critical_hit(crit_factor)
+							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+
 							if p[(n+1)%2].hp == 0:
 								#pokemon 2 fainted
 								display(f"Hit {hit_count[i]}!")
@@ -244,19 +246,15 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 
 					elif health == 1100:
 						#recoil
-						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
-						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
-						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[(n+1)%2] / 2,reason = "is hit with recoil!",effect = 1)
-						if crit() == 1.5:
-							display("It's a critical hit")
+						crit = critical_hit(crit_factor)
+						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit * damageon[(n+1)%2] / 2,reason = "is hit with recoil!",effect = 1)
 
 					elif health == 1010:
 						#gain type
-						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
-						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
-						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -1.0 * crit() * damageon[(n+1)%2] / 2,reason = "gained foe's energy!",effect = 1)	
-						if crit() == 1.5:
-							display("It's a critical hit")
+						crit = critical_hit(crit_factor)
+						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
+						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -1.0 * crit * damageon[(n+1)%2] / 2,reason = "gained foe's energy!",effect = 1)	
 
 					elif health == 1001:
 						#gift type
@@ -351,24 +349,20 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 					#get type of hit (gain,recoil,hits)
 					
 					if health == 1000:
-						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
+						crit = critical_hit(crit_factor)
 						#tackle
 						if p[(n+1)%2].move == "Magnitude":
 							value = random.randint(1,10)
-							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * value * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit * value * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
 							display(f"Magnitude {value}")
 						else:
-							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
-						if crit() == 1.5:
-							display("It's a critical hit")
+							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
 					
 					elif int(health/1000) >= 2:
 						#multi hit moves - double or 2-5 times
 						for i in range(random.randint(2,int(health/1000))):
-							crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
-							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
-							if crit() == 1.5:
-								display("It's a critical hit")
+							crit = critical_hit(crit_factor)
+							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
 							if p[n].hp == 0:
 								#pokemon 2 fainted
 								display(f"Hit {hit_count[i]}!")
@@ -380,19 +374,15 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 
 					elif health == 1100:
 						#recoil
-						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
-						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
-						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit() * damageon[n] / 2,reason = "is hit with recoil!",effect = 1)
-						if crit() == 1.5:
-							display("It's a critical hit")
+						crit = critical_hit(crit_factor)
+						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit * damageon[n] / 2,reason = "is hit with recoil!",effect = 1)
 
 					elif health == 1010:
 						#gain type
-						crit = lambda : 1.5 if random.randint(1,crit_factor) == 5 else 1.0
-						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit() * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
-						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -1.0 * crit() * damageon[n] / 2,reason = "gained foe's energy!",effect = 1)
-						if crit() == 1.5:
-							display("It's a critical hit")
+						crit = critical_hit(crit_factor)
+						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
+						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -1.0 * crit * damageon[n] / 2,reason = "gained foe's energy!",effect = 1)
 					elif health == 1001:
 						#gift type
 						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -1.0 * damageon[n],reason = "gifted health to foe",effect = 1)

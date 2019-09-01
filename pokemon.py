@@ -17,7 +17,7 @@ class Pokemon:
 		self.dataset = getData()
 		for i in range(len(self.dataset)):
 			pokemons.append(self.dataset.iloc[i])
-		i = random.randint(0,386)
+		i = random.randint(0,385)
 		self.maxAttack = max(self.dataset['attack'])
 		self.maxDefense = max(self.dataset['defense'])
 		self.name = pokemons[i]["name"]
