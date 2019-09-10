@@ -23,8 +23,8 @@ def inConfusion(p):
 	else:
 		val = f"{p.name} is confused!"
 		time.sleep(1)
-		playsound("sound\\confused.mp3")
-		playsound("sound\\confused.mp3")
+		playsound("sound\\confused.wav")
+		playsound("sound\\confused.wav")
 		if random.randint(0,10) % 2 != 0:
 			#hurt itself
 			return val,"hurt-itself"
@@ -59,7 +59,7 @@ def checkCondition(p):
 			time.sleep(1)
 			status += "move"
 		else:
-			playsound("sound\\freeze.mp3")
+			playsound("sound\\freeze.wav")
 			val = f"{p.name} is frozen solid!"
 			
 			status += "wont"
@@ -69,7 +69,7 @@ def checkCondition(p):
 		if random.randint(0,10) % 2 != 0:
 			#can't move
 			val = f"{p.name} is paralysed! It can't move"
-			playsound("sound\\paralyse.mp3")
+			playsound("sound\\paralyse.wav")
 			status += "wont"
 
 		elif p.isConfused:

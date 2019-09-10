@@ -152,9 +152,9 @@ def applyStats(p,n,stats):
 		statmsg = f"{p[(n+1)%2].name}'s accuracy harshly fell!"
 
 	if stats > 0:
-		playsound("sound\\rise.mp3")
+		playsound("sound\\rise.wav")
 	elif stats < 0:
-		playsound("sound\\fall.mp3")
+		playsound("sound\\fall.wav")
 	return statmsg
 
 def applyStatus(p,n,status):
@@ -165,61 +165,61 @@ def applyStatus(p,n,status):
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} became paralysed!"
 			poke.isParalysed = True
-			playsound("sound\\paralyse.mp3")
+			playsound("sound\\paralyse.wav")
 	elif status == 2.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} is poisoned!"
 			poke.isPoisoned = True
-			playsound("sound\\poison.mp3")
+			playsound("sound\\poison.wav")
 	elif status == 2.5:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} is badly poisoned!"
 			poke.isPoisoned = True
-			playsound("sound\\poison.mp3")
+			playsound("sound\\poison.wav")
 	elif status == 3.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} is burnt!"
 			poke.isBurnt = True
-			playsound("sound\\burn.mp3")
+			playsound("sound\\burn.wav")
 	elif status == 4.0:
 		if (not poke.isConfused):
 			statusmsg = f"{poke.name} became confused!"
 			poke.isConfused = True
 			poke.confuseCount = random.randint(2,5)
-			playsound("sound\\confused.mp3")
-			playsound("sound\\confused.mp3")
+			playsound("sound\\confused.wav")
+			playsound("sound\\confused.wav")
 	elif status == -4.0:
 		if (not p[n].isConfused):
 			statusmsg = f"{p[n].name} became confused!"
 			p[n].isConfused = True
 			p[n].confuseCount = random.randint(2,5)
-			playsound("sound\\confused.mp3")
-			playsound("sound\\confused.mp3")
+			playsound("sound\\confused.wav")
+			playsound("sound\\confused.wav")
 	elif status == 5.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} went to sleep!"
 			poke.isAsleep = True
 			poke.sleepFreezeCount = random.randint(2,5)
-			playsound("sound\\burn.mp3")
+			playsound("sound\\burn.wav")
 	elif status == 6.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} became frozen!"
 			poke.isFrozen = True
 			poke.sleepFreezeCount = random.randint(2,5)
-			playsound("sound\\freeze.mp3")
+			playsound("sound\\freeze.wav")
 	elif status == 7.0:
 		if (not poke.isSeeded):
 			statusmsg = f"{poke.name} was seeded!"
 			poke.isSeeded = True
-			playsound("sound\\seed1.mp3")
+			playsound("sound\\seed1.wav")
 		else:
 			statusmsg = f"{poke.name} is already seeded!"
 	elif status == 8.0:
 		if (not p[n].isRooted):
 			statusmsg = f"{p[n].name} planted its roots!"
 			p[n].isRooted = True
-			playsound("sound\\roots.mp3")
-			playsound("sound\\roots.mp3")
+			playsound("sound\\roots.wav")
+			playsound("sound\\roots.wav")
 		else:
 			statusmsg = "But it failed!"
 	elif status == -10.0:
@@ -232,7 +232,7 @@ def applyStatus(p,n,status):
 			poke.isFrozen = False
 			poke.isSeeded = False
 			statusmsg = f"{poke.name} was healed of all status problems!"
-			playsound("sound\\seed3.mp3")
+			playsound("sound\\seed3.wav")
 		else:
 			statusmsg = f"But it failed!"
 	time.sleep(1)

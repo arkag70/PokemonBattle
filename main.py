@@ -3,7 +3,9 @@ from pokemon import *
 import threading
 from functions import *
 from battle import *
+import winsound as w
 
+change = 0
 ice_ball = 0
 roll_out = 0
 fury_cutter = 1
@@ -78,34 +80,34 @@ def updateHealth(i,remainingonbar,hp, bar,fullhp,deduct = 10,reason = "",effect 
 	if reason == "":
 		if effect >= 1 and effect <= 1.25:
 			display(f"normal damage")
-			playsound('sound\\normal.mp3',True)
+			playsound('sound\\normal.wav')
 		elif effect < 1:
 			display(f"not very effective damage")
-			playsound('sound\\notvery.mp3',True)
+			playsound('sound\\notvery.wav')
 		elif effect > 1.25:
 			display(f"super effective damage")
-			playsound('sound\\super.mp3',True)
+			playsound('sound\\super.wav')
 			
 
 	elif reason == "hurt itself in confusion!":
-		playsound('sound\\normal.mp3',True)
+		playsound('sound\\normal.wav')
 		displaymsg = True
 	elif "recoil" in reason:
-		playsound('sound\\normal.mp3',True)
+		playsound('sound\\normal.wav')
 		displaymsg = True
 	elif reason == "is hurt by burn!":
-		playsound('sound\\burn.mp3',True)
+		playsound('sound\\burn.wav')
 		displaymsg = True
 	elif reason == "is hurt by poison!":
-		playsound('sound\\poison.mp3',True)
+		playsound('sound\\poison.wav')
 		displaymsg = True
 	elif "LEECH SEED" in reason:
-		playsound("sound\\seed1.mp3")
-		playsound("sound\\seed2.mp3")
+		playsound("sound\\seed1.wav")
+		playsound("sound\\seed2.wav")
 		displaymsg = True
 		f = 1
 	elif deduct < 0:
-		playsound("sound\\seed3.mp3")
+		playsound("sound\\seed3.wav")
 		displaymsg = True
 		f = -1
 	if displaymsg == True:
@@ -201,17 +203,17 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 						if p[n].bellyDrum_Memento == False and p[n].hp > p[n].HP/2:
 							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = p[n].HP/2,reason = "",effect = 1)
 							if p[n].hp <= 0:
-								playsound("sound\\faint.mp3")
+								playsound("sound\\faint.wav")
 								display(f"{p[n].name} fainted!")
-								return -2
+								return -1*((n+1)%2 + 1)
 							elif p[n].move == "Belly Drum":
 								p[n].attack *= 4
 								display(f"{p[n].name} maximized its attacks!")
-								playsound("sound\\rise.mp3")
+								playsound("sound\\rise.wav")
 							elif p[n].move == "Memento":
 								p[(n+1)%2].attack *= 0.25
 								display(f"{p[n].name} sharply lowered {p[(n+1)%2].name}'s attack!")
-								playsound("sound\\fall.mp3")
+								playsound("sound\\fall.wav")
 							p[n].bellyDrum_Memento = True
 						else:
 							display("But it Failed!")
@@ -235,12 +237,12 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 							crit = critical_hit(crit_factor)
 							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
 
-							if p[(n+1)%2].hp == 0:
+							if p[(n+1)%2].hp <= 0:
 								#pokemon 2 fainted
 								display(f"Hit {hit_count[i]}!")
-								playsound("sound\\faint.mp3")
+								playsound("sound\\faint.wav")
 								display(f"{p[(n+1)%2].name} fainted!")
-								return -1
+								return -1*(n+1)
 						#after loop
 						display(f"Hit {hit_count[i]}!")
 
@@ -262,11 +264,11 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 				
 				checkStatus(p,n,index)
 
-		if p[(n+1)%2].hp == 0:
+		if p[(n+1)%2].hp <= 0:
 			#pokeom 2 fainted
-			playsound("sound\\faint.mp3")
+			playsound("sound\\faint.wav")
 			display(f"{p[(n+1)%2].name} fainted!")
-			return -1
+			return -1*(n+1)
 		else:
 			#pokemon 2 did not faint
 			v,p[(n+1)%2].condition = checkCondition(p[(n+1)%2])
@@ -280,11 +282,11 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	elif "hurt-itself" in p[n].condition:
 		time.sleep(2)
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "hurt itself in confusion!",effect = 1)
-		if p[n].hp == 0:
+		if p[n].hp <= 0:
 			#pokemon 1 fainted
-			playsound("sound\\faint.mp3")
+			playsound("sound\\faint.wav")
 			display(f"{p[n].name} fainted!")
-			return -2
+			return -1*((n+1)%2 + 1)
 		else:
 			time.sleep(2)
 			v,p[(n+1)%2].condition = checkCondition(p[(n+1)%2])
@@ -329,17 +331,17 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 						if p[(n+1)%2].bellyDrum_Memento == False and p[(n+1)%2].hp > p[(n+1)%2].HP/2:
 							p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = p[(n+1)%2].HP/2,reason = "",effect = 1)
 							if p[(n+1)%2].hp <= 0:
-								playsound("sound\\faint.mp3")
+								playsound("sound\\faint.wav")
 								display(f"{p[(n+1)%2].name} fainted!")
-								return -1						
+								return -1*(n+1)						
 							elif p[(n+1)%2].move == "Belly Drum":
 								p[(n+1)%2].attack *= 4
 								display(f"{p[(n+1)%2].name} maximized its attack!")
-								playsound("sound\\rise.mp3")
+								playsound("sound\\rise.wav")
 							elif p[(n+1)%2].move == "Memento":
 								p[n].attack *= 0.25
-								display(f"{p[(n+1)%2].name} sharply lowered {p[n]}'s attack!")
-								playsound("sound\\fall.mp3")
+								display(f"{p[(n+1)%2].name} sharply lowered {p[n].name}'s attack!")
+								playsound("sound\\fall.wav")
 							p[(n+1)%2].bellyDrum_Memento == True
 						else:
 							display("But it Failed!")
@@ -363,12 +365,12 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 						for i in range(random.randint(2,int(health/1000))):
 							crit = critical_hit(crit_factor)
 							p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
-							if p[n].hp == 0:
+							if p[n].hp <= 0:
 								#pokemon 2 fainted
 								display(f"Hit {hit_count[i]}!")
-								playsound("sound\\faint.mp3")
+								playsound("sound\\faint.wav")
 								display(f"{p[n].name} fainted!")
-								return -1
+								return -1*((n+1)%2 +1)
 						#after loop
 						display(f"Hit {hit_count[i]}!")
 
@@ -389,51 +391,51 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 				
 				checkStatus(p,(n+1)%2,index)
 
-		if p[n].hp == 0:
+		if p[n].hp <= 0:
 			#pokemon 1 fainted
-			playsound("sound\\faint.mp3")
+			playsound("sound\\faint.wav")
 			display(f"{p[n].name} fainted!")
-			return -2
+			return -1*((n+1)%2 + 1)
 		else:
 			pass
 	elif willmove == -1:
 		time.sleep(2)
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "hurt itself in confusion!",effect = 1)
-		if p[(n+1)%2].hp == 0:
-			playsound("sound\\faint.mp3")
+		if p[(n+1)%2].hp <= 0:
+			playsound("sound\\faint.wav")
 			display(f"{p[(n+1)%2].name} fainted!")
-			return -1
+			return -1*(n+1)
 		else:
 			pass
 	if "poison" in p[n].condition:
 		time.sleep(2)
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by poison!",effect = 1)
-		if p[n].hp == 0:
+		if p[n].hp <= 0:
 			#pokemon 1 fainted
-			playsound("sound\\faint.mp3")
+			playsound("sound\\faint.wav")
 			display(f"{p[n].name} fainted!")
-			return -2
+			return -1*((n+1)%2 + 1)
 		else:
 			pass
 	elif "burn" in p[n].condition:
 		time.sleep(2)
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by burn!",effect = 1)
-		if p[n].hp == 0:
+		if p[n].hp <= 0:
 			#pokemon 1 fainted
-			playsound("sound\\faint.mp3")
+			playsound("sound\\faint.wav")
 			display(f"{p[n].name} fainted!")
-			return -2
+			return -1*((n+1)%2 + 1)
 		else:
 			pass
 	if "seed" in p[n].condition:
 		time.sleep(2)
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "health is sapped by LEECH SEED!",effect = 1)
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -10,reason = "gained foe's energy!!",effect = 1)
-		if p[n].hp == 0:
+		if p[n].hp <= 0:
 			#pokemon 1 fainted
-			playsound("sound\\faint.mp3")
+			playsound("sound\\faint.wav")
 			display(f"{p[n].name} fainted!")
-			return -2
+			return -1*((n+1)%2 + 1)
 		else:
 			pass
 	if "root" in p[n].condition and (p[n].hp < p[n].HP):
@@ -443,32 +445,32 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	if "poison" in p[(n+1)%2].condition:
 		time.sleep(2)
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by poison!",effect = 1)
-		if p[(n+1)%2].hp == 0:
+		if p[(n+1)%2].hp <= 0:
 			#pokemon 1 fainted
-			playsound("sound\\faint.mp3")
+			playsound("sound\\faint.wav")
 			display(f"{p[(n+1)%2].name} fainted!")
-			return -1
+			return -1*(n+1)
 		else:
 			pass
 	elif "burn" in p[(n+1)%2].condition:
 		time.sleep(2)
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by burn!",effect = 1)
-		if p[(n+1)%2].hp == 0:
+		if p[(n+1)%2].hp <= 0:
 			#pokemon 1 fainted
-			playsound("sound\\faint.mp3")
+			playsound("sound\\faint.wav")
 			display(f"{p[(n+1)%2].name} fainted!")
-			return -1
+			return -1*(n+1)
 		else:
 			pass
 	if "seed" in p[(n+1)%2].condition:
 		time.sleep(2)
 		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "health is sapped by LEECH SEED!",effect = 1)
 		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -10,reason = "gained foe's energy!!",effect = 1)
-		if p[(n+1)%2].hp == 0:
+		if p[(n+1)%2].hp <= 0:
 			#pokemon 1 fainted
-			playsound("sound\\faint.mp3")
+			playsound("sound\\faint.wav")
 			display(f"{p[(n+1)%2].name} fainted!")
-			return -1
+			return -1*(n+1)
 		else:
 			pass
 	if "root" in p[(n+1)%2].condition and (p[(n+1)%2].hp < p[(n+1)%2].HP):
@@ -487,13 +489,20 @@ def start_fight_thread(event):
     root.after(20,check_fight_thread)
 
 def check_fight_thread():
+    global disablity
     if fight_thread.is_alive():
         root.after(20,check_fight_thread)
     else:
-    	if disablity < 0:
-    		pass
-    	else:
-        	startButton.config(state = "normal")
+	    if disablity == -1:
+		    p[1] = Pokemon()
+		    reinit(1)
+		    disablity = 0
+	    elif disablity == -2:
+		    p[0] = Pokemon()
+		    disablity = 0
+		    reinit(0)
+	    if disablity == 0:
+		    startButton.config(state = "normal")
 
 def ppUpdate(index):
 	
@@ -637,17 +646,61 @@ def check_sound_thread():
 
 def loopSound():
 	file = random.choice(background_theme)
-	while True:
-		playsound(file, block=True)
+	w.PlaySound(file,w.SND_ASYNC | w.SND_LOOP)
 
-if __name__ == "__main__":
+def reinit(n):
+	global firstpokeLabel,firstImg,secondpokeLabel,secondImg,firstpokeHP,secondpokeHP,Pbar,firstMoveLabel
+	global secondMoveLabel,startButton,remarkBox,var1,var2,firstmoves,firstdesc,secondmoves,seconddesc
+	global firstRadioPP,secondRadioPP,firstRadio,secondRadio
 	
-	root = tk.Tk()
-	root.wm_iconbitmap("poke_png\\pokeico.ico")
-	start_sound_thread()
-	root.resizable(width=False, height=False)
-	root.title("Pokemon Battle")
-	pg = PokeGUI(root)
+	if n == 0:
+		firstImg = pg.createImage(file_ = f"poke_png\\{p[0].rank} {p[0].name}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
+		for i in range(4):
+			firstRadio[i].configure(state = "normal")
+		var1.set(0)
+		print(f"poke_png\\{p[0].rank} {p[0].name}.png")
+		Pbar[0] = pg.createProgress(pg.secondleft)
+		firstpokeLabel.config(text = p[0].name)
+
+		firstpokeHP.config(text = f"HP: {p[0].HP}/{p[0].HP}")
+		moves = p[0].getMoves()
+		firstmoves = [m.split(',')[0] for m in moves]
+		firstdesc = [m.split(',')[1:] for m in moves]
+		p[0].acc = [i[1] for i in firstdesc]
+		var1 = tk.IntVar()
+		var1.set(0)
+		for i in range(4):
+			firstRadio[i].config(text_ = firstmoves[i],variable_ = var1,value_ = i)
+			firstRadioPP[i].config(text_ = " PP: "+ firstdesc[i][2])
+
+	if n == 1:
+		secondImg = pg.createImage(file_ = f"poke_png\\{p[1].rank} {p[1].name}.png",canvas = pg.firstright,row_ = 1,col_ = 0)	
+		for i in range(4):
+			secondRadio[i].configure(state = "normal")
+		var2.set(0)
+		print(f"poke_png\\{p[1].rank} {p[1].name}.png")
+		Pbar[1] = pg.createProgress(pg.secondright)
+		secondpokeLabel.config(text = p[1].name)
+		
+		secondpokeHP.config(text = f"HP: {p[1].HP}/{p[1].HP}")
+		moves = p[1].getMoves()
+		secondmoves = [m.split(',')[0] for m in moves]
+		seconddesc = [m.split(',')[1:] for m in moves]
+		p[1].acc = [i[1] for i in seconddesc]
+		var2 = tk.IntVar()
+		var2.set(0)
+		for i in range(4):
+			secondRadio[i].config(text_ = secondmoves[i],variable_ = var2,value_ = i)
+			secondRadioPP[i].config(text_ = " PP: "+ seconddesc[i][2])
+	
+
+	
+
+
+def setup():
+	global firstpokeLabel,firstImg,secondpokeLabel,secondImg,firstpokeHP,secondpokeHP,Pbar,firstMoveLabel
+	global secondMoveLabel,startButton,remarkBox,var1,var2,firstmoves,firstdesc,secondmoves,seconddesc
+	global firstRadioPP,secondRadioPP,firstRadio,secondRadio
 
 	firstpokeLabel = pg.createLabel(pg.firstleft,text_ = p[0].name,bg_ = "#5a6d9c",color_="white")
 	firstImg = pg.createImage(file_ = f"poke_png\\{p[0].rank} {p[0].name}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
@@ -659,12 +712,12 @@ if __name__ == "__main__":
 	secondpokeHP = pg.createLabel(pg.secondright,text_= f"HP: {p[1].HP}/{p[1].HP}",row_ = 0,col_ = 0,bg_ = "white")
 	Pbar = [pg.createProgress(pg.secondleft),pg.createProgress(pg.secondright)]
 
+
 	firstMoveLabel = pg.createLabel(pg.thirdleft,text_ = "Moves",row_ = 0,col_ = 0,bg_ = "#5a6d9c")
 	moves = p[0].getMoves()
 	firstmoves = [m.split(',')[0] for m in moves]
 	firstdesc = [m.split(',')[1:] for m in moves]
 	p[0].acc = [i[1] for i in firstdesc]
-	firstRadio = []
 	var1 = tk.IntVar()
 	var1.set(0)
 	firstRadio = []
@@ -683,7 +736,6 @@ if __name__ == "__main__":
 	secondmoves = [m.split(',')[0] for m in moves]
 	seconddesc = [m.split(',')[1:] for m in moves]
 	p[1].acc = [i[1] for i in seconddesc]
-	secondRadio = []
 	var2 = tk.IntVar()
 	var2.set(0)
 	secondRadio = []
@@ -699,8 +751,17 @@ if __name__ == "__main__":
 	# secondRadio3 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[2],variable_ = var2,value_ = 2,row_ = 3,col_ = 0)
 	# secondRadio4 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[3],variable_ = var2,value_ = 3,row_ = 4,col_ = 0)
 
-	
 	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None))
-
 	remarkBox = pg.createListBox(pg.remark)
+
+
+if __name__ == "__main__":
+	root = tk.Tk()
+	root.wm_iconbitmap("poke_png\\pokeico.ico")
+	start_sound_thread()
+	root.resizable(width=False, height=False)
+	root.title("Pokemon Battle")
+	pg = PokeGUI(root)
+	setup()
+	change += 1
 	root.mainloop()
