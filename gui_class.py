@@ -41,9 +41,9 @@ class PokeGUI:
 	# 	self.entry.grid(row = row_,column = col_,padx = padx_, pady = pady_)
 	# 	return self.entry
 
-	def createButton(self,canvas,command_,text_ = "Button-Text",width_ = 10,bd_ = 3,font_ = ("Calibri 12")):
+	def createButton(self,canvas,command_,text_ = "Button-Text",width_ = 10,bd_ = 3,font_ = ("Calibri 12"),row_ = 0, col_ = 0):
 		self.button = tk.Button(canvas,text = text_,command = command_,width = width_,bd = bd_,font = font_,bg = "green",fg = "white")
-		self.button.grid(row = 0,column = 0)
+		self.button.grid(row = row_,column = col_)
 		return self.button
 
 	def createRadioButton(self,canvas,variable_,text_ = "radio-item",value_ = 1,row_ = 0, col_ = 0,color_ = "light grey"):

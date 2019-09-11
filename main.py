@@ -4,7 +4,7 @@ import threading
 from functions import *
 from battle import *
 import winsound as w
-
+Score = [0,0]
 change = 0
 ice_ball = 0
 roll_out = 0
@@ -251,6 +251,12 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 						crit = critical_hit(crit_factor)
 						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit * damageon[(n+1)%2],reason = "",effect = effectiveness[n])
 						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit * damageon[(n+1)%2] / 2,reason = "is hit with recoil!",effect = 1)
+						if p[n].hp <= 0:
+							#pokeom 1 fainted
+							playsound("sound\\faint.wav")
+							display(f"{p[n].name} fainted!")
+							return -1*((n+1)%2 + 1)				
+						
 
 					elif health == 1010:
 						#gain type
@@ -379,7 +385,12 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 						crit = critical_hit(crit_factor)
 						p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = crit * damageon[n],reason = "",effect = effectiveness[(n+1)%2])
 						p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = crit * damageon[n] / 2,reason = "is hit with recoil!",effect = 1)
-
+						if p[(n+1)%2].hp <= 0:
+							#pokeom 2 fainted
+							playsound("sound\\faint.wav")
+							display(f"{p[(n+1)%2].name} fainted!")
+							return -1*(n + 1)
+							
 					elif health == 1010:
 						#gain type
 						crit = critical_hit(crit_factor)
@@ -496,11 +507,17 @@ def check_fight_thread():
 	    if disablity == -1:
 		    p[1] = Pokemon()
 		    reinit(1)
+		    if p[0].hp <= 0:
+			    p[0] = Pokemon()
+			    reinit(0)
 		    disablity = 0
 	    elif disablity == -2:
 		    p[0] = Pokemon()
-		    disablity = 0
 		    reinit(0)
+		    if p[1].hp <= 0:
+			    p[1] = Pokemon()
+			    reinit(1)
+		    disablity = 0
 	    if disablity == 0:
 		    startButton.config(state = "normal")
 
@@ -651,9 +668,11 @@ def loopSound():
 def reinit(n):
 	global firstpokeLabel,firstImg,secondpokeLabel,secondImg,firstpokeHP,secondpokeHP,Pbar,firstMoveLabel
 	global secondMoveLabel,startButton,remarkBox,var1,var2,firstmoves,firstdesc,secondmoves,seconddesc
-	global firstRadioPP,secondRadioPP,firstRadio,secondRadio
+	global firstRadioPP,secondRadioPP,firstRadio,secondRadio,leftscore,rightscore
+	global Score
 	
 	if n == 0:
+		Score[1] += 1
 		firstImg = pg.createImage(file_ = f"poke_png\\{p[0].rank} {p[0].name}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
 		for i in range(4):
 			firstRadio[i].configure(state = "normal")
@@ -672,8 +691,10 @@ def reinit(n):
 		for i in range(4):
 			firstRadio[i].config(text_ = firstmoves[i],variable_ = var1,value_ = i)
 			firstRadioPP[i].config(text_ = " PP: "+ firstdesc[i][2])
+		rightscore.config(text_ = f"score : {Score[1]}")
 
 	if n == 1:
+		Score[0] += 1
 		secondImg = pg.createImage(file_ = f"poke_png\\{p[1].rank} {p[1].name}.png",canvas = pg.firstright,row_ = 1,col_ = 0)	
 		for i in range(4):
 			secondRadio[i].configure(state = "normal")
@@ -692,6 +713,7 @@ def reinit(n):
 		for i in range(4):
 			secondRadio[i].config(text_ = secondmoves[i],variable_ = var2,value_ = i)
 			secondRadioPP[i].config(text_ = " PP: "+ seconddesc[i][2])
+		leftscore.config(text_= f"score : {Score[0]}")
 	
 
 	
@@ -700,7 +722,7 @@ def reinit(n):
 def setup():
 	global firstpokeLabel,firstImg,secondpokeLabel,secondImg,firstpokeHP,secondpokeHP,Pbar,firstMoveLabel
 	global secondMoveLabel,startButton,remarkBox,var1,var2,firstmoves,firstdesc,secondmoves,seconddesc
-	global firstRadioPP,secondRadioPP,firstRadio,secondRadio
+	global firstRadioPP,secondRadioPP,firstRadio,secondRadio,leftscore,rightscore
 
 	firstpokeLabel = pg.createLabel(pg.firstleft,text_ = p[0].name,bg_ = "#5a6d9c",color_="white")
 	firstImg = pg.createImage(file_ = f"poke_png\\{p[0].rank} {p[0].name}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
@@ -725,11 +747,6 @@ def setup():
 	for i in range(4):
 		firstRadio.append(pg.createRadioButton(pg.thirdleft,text_ = firstmoves[i],variable_ = var1,value_ = i,row_ = i+1,col_ = 0,color_ = "black"))
 		firstRadioPP.append(pg.createLabel(pg.thirdleft,text_ = " PP: "+ firstdesc[i][2],row_ = i+1,col_ = 1,font_ = "Calibri 12",bg_ = "#5a6d9c",color_ = "white"))
-	# firstRadio1 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[0],variable_ = var1,value_ = 0,row_ = 1,col_ = 0)
-	# firstRadio2 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[1],variable_ = var1,value_ = 1,row_ = 2,col_ = 0)
-	# firstRadio3 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[2],variable_ = var1,value_ = 2,row_ = 3,col_ = 0)
-	# firstRadio4 = pg.createRadioButton(pg.thirdleft,text_ = firstmoves[3],variable_ = var1,value_ = 3,row_ = 4,col_ = 0)
-
 
 	secondMoveLabel = pg.createLabel(pg.thirdright,text_ = "Moves",row_ = 0,col_ = 0,bg_ = "#5a6d9c")
 	moves = p[1].getMoves()
@@ -740,18 +757,14 @@ def setup():
 	var2.set(0)
 	secondRadio = []
 	secondRadioPP = []
-	# pg.createLabel(pg.thirdrightPP,text_ = "    ",row_ = 0,col_ = 0)
+	
 	for i in range(4):
 		secondRadio.append(pg.createRadioButton(pg.thirdright,text_ = secondmoves[i],variable_ = var2,value_ = i,row_ = i+1,col_ = 0,color_="black"))
 		secondRadioPP.append(pg.createLabel(pg.thirdright,text_ = " PP: "+ seconddesc[i][2],row_ = i+1,col_ = 1,font_ = "Calibri 12",bg_ = "#5a6d9c",color_ = "white"))
-
-
-	# secondRadio1 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[0],variable_ = var2,value_ = 0,row_ = 1,col_ = 0)
-	# secondRadio2 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[1],variable_ = var2,value_ = 1,row_ = 2,col_ = 0)
-	# secondRadio3 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[2],variable_ = var2,value_ = 2,row_ = 3,col_ = 0)
-	# secondRadio4 = pg.createRadioButton(pg.thirdright,text_ = secondmoves[3],variable_ = var2,value_ = 3,row_ = 4,col_ = 0)
-
-	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None))
+	#canvas,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12")
+	leftscore = pg.createLabel(pg.bottom,row_ = 0,col_ = 0,padx_ = 10,text_ = f"score : {Score[0]}")
+	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None),row_= 0,col_=1)
+	rightscore = pg.createLabel(pg.bottom,row_ = 0,col_ = 2,padx_ = 10,text_ = f"score : {Score[1]}")
 	remarkBox = pg.createListBox(pg.remark)
 
 
