@@ -7,7 +7,7 @@ GUI based pokemon battle game
 4) run as -> python main.py
 Note : Use python 3.x on windows
 
-<h3>On running the main.py file, the game starts with two random pokemons with four moves each as shown below (selection of pokemon to battle will be there in future updates):</h3>
+<h3>On running the main.py file, the game starts with two random pokemons with four moves each as shown</h3>
 
 
 ![Battle Scene 1](https://github.com/arkag70/PokemonBattle/blob/master/poke_png/Screenshot%20(526).png)
