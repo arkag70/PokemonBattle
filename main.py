@@ -5,9 +5,10 @@ from functions import *
 from battle import *
 import winsound as w
 
+pauseTimer = True
 stopTimer = False
-minutes = 1
-seconds = 15
+minutes = 0
+seconds = 30
 Score = [0,0]
 change = 0
 ice_ball = 0
@@ -513,17 +514,26 @@ def check_fight_thread():
 		    reinit(1)
 		    if p[0].hp <= 0:
 			    p[0] = Pokemon()
-			    reinit(0)
 		    disablity = 0
+
 	    elif disablity == -2:
 		    p[0] = Pokemon()
 		    reinit(0)
 		    if p[1].hp <= 0:
 			    p[1] = Pokemon()
-			    reinit(1)
 		    disablity = 0
+			
 	    if disablity == 0:
-		    startButton.config(state = "normal")
+		    if stopTimer == True:
+			    if Score[0] > Score[1]:
+				    display("Congratulations! Player 1 wins!!!")
+			    elif Score[0] < Score[1]:
+				    display("Congratulations! Player 2 wins!!!")
+			    else:
+				    display("It's a tie!!!")
+		    else:
+		    	reinit(abs(disablity) -1)
+		    	startButton.config(state = "normal")
 
 def ppUpdate(index):
 	
@@ -607,35 +617,36 @@ def check_timer_thread():
     	pass
 
 def countdown():
-	while True:
-		time.sleep(1)
-		global minutes,seconds
-		if seconds == 0:
-			if minutes == 0:
-				if Score[0] > Score[1]:
-					display("Congratulations!! Player 1 wins!!!")
-				elif Score[0] < Score[1]:
-					display("Congratulations!! Player 2 wins!!!")
-				else:
-					display("It's a draw!!!")
-				startButton.config(state = tk.DISABLED)
-				startButton.config(bg = "light green",text = "GAME OVER")				
+	global stopTimer,pauseTimer
+	if pauseTimer == False:
+		while True:
+			if pauseTimer == True:
 				break
+			time.sleep(1)
+			global minutes,seconds
+			if seconds == 0:
+				if minutes == 0:
+					stopTimer = True				
+					break
+				else:
+					seconds = 59
+					minutes -= 1
 			else:
-				seconds = 59
-				minutes -= 1
-		else:
-			seconds -= 1
-		timeLabel.config(text = f"0{minutes} : {seconds}")
-		if stopTimer == True:
-			break
+				seconds -= 1
+			if len(str(seconds)) == 1:
+				timeLabel.config(text = f"0{minutes} : 0{seconds}")
+			else:
+				timeLabel.config(text = f"0{minutes} : {seconds}")
+	else:
+		pass
 
 def fight():
-	startButton.config(bg = "light green",text = "wait...")
-	global stopTimer
+	global stopTimer,pauseTimer,disablity
 	stopTimer = False
+	pauseTimer = False
 	start_timer_thread()
-	global disablity
+	
+	startButton.config(bg = "light green",text = "wait...")
 	index1 = var1.get()
 	index2 = var2.get()
 	ppUpdate((index1,index2))
@@ -677,8 +688,11 @@ def fight():
 	else:
 		n = 1
 	disablity = startProgress(damageon,accuracy,n,(index1,index2),(effectiveness))
-	stopTimer = True
-	startButton.config(bg = "green",text = "GO",fg = "white")
+	pauseTimer = True
+	if stopTimer == False:
+		startButton.config(bg = "green",text = "GO",fg = "white")
+	else:
+		startButton.config(bg = "light green",text = "GAME OVER",fg = "white")
 	
 
 
@@ -806,7 +820,11 @@ def setup():
 		secondRadio.append(pg.createRadioButton(pg.thirdright,text_ = secondmoves[i],variable_ = var2,value_ = i,row_ = i+1,col_ = 0,color_="black"))
 		secondRadioPP.append(pg.createLabel(pg.thirdright,text_ = " PP: "+ seconddesc[i][2],row_ = i+1,col_ = 1,font_ = "Calibri 12",bg_ = "#5a6d9c",color_ = "white"))
 	#canvas,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12")
-	timeLabel = pg.createLabel(pg.bottom,row_ = 0,col_ = 1,padx_ = 10,text_ = f"05:00")
+	if len(str(seconds)) == 1:
+		txt = f"0{seconds}"
+	else:
+		txt = f"{seconds}"
+	timeLabel = pg.createLabel(pg.bottom,row_ = 0,col_ = 1,padx_ = 10,text_ = f"0{minutes}:{txt}")
 
 	leftscore = pg.createLabel(pg.bottom,row_ = 1,col_ = 0,padx_ = 0,text_ = f"score : {Score[0]}")
 	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None),row_= 1,col_=1)
