@@ -4,6 +4,10 @@ import threading
 from functions import *
 from battle import *
 import winsound as w
+
+stopTimer = False
+minutes = 1
+seconds = 15
 Score = [0,0]
 change = 0
 ice_ball = 0
@@ -589,9 +593,48 @@ def getMovePower(p,index,desc):
 			
 
 
+def start_timer_thread():
+    global timer_thread
+    timer_thread = threading.Thread(target = countdown)
+    timer_thread.daemon = True
+    timer_thread.start()
+    root.after(20,check_timer_thread)
+
+def check_timer_thread():
+    if timer_thread.is_alive():
+        root.after(20,check_timer_thread)
+    else:
+    	pass
+
+def countdown():
+	while True:
+		time.sleep(1)
+		global minutes,seconds
+		if seconds == 0:
+			if minutes == 0:
+				if Score[0] > Score[1]:
+					display("Congratulations!! Player 1 wins!!!")
+				elif Score[0] < Score[1]:
+					display("Congratulations!! Player 2 wins!!!")
+				else:
+					display("It's a draw!!!")
+				startButton.config(state = tk.DISABLED)
+				startButton.config(bg = "light green",text = "GAME OVER")				
+				break
+			else:
+				seconds = 59
+				minutes -= 1
+		else:
+			seconds -= 1
+		timeLabel.config(text = f"0{minutes} : {seconds}")
+		if stopTimer == True:
+			break
 
 def fight():
 	startButton.config(bg = "light green",text = "wait...")
+	global stopTimer
+	stopTimer = False
+	start_timer_thread()
 	global disablity
 	index1 = var1.get()
 	index2 = var2.get()
@@ -619,7 +662,6 @@ def fight():
 	damageon[0] = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.2*movepower2)*effectiveness[1]
 	damageon[1] = int(((p[0].attack/maxD)+(1-(p[1].defense/maxD)))*0.2*movepower1)*effectiveness[0]
 
-
 	# display(damageon[0],damageon[1])
 	# # p[0].isParalysed = True
 	# # p[1].isParalysed = True
@@ -635,6 +677,7 @@ def fight():
 	else:
 		n = 1
 	disablity = startProgress(damageon,accuracy,n,(index1,index2),(effectiveness))
+	stopTimer = True
 	startButton.config(bg = "green",text = "GO",fg = "white")
 	
 
@@ -723,6 +766,7 @@ def setup():
 	global firstpokeLabel,firstImg,secondpokeLabel,secondImg,firstpokeHP,secondpokeHP,Pbar,firstMoveLabel
 	global secondMoveLabel,startButton,remarkBox,var1,var2,firstmoves,firstdesc,secondmoves,seconddesc
 	global firstRadioPP,secondRadioPP,firstRadio,secondRadio,leftscore,rightscore
+	global timeLabel
 
 	firstpokeLabel = pg.createLabel(pg.firstleft,text_ = p[0].name,bg_ = "#5a6d9c",color_="white")
 	firstImg = pg.createImage(file_ = f"poke_png\\{p[0].rank} {p[0].name}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
@@ -762,9 +806,11 @@ def setup():
 		secondRadio.append(pg.createRadioButton(pg.thirdright,text_ = secondmoves[i],variable_ = var2,value_ = i,row_ = i+1,col_ = 0,color_="black"))
 		secondRadioPP.append(pg.createLabel(pg.thirdright,text_ = " PP: "+ seconddesc[i][2],row_ = i+1,col_ = 1,font_ = "Calibri 12",bg_ = "#5a6d9c",color_ = "white"))
 	#canvas,row_ = 0,col_ = 0,padx_ = 2,pady_ = 2,text_ = "Label-Text",font_ = ("Calibri 12")
-	leftscore = pg.createLabel(pg.bottom,row_ = 0,col_ = 0,padx_ = 10,text_ = f"score : {Score[0]}")
-	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None),row_= 0,col_=1)
-	rightscore = pg.createLabel(pg.bottom,row_ = 0,col_ = 2,padx_ = 10,text_ = f"score : {Score[1]}")
+	timeLabel = pg.createLabel(pg.bottom,row_ = 0,col_ = 1,padx_ = 10,text_ = f"05:00")
+
+	leftscore = pg.createLabel(pg.bottom,row_ = 1,col_ = 0,padx_ = 0,text_ = f"score : {Score[0]}")
+	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None),row_= 1,col_=1)
+	rightscore = pg.createLabel(pg.bottom,row_ = 1,col_ = 2,padx_ = 10,text_ = f"score : {Score[1]}")
 	remarkBox = pg.createListBox(pg.remark)
 
 
