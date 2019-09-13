@@ -14,5 +14,6 @@ There is a countdown timer of 5 minutes. Team with maximum points win or the res
 
 ![Battle Scene 1](https://github.com/arkag70/PokemonBattle/blob/master/poke_png/Screenshot%20(526).png)
 
+
 ![Battle Scene 2](https://github.com/arkag70/PokemonBattle/blob/master/poke_png/Screenshot%20(527).png)
 
