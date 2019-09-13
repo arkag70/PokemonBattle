@@ -25,7 +25,7 @@ class PokeGUI:
 		self.thirdright = tk.Frame(self.master,highlightbackground="black", highlightthickness=0,bg = "#5a6d9c")
 		self.thirdright.grid(row = 2,column = 1)
 
-		self.bottom = tk.Frame(self.master)
+		self.bottom = tk.Frame(self.master,bg_ = "#5a6d9c")
 		self.bottom.grid(row = 3,column = 0,columnspan = 4,pady = 5)
 
 		self.remark = tk.Frame(self.master)

@@ -7,8 +7,8 @@ import winsound as w
 
 pauseTimer = True
 stopTimer = False
-minutes = 0
-seconds = 30
+minutes = 5
+seconds = 0
 Score = [0,0]
 change = 0
 ice_ball = 0
@@ -824,11 +824,11 @@ def setup():
 		txt = f"0{seconds}"
 	else:
 		txt = f"{seconds}"
-	timeLabel = pg.createLabel(pg.bottom,row_ = 0,col_ = 1,padx_ = 10,text_ = f"0{minutes}:{txt}")
+	timeLabel = pg.createLabel(pg.bottom,row_ = 0,col_ = 1,padx_ = 10,text_ = f"0{minutes}:{txt}",bg_ = "#5a6d9c",color_ = "white")
 
-	leftscore = pg.createLabel(pg.bottom,row_ = 1,col_ = 0,padx_ = 0,text_ = f"score : {Score[0]}")
+	leftscore = pg.createLabel(pg.bottom,row_ = 1,col_ = 0,padx_ = 0,text_ = f"score : {Score[0]}",bg_ = "#5a6d9c",color_ = "white")
 	startButton = pg.createButton(pg.bottom,text_ = "GO",command_ = lambda: start_fight_thread(None),row_= 1,col_=1)
-	rightscore = pg.createLabel(pg.bottom,row_ = 1,col_ = 2,padx_ = 10,text_ = f"score : {Score[1]}")
+	rightscore = pg.createLabel(pg.bottom,row_ = 1,col_ = 2,padx_ = 10,text_ = f"score : {Score[1]}",bg_ = "#5a6d9c",color_ = "white")
 	remarkBox = pg.createListBox(pg.remark)
 
 
