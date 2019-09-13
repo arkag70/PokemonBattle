@@ -539,11 +539,17 @@ def ppUpdate(index):
 	
 	if firstdesc[index[0]][2] == '1':
 		firstRadio[index[0]].configure(state = tk.DISABLED)
-		var1.set((index[0]+1)%4)
+		for i in range(1,4):
+			if firstRadio[(index[0]+i)%4]['state'] != "disabled":
+				var1.set((index[0]+i)%4)
+				break
 
 	if seconddesc[index[1]][2] == '1':
 		secondRadio[index[1]].configure(state = tk.DISABLED)
-		var2.set((index[1]+1)%4)
+		for i in range(1,4):
+			if secondRadio[(index[1]+i)%4]['state'] != "disabled":
+				var2.set((index[1]+i)%4)
+				break
 
 	firstdesc[index[0]][2] = str(int(firstdesc[index[0]][2]) - 1)
 	seconddesc[index[1]][2] = str(int(seconddesc[index[1]][2]) - 1)
