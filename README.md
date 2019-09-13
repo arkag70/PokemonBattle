@@ -7,7 +7,9 @@ GUI based pokemon battle game
 4) run as -> python main.py
 Note : Use python 3.x on windows
 
-<h3>On running the main.py file, the game starts with two random pokemons with four moves each as shown</h3>
+On running the main.py file, the game starts with two random pokemons with four moves each.
+Whenever a Pokemon faints, it is replaced by another random pokemon and the winner side is awarded with a socre.
+There is a countdown timer of 5 minutes. Team with maximum points win or the result could also be a tie.
 
 
 ![Battle Scene 1](https://github.com/arkag70/PokemonBattle/blob/master/poke_png/Screenshot%20(526).png)
