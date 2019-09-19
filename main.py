@@ -514,6 +514,7 @@ def check_fight_thread():
 		    reinit(1)
 		    if p[0].hp <= 0:
 			    p[0] = Pokemon()
+			    reinit(0)
 		    disablity = 0
 
 	    elif disablity == -2:
@@ -521,6 +522,7 @@ def check_fight_thread():
 		    reinit(0)
 		    if p[1].hp <= 0:
 			    p[1] = Pokemon()
+			    reinit(1)
 		    disablity = 0
 			
 	    if disablity == 0:
