@@ -4,32 +4,34 @@ import random
 #filtered the file
 #dataset1 = dataset[~dataset.Name.str.contains("Mega ")]
 
+base = [0,290,320,385,435,480,505,570,1000]
 pokemons = []
-def getData():
-	# dataset = pd.read_csv("poke.csv")
-	dataset = pd.read_excel("poke.xlsx",sheet_name = "poke")
-	datasheet = dataset.iloc[:386]
-	return datasheet
+
+dataset = pd.read_excel("poke.xlsx",sheet_name = "poke")
+datasheet = dataset.iloc[:386]
+data = []
+for i in range(8):
+	data.append(datasheet[(datasheet["base_total"] > base[i]) & (datasheet["base_total"] < base[i+1])])
 
 class Pokemon:
-	def __init__(self):
-		
-		self.dataset = getData()
-		for i in range(len(self.dataset)):
-			pokemons.append(self.dataset.iloc[i])
-		i = random.randint(0,385)
+	def __init__(self,batch = random.randint(0,7)):
+
+		self.dataset = data[batch]
+		self.pokemon = self.dataset.sample()
+		print(f"batch : {batch}")
+		print(f"{str(self.pokemon.name).split()[1]}:{str(self.pokemon.base_total).split()[1]}")
 		self.maxAttack = max(self.dataset['attack'])
 		self.maxDefense = max(self.dataset['defense'])
-		self.name = pokemons[i]["name"]
+		self.name = str(self.pokemon["name"]).split()[1]
 		#max HP
-		self.HP = int(pokemons[i]["hp"])
+		self.HP = int(str(self.pokemon["hp"]).split()[1])
 		#current HP
-		self.hp = int(pokemons[i]["hp"])
-		self.type1 = pokemons[i]["type1"]
-		self.type2 = pokemons[i]["type2"]
-		self.attack = pokemons[i]["attack"]
-		self.defense = pokemons[i]["defense"]
-		self.speed = pokemons[i]["speed"]
+		self.hp = self.HP
+		self.type1 = str(self.pokemon["type1"]).split()[1]
+		self.type2 = str(self.pokemon["type2"]).split()[1]
+		self.attack = int(str(self.pokemon["attack"]).split()[1])
+		self.defense = int(str(self.pokemon["defense"]).split()[1])
+		self.speed = int(str(self.pokemon["speed"]).split()[1])
 		self.isAsleep = False
 		self.sleepFreezeCount = 0
 		self.confuseCount = 0
@@ -37,6 +39,7 @@ class Pokemon:
 		self.isParalysed = False
 		self.isConfused = False
 		self.isPoisoned = False
+		self.isBadlyPoisoned = False
 		self.isBurnt = False
 		self.isSeeded = False
 		self.isRooted = False
@@ -45,13 +48,12 @@ class Pokemon:
 		self.acc = [0,0,0,0]
 		self.bellyDrum_Memento = False
 
-		i += 1
+		i = int(str(self.pokemon["pokedex_number"]).split()[1])
 		if len(str(i)) == 1:
 			i = f"00{i}"
 		elif len(str(i)) == 2:
 			i = f"0{i}"
 		self.rank = i
-		print(self.rank,self.name)
 
 	def getMoves(self):
 		moveset = pd.read_excel("moves.xlsx",sheet_name = "sheet1")

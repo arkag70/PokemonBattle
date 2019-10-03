@@ -5,8 +5,11 @@ from functions import *
 from battle import *
 import winsound as w
 
+
+powerful = [0,1,2,3,3,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7]
 pauseTimer = True
 stopTimer = False
+toxic_count = 1
 minutes = 5
 seconds = 0
 Score = [0,0]
@@ -16,7 +19,7 @@ roll_out = 0
 fury_cutter = 1
 basepow = [30,30,10]
 hit_count = ["once","twice","three times","four times","five times"]
-p = [Pokemon(),Pokemon()]
+p = [Pokemon(random.randint(0,7)),Pokemon(random.randint(0,7))]
 background_theme = ["sound\\magmatheme.wav","sound\\aquatheme.wav","sound\\finaltheme.wav","sound\\rayquaza.wav"]
 moveset = pd.read_excel("moves.xlsx",sheet_name = "sheet1")
 round = 0
@@ -178,7 +181,7 @@ def critical_hit(crit_factor):
 
 def startProgress(damageon,accuracy,n,index,effectiveness):
 	willmove = 0
-	global round
+	global round,toxic_count
 	round += 1
 	display(f"Round {round}")
 	remainingonbar = [int((p[n].hp - damageon[n])*Pbar[n]["maximum"]/p[n].HP),int((p[(n+1)%2].hp - damageon[(n+1)%2])*Pbar[(n+1)%2]["maximum"]/p[(n+1)%2].HP)]
@@ -425,7 +428,7 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			pass
 	if "poison" in p[n].condition:
 		time.sleep(2)
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by poison!",effect = 1)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = int(0.125*p[n].HP),reason = "is hurt by poison!",effect = 1)
 		if p[n].hp <= 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.wav")
@@ -433,9 +436,20 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			return -1*((n+1)%2 + 1)
 		else:
 			pass
+	elif "toxic" in p[n].condition:
+		time.sleep(2)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = int(toxic_count*0.125*p[n].HP),reason = "is hurt by poison!",effect = 1)
+		if p[n].hp <= 0:
+			#pokemon 1 fainted
+			playsound("sound\\faint.wav")
+			display(f"{p[n].name} fainted!")
+			toxic_count = 1
+			return -1*((n+1)%2 + 1)
+		else:
+			toxic_count *= 2
 	elif "burn" in p[n].condition:
 		time.sleep(2)
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "is hurt by burn!",effect = 1)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = int(0.125*p[n].HP),reason = "is hurt by burn!",effect = 1)
 		if p[n].hp <= 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.wav")
@@ -445,8 +459,8 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			pass
 	if "seed" in p[n].condition:
 		time.sleep(2)
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = 10,reason = "health is sapped by LEECH SEED!",effect = 1)
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = -10,reason = "gained foe's energy!!",effect = 1)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = int(0.125*p[n].HP),reason = "health is sapped by LEECH SEED!",effect = 1)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = int(-0.125*p[n].HP),reason = "gained foe's energy!!",effect = 1)
 		if p[n].hp <= 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.wav")
@@ -460,7 +474,7 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 	
 	if "poison" in p[(n+1)%2].condition:
 		time.sleep(2)
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by poison!",effect = 1)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = int(0.125*p[(n+1)%2].HP),reason = "is hurt by poison!",effect = 1)
 		if p[(n+1)%2].hp <= 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.wav")
@@ -468,9 +482,20 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			return -1*(n+1)
 		else:
 			pass
+	elif "toxic" in p[(n+1)%2].condition:
+		time.sleep(2)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = int(toxic_count*0.125*p[(n+1)%2].HP),reason = "is hurt by poison!",effect = 1)
+		if p[(n+1)%2].hp <= 0:
+			#pokemon 1 fainted
+			playsound("sound\\faint.wav")
+			display(f"{p[(n+1)%2].name} fainted!")
+			toxic_count = 1
+			return -1*(n+1)
+		else:
+			toxic_count *= 2
 	elif "burn" in p[(n+1)%2].condition:
 		time.sleep(2)
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "is hurt by burn!",effect = 1)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = int(0.125*p[(n+1)%2].HP),reason = "is hurt by burn!",effect = 1)
 		if p[(n+1)%2].hp <= 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.wav")
@@ -480,8 +505,8 @@ def startProgress(damageon,accuracy,n,index,effectiveness):
 			pass
 	if "seed" in p[(n+1)%2].condition:
 		time.sleep(2)
-		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = 10,reason = "health is sapped by LEECH SEED!",effect = 1)
-		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = -10,reason = "gained foe's energy!!",effect = 1)
+		p[(n+1)%2].hp = updateHealth((n+1)%2,remainingonbar[(n+1)%2],p[(n+1)%2].hp, Pbar[(n+1)%2],p[(n+1)%2].HP,deduct = int(0.125*p[(n+1)%2].HP),reason = "health is sapped by LEECH SEED!",effect = 1)
+		p[n].hp = updateHealth(n,remainingonbar[n],p[n].hp, Pbar[n],p[n].HP,deduct = int(-0.125*p[(n+1)%2].HP),reason = "gained foe's energy!!",effect = 1)
 		if p[(n+1)%2].hp <= 0:
 			#pokemon 1 fainted
 			playsound("sound\\faint.wav")
@@ -504,24 +529,43 @@ def start_fight_thread(event):
     fight_thread.start()
     root.after(20,check_fight_thread)
 
+def Scorecheck(score,n):
+	diff = score[(n+1)%2] - score[n]
+	print(f"diff:{diff}")
+	if diff >= 2:
+		print(powerful[2*diff:])
+		return random.choice(powerful[2*diff:])
+	else:
+		return random.randint(0,7)
+
 def check_fight_thread():
-    global disablity
+    global disablity,Score
+
     if fight_thread.is_alive():
         root.after(20,check_fight_thread)
     else:
 	    if disablity == -1:
-		    p[1] = Pokemon()
+		    Score[0] += 1
+		    batch = Scorecheck(Score,1)
+		    p[1] = Pokemon(batch)
 		    reinit(1)
+
 		    if p[0].hp <= 0:
-			    p[0] = Pokemon()
+			    Score[1] += 1
+			    batch = Scorecheck(Score,0)
+			    p[0] = Pokemon(batch)
 			    reinit(0)
 		    disablity = 0
 
 	    elif disablity == -2:
-		    p[0] = Pokemon()
+		    Score[1] += 1
+		    batch = Scorecheck(Score,0)
+		    p[0] = Pokemon(batch)
 		    reinit(0)
 		    if p[1].hp <= 0:
-			    p[1] = Pokemon()
+			    Score[0] += 1
+			    batch = Scorecheck(Score,1)
+			    p[1] = Pokemon(batch)
 			    reinit(1)
 		    disablity = 0
 			
@@ -536,7 +580,7 @@ def check_fight_thread():
 		    else:
 		    	reinit(abs(disablity) -1)
 		    	startButton.config(state = "normal")
-
+				
 def ppUpdate(index):
 	
 	if firstdesc[index[0]][2] == '1':
@@ -606,7 +650,7 @@ def getMovePower(p,index,desc):
 			movepower[i] = getFlail(p[i])
 		else:		#firstdesc[index1][0]
 			movepower[i] = int(desc[i][index[i]][0])
-	return movepower	
+	return movepower
 
 			
 
@@ -678,8 +722,8 @@ def fight():
 	effectiveness = checkEffect(p)
 	#	damage on opponent = move-power * (normalize(self Attack) + (1 - normalize(opponent defense)))
 	damageon = [0,0]
-	damageon[0] = int(((p[1].attack/maxA)+(1-(p[0].defense/maxD)))*0.2*movepower2)*effectiveness[1]
-	damageon[1] = int(((p[0].attack/maxD)+(1-(p[1].defense/maxD)))*0.2*movepower1)*effectiveness[0]
+	damageon[0] = int((1.2*(p[1].attack/maxA)+0.5*(1-(p[0].defense/maxD)))*0.2*movepower2)*effectiveness[1]
+	damageon[1] = int((1.2*(p[0].attack/maxD)+0.5*(1-(p[1].defense/maxD)))*0.2*movepower1)*effectiveness[0]
 
 	# display(damageon[0],damageon[1])
 	# # p[0].isParalysed = True
@@ -737,7 +781,6 @@ def reinit(n):
 	global Score
 	
 	if n == 0:
-		Score[1] += 1
 		firstImg = pg.createImage(file_ = f"poke_png\\{p[0].rank} {p[0].name}.png",canvas = pg.firstleft,row_ = 1,col_ = 0)
 		for i in range(4):
 			firstRadio[i].configure(state = "normal")
@@ -759,7 +802,6 @@ def reinit(n):
 		rightscore.config(text_ = f"score : {Score[1]}")
 
 	if n == 1:
-		Score[0] += 1
 		secondImg = pg.createImage(file_ = f"poke_png\\{p[1].rank} {p[1].name}.png",canvas = pg.firstright,row_ = 1,col_ = 0)	
 		for i in range(4):
 			secondRadio[i].configure(state = "normal")

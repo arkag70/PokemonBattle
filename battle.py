@@ -89,6 +89,8 @@ def checkCondition(p):
 		status += s
 		if p.isPoisoned:
 			status += " poison"
+		elif p.isBadlyPoisoned:
+			status += " toxic"
 		elif p.isBurnt:
 			status += " burn"
 		elif p.isSeeded:
@@ -101,6 +103,8 @@ def checkCondition(p):
 		status += "move"
 		if p.isPoisoned:
 			status += " poison"
+		elif p.isBadlyPoisoned:
+			status += " toxic"
 		elif p.isBurnt:
 			status += " burn"
 		elif p.isBurnt:
