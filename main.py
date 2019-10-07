@@ -578,8 +578,9 @@ def check_fight_thread():
 			    else:
 				    display("It's a tie!!!")
 		    else:
-		    	reinit(abs(disablity) -1)
-		    	startButton.config(state = "normal")
+			    reinit(abs(disablity) -1)
+			    time.sleep(1)
+			    startButton.config(state = "normal")
 				
 def ppUpdate(index):
 	
@@ -676,8 +677,8 @@ def countdown():
 				break
 			time.sleep(1)
 			global minutes,seconds
-			if seconds == 0:
-				if minutes == 0:
+			if seconds < 1:
+				if minutes < 1:
 					stopTimer = True				
 					break
 				else:

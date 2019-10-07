@@ -167,14 +167,16 @@ def applyStatus(p,n,status):
 			poke.isParalysed = True
 			playsound("sound\\paralyse.wav")
 		else:
-			statusmsg = f"{poke.name} already has a status problem!"
+			if not poke.isParalysed:
+				statusmsg = f"{poke.name} already has a status problem!"
 	elif status == 2.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBadlyPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} is poisoned!"
 			poke.isPoisoned = True
 			playsound("sound\\poison.wav")
 		else:
-			statusmsg = f"{poke.name} already has a status problem!"
+			if not poke.isPoisoned:
+				statusmsg = f"{poke.name} already has a status problem!"
 	elif status == 2.5:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBadlyPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} is badly poisoned!"
@@ -182,14 +184,16 @@ def applyStatus(p,n,status):
 			playsound("sound\\poison.wav")
 			playsound("sound\\poison.wav")
 		else:
-			statusmsg = f"{poke.name} already has a status problem!"
+			if not poke.isBadlyPoisoned:
+				statusmsg = f"{poke.name} already has a status problem!"
 	elif status == 3.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBadlyPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} is burnt!"
 			poke.isBurnt = True
 			playsound("sound\\burn.wav")
 		else:
-			statusmsg = f"{poke.name} already has a status problem!"
+			if not poke.isBurnt:
+				statusmsg = f"{poke.name} already has a status problem!"
 	elif status == 4.0:
 		if (not poke.isConfused):
 			statusmsg = f"{poke.name} became confused!"
@@ -211,7 +215,8 @@ def applyStatus(p,n,status):
 			poke.sleepFreezeCount = random.randint(2,5)
 			playsound("sound\\burn.wav")
 		else:
-			statusmsg = f"{poke.name} already has a status problem!"
+			if not poke.isAsleep:
+				statusmsg = f"{poke.name} already has a status problem!"
 	elif status == 6.0:
 		if (not poke.isParalysed) and (not poke.isPoisoned) and (not poke.isBadlyPoisoned) and (not poke.isBurnt) and (not poke.isAsleep) and (not poke.isFrozen):
 			statusmsg = f"{poke.name} became frozen!"
@@ -219,7 +224,8 @@ def applyStatus(p,n,status):
 			poke.sleepFreezeCount = random.randint(2,5)
 			playsound("sound\\freeze.wav")
 		else:
-			statusmsg = f"{poke.name} already has a status problem!"
+			if not poke.isFrozen:
+				statusmsg = f"{poke.name} already has a status problem!"
 	elif status == 7.0:
 		if (not poke.isSeeded):
 			statusmsg = f"{poke.name} was seeded!"
