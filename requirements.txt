@@ -1,3 +1,4 @@
 pandas
 playsound
 xlrd
+openpyxl
