@@ -1,6 +1,8 @@
 # PokemonBattle
 GUI based pokemon battle game
 
+https://github.com/arkag70/PokemonBattle/assets/43979789/280db1f1-c50c-4d52-8245-24213cb0e347
+
 1) Download Zip
 2) Unzip the package
 3) install required packages -> pip install -r requirements.txt
